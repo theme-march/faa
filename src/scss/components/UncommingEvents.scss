@@ -1,0 +1,30 @@
+.upcomming-event {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  justify-content: space-between;
+
+  .upcomming-event-text-section {
+    max-width: 486px;
+    .upcomming-event-title {
+      margin-bottom: 30px;
+    }
+    .event-time {
+      .event-text {
+        color: $black;
+        font-weight: 700;
+        line-height: 24px;
+        span {
+          color: $border;
+          font-weight: 400;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .upcomming-event {
+    flex-direction: column-reverse;
+  }
+}

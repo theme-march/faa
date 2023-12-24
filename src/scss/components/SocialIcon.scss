@@ -1,0 +1,35 @@
+.social-icon {
+  display: flex;
+  width: 40px;
+  height: 32px;
+  padding: 8px 10.969px;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  border-radius: 5px;
+  border: 1px solid rgba(102, 102, 102, 0.2);
+  background-color: $white;
+  transition: all 0.3s;
+  &:hover {
+    background-color: $primary;
+    color: $white;
+  }
+}
+.social-icon-transparent {
+  display: flex;
+  background-color: transparent;
+  width: 40px;
+  height: 32px;
+  padding: 8px 10.969px;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s;
+  color: $white;
+  &:hover {
+    background-color: $white;
+    color: $black;
+  }
+}

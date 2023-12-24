@@ -1,0 +1,105 @@
+[
+    {
+        "title": "Home",
+        "link": "/",
+        "key": "home",
+        "childern": [
+            {
+                "title": "Home 1",
+                "link": "/",
+                "key": "home1"
+            },
+            {
+                "title": "Home 2",
+                "link": "/home2",
+                "key": "home2"
+            },
+            {
+                "title": "Home 3",
+                "link": "/home3",
+                "key": "home3"
+            }
+        ]
+    },
+    {
+        "title": "About",
+        "link": "/about",
+        "key": "about"
+    },
+    {
+        "title": "Membership",
+        "link": "/membership",
+        "key": "membership"
+    },
+    {
+        "title": "News & Publication",
+        "link": "/news",
+        "key": "news",
+        "childern": [
+            {
+                "title": "News",
+                "link": "/news",
+                "key": "news"
+            },
+            {
+                "title": "Publication",
+                "link": "/publication",
+                "key": "publication"
+            }
+        ]
+    },
+    {
+        "title": "Events",
+        "link": "/events",
+        "key": "events",
+        "childern": [
+            {
+                "title": "Events",
+                "link": "/events",
+                "key": "events"
+            },
+            {
+                "title": "Event Registration",
+                "link": "/events-registration",
+                "key": "events-registration"
+            }
+        ]
+    },
+    {
+        "title": "Gallery",
+        "link": "/gallery",
+        "key": "gallery"
+    },
+    {
+        "title": "Pages",
+        "link": "#",
+        "key": "pages",
+        "childern": [
+            {
+                "title": "Contact",
+                "link": "/contact",
+                "key": "contact"
+            },
+            {
+                "title": "Reservations",
+                "link": "/reservations",
+                "key": "reservations"
+            },
+            {
+                "title": "gallery",
+                "link": "/gallery",
+                "key": "gallery"
+            },
+            {
+                "title": "Error Pages",
+                "link": "/error-pages",
+                "key": "errorpages"
+            },
+            {
+                "title": "Comming Soon",
+                "link": "/comming-soon",
+                "key": "commingsoon"
+            }
+        ]
+    }
+]

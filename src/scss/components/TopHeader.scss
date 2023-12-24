@@ -1,0 +1,27 @@
+.top-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.header-bg-section {
+  padding: 35px 0 25px 0;
+}
+.header-text-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+@media screen and (max-width: 768px) {
+  .top-header {
+    // flex-direction: column;
+    display: none;
+  }
+  .ak-moving-section-wrap {
+    width: 80%;
+  }
+  .header-text-section {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
+}

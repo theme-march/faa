@@ -1,0 +1,27 @@
+.ak-commmon-hero.ak-style1 {
+  position: relative;
+  min-height: 250px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  .commmon-hero-img {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+  }
+  .ak-commmon-heading {
+    .ak-section-title {
+      color: $white;
+    }
+    position: absolute;
+  }
+}
+@media screen and (max-width: 767px) {
+  .ak-commmon-hero.ak-style1 {
+    min-height: 150px;
+  }
+}

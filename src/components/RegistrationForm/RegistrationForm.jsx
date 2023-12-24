@@ -1,0 +1,222 @@
+import React from "react";
+import { useForm, Controller } from "react-hook-form";
+
+export default function RegistrationForm() {
+  const {
+    register,
+    handleSubmit,
+    control,
+    reset,
+    formState: { errors },
+  } = useForm();
+  const onSubmit = (data) => {
+    console.log(data);
+    reset();
+  };
+  return (
+    <form
+      className="row g-3"
+      onSubmit={handleSubmit(onSubmit)}
+      autoComplete="on"
+    >
+      <div className="col-md-6">
+        <label htmlFor="inputName" className="form-label">
+          {errors.name?.type === "required" ? (
+            <p role="alert " className="text-danger">
+              Name is required
+            </p>
+          ) : (
+            "Name*"
+          )}
+        </label>
+        <input
+          type="name"
+          className="text-input-filed type_2"
+          id="inputName"
+          {...register("name", { required: true })}
+        />
+      </div>
+
+      <div className="col-md-6">
+        <label htmlFor="inputNumber" className="form-label">
+          {errors.number && errors.number?.type === "required" ? (
+            <p role="alert " className="text-danger">
+              Phone Number is required
+            </p>
+          ) : (
+            "Phone Number*"
+          )}
+        </label>
+        <input
+          className="text-input-filed type_2"
+          id="inputNumber"
+          type="number"
+          {...register("number", { required: true })}
+        />
+      </div>
+
+      <div className="col-12">
+        <label htmlFor="inputEmail" className="form-label">
+          {errors.mail?.type === "required" ? (
+            <p role="alert " className="text-danger">
+              Email Address is required
+            </p>
+          ) : (
+            "Email*"
+          )}
+        </label>
+        <input
+          type="email"
+          className="text-input-filed type_2"
+          id="inputEmail"
+          {...register("mail", { required: true })}
+          aria-invalid={errors.mail ? "true" : "false"}
+        />
+      </div>
+
+      <div className="col-md-6">
+        <label htmlFor="batchNumberId" className="form-label">
+          {errors.batchNumber?.message ? (
+            <p role="alert " className="text-danger">
+              Select Batch number/ Session* is required
+            </p>
+          ) : (
+            "Select Batch number/ Session*"
+          )}
+        </label>
+        <Controller
+          name="batchNumber"
+          control={control}
+          defaultValue=""
+          rules={{ required: "Please select an option" }}
+          render={({ field }) => (
+            <select
+              {...field}
+              id="batchNumberId"
+              className="form-select text-input-filed type_2"
+            >
+              <option value="" disabled hidden>
+                Select an option
+              </option>
+              <option value="option1">Option 1</option>
+              <option value="option2">Option 2</option>
+              <option value="option3">Option 3</option>
+            </select>
+          )}
+        />
+      </div>
+      <div className="col-md-6">
+        <label forhtml="occupationId" className="form-label">
+          {errors.occupation?.message ? (
+            <p role="alert " className="text-danger">
+              Select Current Occupation* is required
+            </p>
+          ) : (
+            "Select Batch number/ Occupation*"
+          )}
+        </label>
+        <Controller
+          name="occupation" // The name of your form field
+          control={control}
+          defaultValue="" // Set the default value for the select field
+          rules={{ required: "Please select an option" }}
+          render={({ field }) => (
+            <select
+              {...field}
+              id="occupationId"
+              className="form-select text-input-filed type_2"
+            >
+              <option value="" disabled hidden>
+                Select an option
+              </option>
+              <option value="option1">Option 1</option>
+              <option value="option2">Option 2</option>
+              <option value="option3">Option 3</option>
+            </select>
+          )}
+        />
+      </div>
+
+      <div className="col-md-6">
+        <label forhtml="Organization" className="form-label">
+          {errors.organization?.type === "required" ? (
+            <p role="alert " className="text-danger">
+              Organization name* is required
+            </p>
+          ) : (
+            "Organization name*"
+          )}
+        </label>
+        <input
+          type="text"
+          className="text-input-filed type_2"
+          id="Organization"
+          {...register("organization", { required: true })}
+        />
+      </div>
+
+      <div className="col-md-6">
+        <label htmlFor="Designation" className="form-label">
+          {errors.designation?.type === "required" ? (
+            <p role="alert " className="text-danger">
+              Designation name* is required
+            </p>
+          ) : (
+            "Designation name*"
+          )}
+        </label>
+        <input
+          type="text"
+          className="text-input-filed type_2"
+          id="Designation"
+          {...register("designation", { required: true })}
+        />
+      </div>
+      <div className="col-12">
+        <Controller
+          name="password" // The name of your form field
+          control={control}
+          defaultValue=""
+          rules={{
+            required: "Password is required",
+            minLength: {
+              value: 8,
+              message: "Password must be at least 8 characters",
+            },
+            // Add more validation rules as needed
+          }}
+          render={({ field }) => (
+            <div>
+              <label htmlFor="Password" className="form-label">
+                {errors.password?.message ? (
+                  <p role="alert " className="text-danger">
+                    {errors.password.message}
+                  </p>
+                ) : (
+                  "Password*"
+                )}
+              </label>
+              <input
+                id="Password"
+                type="password"
+                {...field}
+                className="text-input-filed type_2"
+              />
+            </div>
+          )}
+        />
+      </div>
+      <div className="col-12">
+        <p className="mt-4">
+          By creating an account, you agree to the Terms of Use and acknowledge
+          our Privacy Policy.
+        </p>
+      </div>
+      <div className="col-12">
+        <button type="submit" className="button-primary">
+          Become a member
+        </button>
+      </div>
+    </form>
+  );
+}

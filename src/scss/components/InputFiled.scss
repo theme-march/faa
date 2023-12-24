@@ -1,0 +1,17 @@
+.text-input-filed {
+  border-radius: 10px;
+  border: 1px solid rgba(69, 69, 69, 0.2);
+  color: $inputColor;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 170%;
+  padding: 10px;
+  &.type_2 {
+    width: 100%;
+  }
+  &:focus {
+    box-shadow: none;
+    border: 1px solid $primary; /* Change border color on focus */
+  }
+}

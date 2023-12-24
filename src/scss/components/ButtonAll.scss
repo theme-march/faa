@@ -1,0 +1,63 @@
+.button-primary {
+  display: inline-flex;
+  padding: 9.5px 19px 11.5px 19px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  border: 1px solid rgba(102, 102, 102, 0.2);
+  background: $primary;
+  color: $white;
+  font-size: 14px;
+  font-style: normal;
+  line-height: 21px; /* 150% */
+  text-transform: uppercase;
+  font-weight: 400;
+  &:hover {
+    color: $black;
+    background-color: $white;
+    font-size: 15px;
+  }
+}
+
+.button-more {
+  color: $black;
+  font-family: Segoe UI;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    display: inline;
+    width: 0%;
+    height: 2px;
+    left: 0;
+    bottom: 0px;
+    opacity: 1;
+    background-color: $primary;
+    transition: all 0.5s;
+    bottom: -5px;
+  }
+  &:hover::after {
+    width: 100%;
+  }
+}
+
+.button-white {
+  display: inline-flex;
+  padding: 15px 36px;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(102, 102, 102, 0.2);
+  background: $white;
+  transition: all 0.5s;
+  &:hover {
+    font-size: 18px;
+    border: 1px solid $primary;
+  }
+}
