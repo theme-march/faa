@@ -14,4 +14,8 @@
     box-shadow: none;
     border: 1px solid $primary; /* Change border color on focus */
   }
+  &:focus-visible {
+    box-shadow: none;
+    border: 1px solid $primary; /* Change border color on focus */
+  }
 }

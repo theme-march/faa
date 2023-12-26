@@ -6,7 +6,6 @@ import { selectorMember } from "../features/member/memberSelector";
 
 export default function Membership() {
   const { search: name } = useSelector(selectorMember);
-  console.log(name);
 
   return (
     <>

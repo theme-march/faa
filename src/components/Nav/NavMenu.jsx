@@ -28,7 +28,7 @@ export default function NavMenu() {
         <div className="ak-main_header_in">
           <div className="ak-main_header_left">
             <div className="d-flex gap-3 align-items-center">
-              <Link to={"/singin"}>SingIn</Link>
+              <Link to={"/singin"}>Sign in</Link>
               <ButtonPrimary to={"/member-registration"}>
                 Became a Member
               </ButtonPrimary>

@@ -35,7 +35,7 @@ export default function Footer() {
             <p className="social-short-title">
               Links of Finance Alumni Association in other countries
             </p>
-            <div className="social-url ">
+            <div className="social-url">
               <Link to="/contact">Contact us</Link>
               <Link to="/faq">Help & FAQ</Link>
               <Link to="/find">Find an alumnus</Link>

@@ -333,7 +333,7 @@
       flex-wrap: wrap;
       height: inherit;
       > li {
-        margin-right: 50px;
+        margin-right: 25px;
         height: inherit;
         text-transform: uppercase;
         &:last-child {
@@ -366,6 +366,20 @@
           transition: all 0.5s;
           > a {
             position: relative;
+            /* &::after {
+              content: "";
+              display: inline-block;
+              height: 8px;
+              width: 8px;
+              border: 2px solid $secondary;
+              transform: rotate(45deg);
+              border-left: 0;
+              border-top: 0;
+              margin-left: 6px;
+              position: relative;
+              top: -2px;
+              border-radius: 0px 0px 2px 0px;
+            } */
           }
         }
       }
@@ -507,12 +521,13 @@
       position: absolute;
       width: 100vw;
       left: -15px;
+      margin-top: 15px;
       padding: 10px 0;
       transition: height 1s;
       top: 0%;
       height: 0vh;
       padding-top: 75px;
-      // border-bottom: 1px solid #4d4d4d52;
+      background-color: $white;
       overflow: hidden;
       max-height: calc(100vh);
       line-height: 1.6em;
@@ -552,7 +567,7 @@
   .ak-nav .ak-nav_list a {
     position: relative;
     text-transform: uppercase;
-    color: $white;
+    color: $black;
     &:hover {
       color: $primary;
     }

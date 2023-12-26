@@ -2,24 +2,7 @@
     {
         "title": "Home",
         "link": "/",
-        "key": "home",
-        "childern": [
-            {
-                "title": "Home 1",
-                "link": "/",
-                "key": "home1"
-            },
-            {
-                "title": "Home 2",
-                "link": "/home2",
-                "key": "home2"
-            },
-            {
-                "title": "Home 3",
-                "link": "/home3",
-                "key": "home3"
-            }
-        ]
+        "key": "home"
     },
     {
         "title": "About",
@@ -30,6 +13,11 @@
         "title": "Membership",
         "link": "/membership",
         "key": "membership"
+    },
+    {
+        "title": "Notice Board",
+        "link": "/notice-board",
+        "key": "notice-board"
     },
     {
         "title": "News & Publication",
@@ -71,34 +59,29 @@
         "key": "gallery"
     },
     {
-        "title": "Pages",
+        "title": "Contact Us",
+        "link": "/contact-us",
+        "key": "contactus"
+    },
+    {
+        "title": "pages",
         "link": "#",
         "key": "pages",
         "childern": [
             {
-                "title": "Contact",
-                "link": "/contact",
-                "key": "contact"
+                "title": "program",
+                "link": "/program",
+                "key": "program"
             },
             {
-                "title": "Reservations",
-                "link": "/reservations",
-                "key": "reservations"
+                "title": "Teams Use",
+                "link": "/teams-use",
+                "key": "teams-use"
             },
             {
-                "title": "gallery",
-                "link": "/gallery",
-                "key": "gallery"
-            },
-            {
-                "title": "Error Pages",
-                "link": "/error-pages",
-                "key": "errorpages"
-            },
-            {
-                "title": "Comming Soon",
-                "link": "/comming-soon",
-                "key": "commingsoon"
+                "title": "faq",
+                "link": "/faq",
+                "key": "faq"
             }
         ]
     }

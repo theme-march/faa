@@ -6,7 +6,7 @@ export default function NewsItem() {
   return (
     <div className="col">
       <div className="news-publices">
-        <Link to={"/"}>
+        <Link to={"/news-details"}>
           <img
             src="newpublication/newpublication_1.jpg"
             className="top-img"
@@ -16,12 +16,14 @@ export default function NewsItem() {
         <div className="body-info">
           <p className="short-title">25 March, 2023 11:22 PM</p>
 
-          <Link to={"/"} className="title">
+          <Link to={"/news-details"} className="title">
             Here is the title of the blog item. You can change and add.
           </Link>
         </div>
         <div className="footer-btn">
-          <ButtonReadMoreArrowIcon to="/">Read More</ButtonReadMoreArrowIcon>
+          <ButtonReadMoreArrowIcon to="/news-details">
+            Read More
+          </ButtonReadMoreArrowIcon>
         </div>
       </div>
     </div>

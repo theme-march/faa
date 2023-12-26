@@ -10,6 +10,10 @@
   font-style: normal;
   font-weight: 600;
   line-height: normal;
+  &.type_two {
+    font-size: 36px;
+    text-align: start;
+  }
 }
 
 .ak-row-gap-20 {
@@ -437,19 +441,13 @@ select:focus {
 }
 
 .ak-google-map {
-  height: 700px;
+  height: 400px;
   overflow: hidden;
   iframe {
     height: 100%;
+    width: 100%;
     display: block;
     border: none;
-    width: 100%;
-    filter: grayscale(100%) invert(90%) contrast(120%);
-  }
-  &.ak-type1 {
-    height: 100%;
-    min-height: 300px;
-    width: 50vw;
   }
 }
 
@@ -492,4 +490,36 @@ input[type="checkbox"]:checked {
   background-color: $primary;
   border-color: $primary;
   color: $primary;
+}
+
+.container-max-width-910 {
+  max-width: 910px;
+}
+
+.dataTables_filter {
+  input {
+    margin-left: 10px;
+    border: 1px solid #000;
+  }
+}
+.dataTables_paginate {
+  display: flex;
+  gap: 15px;
+  margin-top: 25px;
+  span {
+    .paginate_button {
+      margin-left: 15px;
+      &.current {
+        color: $primary;
+        font-size: 18px;
+        font-weight: 600;
+      }
+    }
+  }
+  a {
+    cursor: pointer;
+  }
+}
+.cursor-pointer {
+  cursor: pointer;
 }

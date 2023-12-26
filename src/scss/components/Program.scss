@@ -1,0 +1,54 @@
+.program-title {
+  color: #39424a;
+  font-size: 30px;
+  text-align: center;
+}
+.program-heading-title {
+  color: #39424a;
+  font-weight: 700;
+  line-height: 36px;
+  font-size: 26px;
+}
+
+.program-info {
+  .program-title {
+    margin: 0 auto;
+    max-width: 700px;
+    line-height: 42px;
+  }
+}
+
+.program-info-two {
+  text-align: center;
+  background: rgba(234, 234, 234, 0.5);
+}
+
+.team-section-title {
+  color: #000;
+  font-family: Segoe UI;
+  font-size: 35px;
+  font-style: normal;
+  font-weight: 600;
+  margin-bottom: 60px;
+  line-height: normal;
+}
+
+.team-use {
+  .team-titel {
+    color: #39424a;
+    font-family: Segoe UI;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 170%;
+  }
+  .team-desp {
+    color: #39424a;
+    font-family: Segoe UI;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    margin-bottom: 30px;
+    line-height: 170%;
+  }
+}

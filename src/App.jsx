@@ -9,8 +9,15 @@ import Registration from "./pages/Registration";
 import EventRegistration from "./pages/EventRegistration";
 import Events from "./pages/Events";
 import News from "./pages/News";
+import NewsDetails from "./pages/NewsDetails";
 import Publication from "./pages/Publication";
 import Gallery from "./pages/Gallery";
+import NoticeBoard from "./pages/NoticeBoard";
+import ContactUs from "./pages/ContactUs";
+import Program from "./pages/Program";
+import TeamsUse from "./pages/TeamsUse";
+import Faq from "./pages/Faq";
+import JobApplication from "./pages/JobApplication";
 
 function App() {
   return (
@@ -26,8 +33,15 @@ function App() {
           element={<EventRegistration />}
         ></Route>
         <Route path="/news" element={<News />}></Route>
+        <Route path="/news-details" element={<NewsDetails />}></Route>
         <Route path="/publication" element={<Publication />}></Route>
         <Route path="/gallery" element={<Gallery />}></Route>
+        <Route path="/notice-board" element={<NoticeBoard />}></Route>
+        <Route path="/contact-us" element={<ContactUs />}></Route>
+        <Route path="/program" element={<Program />}></Route>
+        <Route path="/teams-use" element={<TeamsUse />}></Route>
+        <Route path="/job-application" element={<JobApplication />}></Route>
+        <Route path="/faq" element={<Faq />}></Route>
         <Route path="/singin" element={<SignIn />}></Route>
       </Route>
     </Routes>

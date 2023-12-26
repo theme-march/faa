@@ -1,0 +1,34 @@
+.contact-us {
+  display: flex;
+  gap: 40px;
+}
+
+.contact-us-info {
+  width: 100%;
+  height: 100%;
+  border-radius: 15px;
+  border: 1px solid $borderTwo;
+  background: $borderTwo;
+  padding: 15px;
+  .contact-us-address {
+    max-width: 300px;
+  }
+  p {
+    margin-top: 30px;
+  }
+}
+@media screen and (min-width: 992px) {
+  .contact-us-info {
+    width: 450px;
+    padding: 50px;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .contact-us {
+    flex-wrap: wrap;
+    .contact-us-text {
+      width: 100% !important;
+    }
+  }
+}
