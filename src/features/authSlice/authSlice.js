@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit/react";
 
 const initialState = {
   user: { email: "", rule: "" },

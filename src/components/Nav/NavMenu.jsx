@@ -1,12 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import MenuItem from "./MenuItem";
 import navitemlist from "../../jsonData/navitemlist.json";
 import { ButtonPrimary } from "../Button/Button";
+import { useGetMenuListQuery } from "../../features/menuList/menuList";
 
 export default function NavMenu() {
+  const { data } = useGetMenuListQuery();
+  console.log(data);
   const [navBar, setNavbar] = useState("");
   const [navlist, setNavList] = useState("");
+
+  useEffect(() => {
+    fetch("http://174.138.171.172:3000/api/v1/menu_list")
+      .then((res) => res.json())
+      .then((data) => console.log(data));
+  }, []);
 
   const navBarShow = () => {
     if (navBar == "") {

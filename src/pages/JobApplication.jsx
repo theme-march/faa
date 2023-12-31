@@ -5,7 +5,7 @@ import SectionTitle from "../components/SectionTitle/SectionTitle";
 export default function JobApplication() {
   return (
     <div className="container">
-      <div className="ak-height-100 ak-height-lg-60"></div>
+      <div className="ak-height-80 ak-height-lg-60"></div>
       <SectionTitle>Job Application</SectionTitle>
       <JobApplicationFrom />
 

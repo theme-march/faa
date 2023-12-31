@@ -18,6 +18,9 @@ import Program from "./pages/Program";
 import TeamsUse from "./pages/TeamsUse";
 import Faq from "./pages/Faq";
 import JobApplication from "./pages/JobApplication";
+import EventSponsorRegistration from "./pages/EventSponsorRegistration";
+import EventParticipateRegistration from "./pages/EventParticipateRegistration";
+import EventDetails from "./pages/EventDetails";
 
 function App() {
   return (
@@ -28,9 +31,18 @@ function App() {
         <Route path="/membership" element={<Membership />}></Route>
         <Route path="/member-registration" element={<Registration />}></Route>
         <Route path="/events" element={<Events />}></Route>
+        <Route path="/events-details" element={<EventDetails />}></Route>
         <Route
           path="/events-registration"
           element={<EventRegistration />}
+        ></Route>
+        <Route
+          path="/event-sponsor-registration"
+          element={<EventSponsorRegistration />}
+        ></Route>
+        <Route
+          path="/event-participate-registration"
+          element={<EventParticipateRegistration />}
         ></Route>
         <Route path="/news" element={<News />}></Route>
         <Route path="/news-details" element={<NewsDetails />}></Route>

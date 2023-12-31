@@ -1,10 +1,12 @@
 import React from "react";
 import GalleryItem from "../components/GalleryGrid/GalleryItem";
 import galleryImg from "../assets/Gallery/gallery_1.jpg";
+import CommonHero from "../components/CommonHero/CommonHero";
 
 export default function Gallery() {
   return (
     <>
+      <CommonHero title={"Our Gallery"} />
       <div className="ak-height-80 ak-height-lg-40"></div>
       <div className="container">
         <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-2">

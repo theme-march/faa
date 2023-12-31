@@ -30,6 +30,11 @@
                 "key": "news"
             },
             {
+                "title": "News Details",
+                "link": "/news-details",
+                "key": "news-details"
+            },
+            {
                 "title": "Publication",
                 "link": "/publication",
                 "key": "publication"
@@ -47,9 +52,24 @@
                 "key": "events"
             },
             {
+                "title": "Events Details",
+                "link": "/events-details",
+                "key": "events-details"
+            },
+            {
                 "title": "Event Registration",
                 "link": "/events-registration",
                 "key": "events-registration"
+            },
+            {
+                "title": "Event Sponsor Registration",
+                "link": "/event-sponsor-registration",
+                "key": "event-sponsor-registration"
+            },
+            {
+                "title": "Event Participate Registration",
+                "link": "/event-participate-registration",
+                "key": "event-participate-registration"
             }
         ]
     },
@@ -82,6 +102,11 @@
                 "title": "faq",
                 "link": "/faq",
                 "key": "faq"
+            },
+            {
+                "title": "job-application",
+                "link": "/job-application",
+                "key": "job-application"
             }
         ]
     }
