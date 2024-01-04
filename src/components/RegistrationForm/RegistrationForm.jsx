@@ -1,5 +1,6 @@
 import React from "react";
 import { useForm, Controller } from "react-hook-form";
+import { toast } from "react-toastify";
 
 export default function RegistrationForm() {
   const {
@@ -9,9 +10,36 @@ export default function RegistrationForm() {
     reset,
     formState: { errors },
   } = useForm();
+
+  const BatchSession = [
+    "DUIBA001",
+    "DUIBA002",
+    "DUIBA003",
+    "DUIBA004",
+    "DUIBA005",
+    "DUIBA006",
+    "DUIBA007",
+    "DUFIN 1990-1994",
+    "DUFIN 1994-1998",
+    "DUFIN 1998-2002",
+    "DUFIN 2002-2006",
+  ];
+
+  const Occupations = [
+    "Service (Govt)",
+    "Service (Private)",
+    "Business",
+    "Consultant",
+  ];
+
   const onSubmit = (data) => {
-    console.log(data);
-    reset();
+    if (data) {
+      toast.success("Success Notification !", {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 500,
+      });
+      reset();
+    }
   };
   return (
     <form
@@ -98,9 +126,11 @@ export default function RegistrationForm() {
               <option value="" disabled hidden>
                 Select an option
               </option>
-              <option value="option1">Option 1</option>
-              <option value="option2">Option 2</option>
-              <option value="option3">Option 3</option>
+              {BatchSession.map((batchNumber, i) => (
+                <option value={batchNumber} key={i}>
+                  {batchNumber}
+                </option>
+              ))}
             </select>
           )}
         />
@@ -112,7 +142,7 @@ export default function RegistrationForm() {
               Select Current Occupation* is required
             </p>
           ) : (
-            "Select Batch number/ Occupation*"
+            "Select Current Occupation*"
           )}
         </label>
         <Controller
@@ -129,9 +159,11 @@ export default function RegistrationForm() {
               <option value="" disabled hidden>
                 Select an option
               </option>
-              <option value="option1">Option 1</option>
-              <option value="option2">Option 2</option>
-              <option value="option3">Option 3</option>
+              {Occupations.map((occupation, i) => (
+                <option value={occupation} key={i}>
+                  {occupation}
+                </option>
+              ))}
             </select>
           )}
         />

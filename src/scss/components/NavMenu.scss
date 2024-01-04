@@ -336,7 +336,6 @@
       > li {
         margin-right: 25px;
         height: inherit;
-        text-transform: uppercase;
         &:last-child {
           margin-right: 0;
         }
@@ -344,6 +343,8 @@
           padding: 10px 0;
           display: inline-flex;
           position: relative;
+          font-size: 16px;
+          text-transform: capitalize;
           height: inherit;
           align-items: center;
           &:hover {

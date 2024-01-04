@@ -6,7 +6,7 @@ import { useGetMenuListQuery } from "../../features/menuList/menuList";
 
 export default function NavMenu() {
   const { data } = useGetMenuListQuery();
-  console.log(data?.result);
+  console.log(data);
   const [navBar, setNavbar] = useState("");
   const [navlist, setNavList] = useState("");
 
@@ -39,8 +39,8 @@ export default function NavMenu() {
           <div className="ak-main_header_right">
             <div className="ak-nav">
               <ul id="ak-nav_list" className={`ak-nav_list ${navlist}`}>
-                {data?.result?.map((item) => {
-                  return <MenuItem props={item} key={item.key} />;
+                {data?.result?.map((item, index) => {
+                  return <MenuItem props={item} key={index} />;
                 })}
               </ul>
               <span
