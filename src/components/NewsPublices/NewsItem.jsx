@@ -2,13 +2,13 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { ButtonReadMoreArrowIcon } from "../Button/Button";
 
-export default function NewsItem() {
+export default function NewsItem({ props }) {
   return (
     <div className="col">
       <div className="news-publices">
         <Link to={"/news-details"}>
           <img
-            src="newpublication/newpublication_1.jpg"
+            src={`http://localhost:3000/publication/${props?.cover_image}`}
             className="top-img"
             alt="..."
           />
@@ -17,7 +17,7 @@ export default function NewsItem() {
           <p className="short-title">25 March, 2023 11:22 PM</p>
 
           <Link to={"/news-details"} className="title">
-            Here is the title of the blog item. You can change and add.
+            {props?.title}
           </Link>
         </div>
         <div className="footer-btn">

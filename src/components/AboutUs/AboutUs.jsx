@@ -2,21 +2,18 @@ import React, { useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { ButtonMore } from "../Button/Button";
 
-export default function AboutUs() {
+export default function AboutUs({ props }) {
   const swiperTestimonialRef = useRef();
+  const { details, title, url } = props;
   return (
     <div className="container">
       <div className="about-section">
         <div className="about-details">
-          <h1>About Us</h1>
+          <h1>{title}</h1>
           <div className="ak-height-25 ak-height-lg-20"></div>
-          <p>
-            <strong>History:</strong> is simply dummy text of the printing and
-            typesetting industry. Lorem Ipsum has been the industry's stan. text
-            of the printing and typesetting
-          </p>
+          <p>{details}</p>
           <div className="ak-height-25 ak-height-lg-20"></div>
-          <ButtonMore to={"/"}>VIEW MORE</ButtonMore>
+          <ButtonMore to={url}>VIEW MORE</ButtonMore>
         </div>
         <div>
           <div className="ak-slider ak-slider-about">

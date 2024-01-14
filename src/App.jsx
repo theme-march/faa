@@ -5,7 +5,7 @@ import Home from "./pages/Home";
 import About from "./pages/About";
 import Membership from "./pages/Membership";
 import SignIn from "./pages/SignIn";
-import Registration from "./pages/Registration";
+import MembershipRegistration from "./pages/Registration";
 import EventRegistration from "./pages/EventRegistration";
 import Events from "./pages/Events";
 import News from "./pages/News";
@@ -29,7 +29,10 @@ function App() {
         <Route index element={<Home />}></Route>
         <Route path="/about" element={<About />}></Route>
         <Route path="/membership" element={<Membership />}></Route>
-        <Route path="/member-registration" element={<Registration />}></Route>
+        <Route
+          path="/member-registration"
+          element={<MembershipRegistration />}
+        ></Route>
         <Route path="/events" element={<Events />}></Route>
         <Route path="/events-details" element={<EventDetails />}></Route>
         <Route

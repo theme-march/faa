@@ -2,7 +2,7 @@ import React from "react";
 import { ButtonReadMoreArrowIcon } from "../components/Button/Button";
 import RegistrationForm from "../components/RegistrationForm/RegistrationForm";
 
-export default function Registration() {
+export default function MembershipRegistration() {
   return (
     <>
       <div className="ak-height-100 ak-height-lg-60"></div>

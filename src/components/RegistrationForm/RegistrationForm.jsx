@@ -95,6 +95,7 @@ export default function RegistrationForm() {
         </label>
         <input
           type="email"
+          autoComplete="current-email"
           className="text-input-filed type_2"
           id="inputEmail"
           {...register("mail", { required: true })}
@@ -230,6 +231,7 @@ export default function RegistrationForm() {
               </label>
               <input
                 id="Password"
+                autoComplete="current-password"
                 type="password"
                 {...field}
                 className="text-input-filed type_2"

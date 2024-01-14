@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 
-export default function MovingImg() {
+export default function MovingImg({ props }) {
   const swiperTestimonialRef = useRef(null);
   return (
     <div className="container">
@@ -18,76 +18,24 @@ export default function MovingImg() {
               swiperTestimonialRef.current = swiper;
             }}
           >
-            <SwiperSlide>
-              <img
-                src="eventssponsors/eventssponsors_1.png"
-                className="ak-bg slider-img"
-                alt="Partner"
-              />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img
-                src="eventssponsors/eventssponsors_2.png"
-                className="ak-bg slider-img"
-                alt="Partner"
-              />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img
-                src="eventssponsors/eventssponsors_3.png"
-                className="ak-bg slider-img"
-                alt="Partner"
-              />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img
-                src="eventssponsors/eventssponsors_4.png"
-                className="ak-bg slider-img"
-                alt="Partner"
-              />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img
-                src="eventssponsors/eventssponsors_5.png"
-                className="ak-bg slider-img"
-                alt="Partner"
-              />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img
-                src="eventssponsors/eventssponsors_1.png"
-                className="ak-bg slider-img"
-                alt="Partner"
-              />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img
-                src="eventssponsors/eventssponsors_2.png"
-                className="ak-bg slider-img"
-                alt="Partner"
-              />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img
-                src="eventssponsors/eventssponsors_3.png"
-                className="ak-bg slider-img"
-                alt="Partner"
-              />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img
-                src="eventssponsors/eventssponsors_4.png"
-                className="ak-bg slider-img"
-                alt="Partner"
-              />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img
-                src="eventssponsors/eventssponsors_5.png"
-                className="ak-bg slider-img"
-                alt="Partner"
-              />
-            </SwiperSlide>
+            {props?.map((item) => (
+              <SwiperSlide key={item.id}>
+                <img
+                  src={`http://localhost:3000/event_sponsors/${item?.image}`}
+                  className="ak-bg slider-img"
+                  alt="Partner"
+                />
+              </SwiperSlide>
+            ))}
+            {props?.map((item) => (
+              <SwiperSlide key={item.id}>
+                <img
+                  src={`http://localhost:3000/event_sponsors/${item?.image}`}
+                  className="ak-bg slider-img"
+                  alt="Partner"
+                />
+              </SwiperSlide>
+            ))}
           </Swiper>
         </div>
       </div>

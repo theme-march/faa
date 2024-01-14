@@ -3,30 +3,29 @@ import { ButtonPrimary } from "../Button/Button";
 import { Link } from "react-router-dom";
 import { IoIosArrowForward } from "react-icons/io";
 
-export default function DonationCareerItem() {
+export default function DonationCareerItem({ props }) {
   return (
     <div className="col">
       <div className="card h-100 shadow-sm border-1">
         <div className="card-body p-0">
           <div className="d-flex justify-content-between align-items-center">
-            <h6 className="ms-2">Career Connection</h6>
-            <ButtonPrimary>Donate</ButtonPrimary>
+            <h6 className="ms-2">{props?.title}</h6>
+            <ButtonPrimary to={"/donation"}>Donate</ButtonPrimary>
           </div>
           <div className="ak-border-width"></div>
           <div className="ak-height-30 ak-height-lg-20"></div>
           <div className="p-3">
-            <img src="donner_1.png" alt="..." />
+            <img
+              src={`http://localhost:3000/donation_career/${props?.image}`}
+              alt="..."
+            />
             <div className="ak-height-20 ak-height-lg-10"></div>
-            <Link to={"/"} className="card-title fw-semibold">
-              Career Connection
+            <Link to={"/donation"} className="card-title fw-semibold">
+              {props?.title}
             </Link>
-            <p className="card-text">
-              There are many variations of passages of Lorem Ipsum available,
-              but the majority have suffered alteration in some form, by
-              injected humour, or randomised words
-            </p>
+            <p className="card-text">{props?.details}</p>
             <div className="ak-height-20 ak-height-lg-10"></div>
-            <Link to="/" className="arrow-icon-anim">
+            <Link to="/donation" className="arrow-icon-anim">
               Read More <IoIosArrowForward />
             </Link>
           </div>
