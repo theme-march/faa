@@ -2,16 +2,17 @@ import { apiSlice } from "../api/apiSlice";
 
 const memberApi = apiSlice.injectEndpoints({
   endpoints: (bulider) => ({
-    addMember: bulider.mutation({
+    memberRegister: bulider.mutation({
       query: (data) => ({
-        url: "/member",
+        url: "/member_register",
+        headers: { "Content-Type": "application/json" },
         method: "POST",
         body: data,
       }),
       //   invalidatesTags: ["member"],
     }),
 
-    getMember: bulider.query({
+    memberGet: bulider.query({
       query: ({ name }) => ({
         url: `/member/?q=${name}`,
         method: "GET",
@@ -19,7 +20,7 @@ const memberApi = apiSlice.injectEndpoints({
       //   providesTags: ["members"],
     }),
 
-    getMemberId: bulider.query({
+    memberGetId: bulider.query({
       query: (id) => ({
         url: `/members/${id}`,
         method: "GET",
@@ -29,5 +30,8 @@ const memberApi = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useAddMemberMutation, useGetMemberQuery, useGetMemberIdQuery } =
-  memberApi;
+export const {
+  useMemberRegisterMutation,
+  useMemberGetQuery,
+  useMemberGetIdQuery,
+} = memberApi;

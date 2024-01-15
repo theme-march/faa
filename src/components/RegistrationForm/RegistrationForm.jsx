@@ -1,5 +1,7 @@
 import React from "react";
 import { useForm, Controller } from "react-hook-form";
+import { toast } from "react-toastify";
+import { useMemberRegisterMutation } from "../../features/member/memberApiIn";
 
 export default function RegistrationForm() {
   const {
@@ -9,15 +11,48 @@ export default function RegistrationForm() {
     reset,
     formState: { errors },
   } = useForm();
+
+  const BatchSession = [
+    "DUIBA001",
+    "DUIBA002",
+    "DUIBA003",
+    "DUIBA004",
+    "DUIBA005",
+    "DUIBA006",
+    "DUIBA007",
+    "DUFIN 1990-1994",
+    "DUFIN 1994-1998",
+    "DUFIN 1998-2002",
+    "DUFIN 2002-2006",
+  ];
+
+  const Occupations = [
+    "Service (Govt)",
+    "Service (Private)",
+    "Business",
+    "Consultant",
+  ];
+  const [memberRegister, { data, isLoading, isError, isSuccess }] =
+    useMemberRegisterMutation();
+
+  console.log(isSuccess);
   const onSubmit = (data) => {
     console.log(data);
-    reset();
+    memberRegister(data);
+    if (isSuccess) {
+      toast.success("Success Notification !", {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 500,
+      });
+      reset();
+    }
   };
   return (
     <form
       className="row g-3"
       onSubmit={handleSubmit(onSubmit)}
       autoComplete="on"
+      method="POST"
     >
       <div className="col-md-6">
         <label htmlFor="inputName" className="form-label">
@@ -51,7 +86,7 @@ export default function RegistrationForm() {
           className="text-input-filed type_2"
           id="inputNumber"
           type="number"
-          {...register("number", { required: true })}
+          {...register("phone_number", { required: true })}
         />
       </div>
 
@@ -67,9 +102,10 @@ export default function RegistrationForm() {
         </label>
         <input
           type="email"
+          autoComplete="current-email"
           className="text-input-filed type_2"
           id="inputEmail"
-          {...register("mail", { required: true })}
+          {...register("email", { required: true })}
           aria-invalid={errors.mail ? "true" : "false"}
         />
       </div>
@@ -85,7 +121,7 @@ export default function RegistrationForm() {
           )}
         </label>
         <Controller
-          name="batchNumber"
+          name="session"
           control={control}
           defaultValue=""
           rules={{ required: "Please select an option" }}
@@ -98,9 +134,11 @@ export default function RegistrationForm() {
               <option value="" disabled hidden>
                 Select an option
               </option>
-              <option value="option1">Option 1</option>
-              <option value="option2">Option 2</option>
-              <option value="option3">Option 3</option>
+              {BatchSession.map((batchNumber, i) => (
+                <option value={batchNumber} key={i}>
+                  {batchNumber}
+                </option>
+              ))}
             </select>
           )}
         />
@@ -112,7 +150,7 @@ export default function RegistrationForm() {
               Select Current Occupation* is required
             </p>
           ) : (
-            "Select Batch number/ Occupation*"
+            "Select Current Occupation*"
           )}
         </label>
         <Controller
@@ -129,9 +167,11 @@ export default function RegistrationForm() {
               <option value="" disabled hidden>
                 Select an option
               </option>
-              <option value="option1">Option 1</option>
-              <option value="option2">Option 2</option>
-              <option value="option3">Option 3</option>
+              {Occupations.map((occupation, i) => (
+                <option value={occupation} key={i}>
+                  {occupation}
+                </option>
+              ))}
             </select>
           )}
         />
@@ -151,7 +191,7 @@ export default function RegistrationForm() {
           type="text"
           className="text-input-filed type_2"
           id="Organization"
-          {...register("organization", { required: true })}
+          {...register("organization_name", { required: true })}
         />
       </div>
 
@@ -169,7 +209,7 @@ export default function RegistrationForm() {
           type="text"
           className="text-input-filed type_2"
           id="Designation"
-          {...register("designation", { required: true })}
+          {...register("designation_name", { required: true })}
         />
       </div>
       <div className="col-12">
@@ -198,6 +238,7 @@ export default function RegistrationForm() {
               </label>
               <input
                 id="Password"
+                autoComplete="current-password"
                 type="password"
                 {...field}
                 className="text-input-filed type_2"

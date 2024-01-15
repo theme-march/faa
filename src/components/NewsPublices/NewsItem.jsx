@@ -1,27 +1,30 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { ButtonReadMoreArrowIcon } from "../Button/Button";
+import DateFormat from "../DateFormat/DateFormat";
 
-export default function NewsItem() {
+export default function NewsItem({ props }) {
+  console.log(props);
   return (
     <div className="col">
       <div className="news-publices">
-        <Link to={"/news-details"}>
+        <Link to={`/news-details/${props?.id}`}>
           <img
-            src="newpublication/newpublication_1.jpg"
+            src={`http://localhost:3000/publication/${props?.cover_image}`}
             className="top-img"
             alt="..."
           />
         </Link>
         <div className="body-info">
-          <p className="short-title">25 March, 2023 11:22 PM</p>
-
-          <Link to={"/news-details"} className="title">
-            Here is the title of the blog item. You can change and add.
+          <p className="short-title">
+            <DateFormat props={props?.created_at} />
+          </p>
+          <Link to={`/news-details/${props?.id}`} className="title">
+            {props?.title}
           </Link>
         </div>
         <div className="footer-btn">
-          <ButtonReadMoreArrowIcon to="/news-details">
+          <ButtonReadMoreArrowIcon to={`/news-details/${props?.id}`}>
             Read More
           </ButtonReadMoreArrowIcon>
         </div>
