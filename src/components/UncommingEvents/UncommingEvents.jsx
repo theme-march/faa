@@ -1,7 +1,9 @@
 import React from "react";
 import { ButtonPrimary } from "../Button/Button";
+import DateFormat from "../DateFormat/DateFormat";
 
 export default function UncommingEvents({ props }) {
+  console.log(props);
   const { event_title, event_date, event_details, cover_image } = props[0];
   return (
     <div className="container">
@@ -14,12 +16,18 @@ export default function UncommingEvents({ props }) {
               Event Name: <span>{event_title}</span>
             </p>
             <p className="event-text">
-              Date & Time: <span> {event_date}</span>
+              Date & Time:{" "}
+              <span>
+                <DateFormat props={event_date} />
+              </span>
             </p>
-            <p className="event-text">
-              Short Details:
-              <span>{event_details}</span>
-            </p>
+            <div className="event-text d-flex">
+              <p className="flex-shrink-0">Short Details: </p>
+              <span
+                className="flex-shrink-1"
+                dangerouslySetInnerHTML={{ __html: event_details }}
+              />
+            </div>
           </div>
 
           <div>

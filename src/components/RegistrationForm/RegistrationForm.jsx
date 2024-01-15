@@ -1,6 +1,7 @@
 import React from "react";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
+import { useMemberRegisterMutation } from "../../features/member/memberApiIn";
 
 export default function RegistrationForm() {
   const {
@@ -31,9 +32,14 @@ export default function RegistrationForm() {
     "Business",
     "Consultant",
   ];
+  const [memberRegister, { data, isLoading, isError, isSuccess }] =
+    useMemberRegisterMutation();
 
+  console.log(isSuccess);
   const onSubmit = (data) => {
-    if (data) {
+    console.log(data);
+    memberRegister(data);
+    if (isSuccess) {
       toast.success("Success Notification !", {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 500,
@@ -46,6 +52,7 @@ export default function RegistrationForm() {
       className="row g-3"
       onSubmit={handleSubmit(onSubmit)}
       autoComplete="on"
+      method="POST"
     >
       <div className="col-md-6">
         <label htmlFor="inputName" className="form-label">
@@ -79,7 +86,7 @@ export default function RegistrationForm() {
           className="text-input-filed type_2"
           id="inputNumber"
           type="number"
-          {...register("number", { required: true })}
+          {...register("phone_number", { required: true })}
         />
       </div>
 
@@ -98,7 +105,7 @@ export default function RegistrationForm() {
           autoComplete="current-email"
           className="text-input-filed type_2"
           id="inputEmail"
-          {...register("mail", { required: true })}
+          {...register("email", { required: true })}
           aria-invalid={errors.mail ? "true" : "false"}
         />
       </div>
@@ -114,7 +121,7 @@ export default function RegistrationForm() {
           )}
         </label>
         <Controller
-          name="batchNumber"
+          name="session"
           control={control}
           defaultValue=""
           rules={{ required: "Please select an option" }}
@@ -184,7 +191,7 @@ export default function RegistrationForm() {
           type="text"
           className="text-input-filed type_2"
           id="Organization"
-          {...register("organization", { required: true })}
+          {...register("organization_name", { required: true })}
         />
       </div>
 
@@ -202,7 +209,7 @@ export default function RegistrationForm() {
           type="text"
           className="text-input-filed type_2"
           id="Designation"
-          {...register("designation", { required: true })}
+          {...register("designation_name", { required: true })}
         />
       </div>
       <div className="col-12">

@@ -4,14 +4,15 @@ import { ButtonMore } from "../Button/Button";
 
 export default function AboutUs({ props }) {
   const swiperTestimonialRef = useRef();
-  const { details, title, url } = props;
+  const { details, title, url } = props.details;
+
   return (
     <div className="container">
       <div className="about-section">
         <div className="about-details">
           <h1>{title}</h1>
           <div className="ak-height-25 ak-height-lg-20"></div>
-          <p>{details}</p>
+          <p dangerouslySetInnerHTML={{ __html: details }} />
           <div className="ak-height-25 ak-height-lg-20"></div>
           <ButtonMore to={url}>VIEW MORE</ButtonMore>
         </div>
@@ -24,27 +25,15 @@ export default function AboutUs({ props }) {
                 swiperTestimonialRef.current = swiper;
               }}
             >
-              <SwiperSlide>
-                <img className="slider-img" src="about_1.jpg" alt="..." />
-              </SwiperSlide>
-              <SwiperSlide>
-                <img className="slider-img" src="about_1.jpg" alt="..." />
-              </SwiperSlide>
-              <SwiperSlide>
-                <img className="slider-img" src="about_1.jpg" alt="..." />
-              </SwiperSlide>
-              <SwiperSlide>
-                <img className="slider-img" src="about_1.jpg" alt="..." />
-              </SwiperSlide>
-              <SwiperSlide>
-                <img className="slider-img" src="about_1.jpg" alt="..." />
-              </SwiperSlide>
-              <SwiperSlide>
-                <img className="slider-img" src="about_1.jpg" alt="..." />
-              </SwiperSlide>
-              <SwiperSlide>
-                <img className="slider-img" src="about_1.jpg" alt="..." />
-              </SwiperSlide>
+              {props?.media_data.map((image) => (
+                <SwiperSlide key={image.id}>
+                  <img
+                    className="slider-img"
+                    src={`http://localhost:3000/home_page_image/${image?.image}`}
+                    alt="..."
+                  />
+                </SwiperSlide>
+              ))}
             </Swiper>
             <div className="ak-swiper-controll-about">
               <div
