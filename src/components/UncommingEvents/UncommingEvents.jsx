@@ -3,7 +3,6 @@ import { ButtonPrimary } from "../Button/Button";
 import DateFormat from "../DateFormat/DateFormat";
 
 export default function UncommingEvents({ props }) {
-  console.log(props);
   const { event_title, event_date, event_details, cover_image } = props[0];
   return (
     <div className="container">
