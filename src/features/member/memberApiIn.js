@@ -11,6 +11,15 @@ const memberApi = apiSlice.injectEndpoints({
       }),
       //   invalidatesTags: ["member"],
     }),
+    memberSingIn: bulider.mutation({
+      query: (data) => ({
+        url: "/member_login",
+        headers: { "Content-Type": "application/json" },
+        method: "POST",
+        body: data,
+      }),
+      //   invalidatesTags: ["member"],
+    }),
 
     memberGet: bulider.query({
       query: ({ name }) => ({
@@ -30,8 +39,4 @@ const memberApi = apiSlice.injectEndpoints({
   }),
 });
 
-export const {
-  useMemberRegisterMutation,
-  useMemberGetQuery,
-  useMemberGetIdQuery,
-} = memberApi;
+export const { useMemberRegisterMutation, useMemberSingInMutation } = memberApi;

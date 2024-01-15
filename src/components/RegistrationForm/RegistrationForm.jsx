@@ -32,19 +32,29 @@ export default function RegistrationForm() {
     "Business",
     "Consultant",
   ];
-  const [memberRegister, { data, isLoading, isError, isSuccess }] =
-    useMemberRegisterMutation();
+  const [memberRegister] = useMemberRegisterMutation();
 
-  console.log(isSuccess);
-  const onSubmit = (data) => {
-    console.log(data);
-    memberRegister(data);
-    if (isSuccess) {
-      toast.success("Success Notification !", {
+  const onSubmit = async (data) => {
+    const resp = await memberRegister(data);
+    console.log("Form submitted successfully:", resp);
+    try {
+      if (resp.data.success === true) {
+        toast.success("SingIn SuccessFully!", {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 1000,
+        });
+        reset();
+      } else {
+        toast.info("User Allready Register!", {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 1000,
+        });
+      }
+    } catch (error) {
+      toast.error("SingIn DataNot Submit!", {
         position: toast.POSITION.TOP_RIGHT,
-        autoClose: 500,
+        autoClose: 1000,
       });
-      reset();
     }
   };
   return (
@@ -74,7 +84,7 @@ export default function RegistrationForm() {
 
       <div className="col-md-6">
         <label htmlFor="inputNumber" className="form-label">
-          {errors.number && errors.number?.type === "required" ? (
+          {errors.phone_number && errors.phone_number?.type === "required" ? (
             <p role="alert " className="text-danger">
               Phone Number is required
             </p>
@@ -92,7 +102,7 @@ export default function RegistrationForm() {
 
       <div className="col-12">
         <label htmlFor="inputEmail" className="form-label">
-          {errors.mail?.type === "required" ? (
+          {errors.email?.type === "required" ? (
             <p role="alert " className="text-danger">
               Email Address is required
             </p>
@@ -112,7 +122,7 @@ export default function RegistrationForm() {
 
       <div className="col-md-6">
         <label htmlFor="batchNumberId" className="form-label">
-          {errors.batchNumber?.message ? (
+          {errors.session?.message ? (
             <p role="alert " className="text-danger">
               Select Batch number/ Session* is required
             </p>
@@ -154,9 +164,9 @@ export default function RegistrationForm() {
           )}
         </label>
         <Controller
-          name="occupation" // The name of your form field
+          name="occupation"
           control={control}
-          defaultValue="" // Set the default value for the select field
+          defaultValue=""
           rules={{ required: "Please select an option" }}
           render={({ field }) => (
             <select
@@ -179,7 +189,7 @@ export default function RegistrationForm() {
 
       <div className="col-md-6">
         <label forhtml="Organization" className="form-label">
-          {errors.organization?.type === "required" ? (
+          {errors.organization_name?.type === "required" ? (
             <p role="alert " className="text-danger">
               Organization name* is required
             </p>
@@ -197,7 +207,7 @@ export default function RegistrationForm() {
 
       <div className="col-md-6">
         <label htmlFor="Designation" className="form-label">
-          {errors.designation?.type === "required" ? (
+          {errors.designation_name?.type === "required" ? (
             <p role="alert " className="text-danger">
               Designation name* is required
             </p>
@@ -223,7 +233,6 @@ export default function RegistrationForm() {
               value: 8,
               message: "Password must be at least 8 characters",
             },
-            // Add more validation rules as needed
           }}
           render={({ field }) => (
             <div>
