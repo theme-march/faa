@@ -6,10 +6,6 @@ import { useGetMenuListQuery } from "../../features/menuList/menuList";
 
 export default function NavMenu() {
   const { data } = useGetMenuListQuery();
-<<<<<<< HEAD
-  console.log(data);
-=======
->>>>>>> 27cfdff1a910c8c4ea0213f7b4b2ac68162e4775
   const [navBar, setNavbar] = useState("");
   const [navlist, setNavList] = useState("");
 

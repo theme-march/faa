@@ -4,7 +4,6 @@ import { ButtonReadMoreArrowIcon } from "../Button/Button";
 import DateFormat from "../DateFormat/DateFormat";
 
 export default function NewsItem({ props }) {
-  console.log(props);
   return (
     <div className="col">
       <div className="news-publices">
