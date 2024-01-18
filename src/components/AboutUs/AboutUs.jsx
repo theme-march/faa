@@ -4,7 +4,7 @@ import { ButtonMore } from "../Button/Button";
 
 export default function AboutUs({ props }) {
   const swiperTestimonialRef = useRef();
-  const { details, title, url } = props.details;
+  const { details, title, url } = props?.details;
 
   return (
     <div className="container">

@@ -2,7 +2,7 @@ import React from "react";
 import { ButtonMore } from "../Button/Button";
 
 export default function MilestoneProgram({ props }) {
-  const { details, title, url } = props.details;
+  const { details, title, url } = props?.details;
   return (
     <div className="container">
       <div className="row align-items-center justify-content-between gap-5">

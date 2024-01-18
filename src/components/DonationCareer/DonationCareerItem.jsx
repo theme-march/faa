@@ -10,7 +10,11 @@ export default function DonationCareerItem({ props }) {
         <div className="card-body p-0">
           <div className="d-flex justify-content-between align-items-center">
             <h6 className="ms-2">{props?.title}</h6>
-            <ButtonPrimary to={`/donation/${props?.id}`}>Donate</ButtonPrimary>
+            <ButtonPrimary
+              to={props?.title.includes("Dona") ? "/donation" : "/career"}
+            >
+              {props?.title.includes("Dona") ? "Donate" : "JOB"}
+            </ButtonPrimary>
           </div>
           <div className="ak-border-width"></div>
           <div className="ak-height-30 ak-height-lg-20"></div>
@@ -21,7 +25,7 @@ export default function DonationCareerItem({ props }) {
             />
             <div className="ak-height-20 ak-height-lg-10"></div>
             <Link
-              to={`/donation/${props?.id}`}
+              to={props?.title.includes("Dona") ? "/donation" : "/career"}
               className="card-title fw-semibold"
             >
               {props?.title}
@@ -31,7 +35,10 @@ export default function DonationCareerItem({ props }) {
               dangerouslySetInnerHTML={{ __html: props?.details }}
             />
             <div className="ak-height-20 ak-height-lg-10"></div>
-            <Link to={`/donation/${props?.id}`} className="arrow-icon-anim">
+            <Link
+              to={props?.title.includes("Dona") ? "/donation" : "/career"}
+              className="arrow-icon-anim"
+            >
               Read More <IoIosArrowForward />
             </Link>
           </div>
