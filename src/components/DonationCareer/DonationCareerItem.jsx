@@ -16,7 +16,7 @@ export default function DonationCareerItem({ props }) {
           <div className="ak-height-30 ak-height-lg-20"></div>
           <div className="p-3">
             <img
-              src={`http://localhost:3000/donation_career/${props?.image}`}
+              src={`http://174.138.171.172:3000/donation_career/${props?.image}`}
               alt="..."
             />
             <div className="ak-height-20 ak-height-lg-10"></div>

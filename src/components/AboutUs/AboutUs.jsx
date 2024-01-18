@@ -29,7 +29,7 @@ export default function AboutUs({ props }) {
                 <SwiperSlide key={image.id}>
                   <img
                     className="slider-img"
-                    src={`http://localhost:3000/home_page_image/${image?.image}`}
+                    src={`http://174.138.171.172:3000/home_page_image/${image?.image}`}
                     alt="..."
                   />
                 </SwiperSlide>

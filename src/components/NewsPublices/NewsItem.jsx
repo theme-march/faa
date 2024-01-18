@@ -9,7 +9,7 @@ export default function NewsItem({ props }) {
       <div className="news-publices">
         <Link to={`/news-details/${props?.id}`}>
           <img
-            src={`http://localhost:3000/publication/${props?.cover_image}`}
+            src={`http://174.138.171.172:3000/publication/${props?.cover_image}`}
             className="top-img"
             alt="..."
           />

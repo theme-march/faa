@@ -38,7 +38,7 @@ export default function UncommingEvents({ props }) {
         </div>
         <div className="upcomming-even-img-section">
           <img
-            src={`http://localhost:3000/cover_image_event/${cover_image}`}
+            src={`http://174.138.171.172:3000/cover_image_event/${cover_image}`}
             className="ak-bg w-100 h-100"
             alt="upcommingevent"
           />

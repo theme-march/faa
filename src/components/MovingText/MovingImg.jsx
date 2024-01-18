@@ -21,7 +21,7 @@ export default function MovingImg({ props }) {
             {props?.map((item) => (
               <SwiperSlide key={item.id}>
                 <img
-                  src={`http://localhost:3000/event_sponsors/${item?.image}`}
+                  src={`http://174.138.171.172:3000/event_sponsors/${item?.image}`}
                   className="ak-bg slider-img"
                   alt="Partner"
                 />
@@ -30,7 +30,7 @@ export default function MovingImg({ props }) {
             {props?.map((item) => (
               <SwiperSlide key={item.id}>
                 <img
-                  src={`http://localhost:3000/event_sponsors/${item?.image}`}
+                  src={`http://174.138.171.172:3000/event_sponsors/${item?.image}`}
                   className="ak-bg slider-img"
                   alt="Partner"
                 />

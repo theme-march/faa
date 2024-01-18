@@ -16,7 +16,7 @@ export default function MilestoneProgram({ props }) {
         </div>
         <div className="col-lg-6">
           <img
-            src={`http://localhost:3000/home_page_image/${props?.media_data[1].image}`}
+            src={`http://174.138.171.172:3000/home_page_image/${props?.media_data[1].image}`}
             className="w-100"
             alt="..."
           />
