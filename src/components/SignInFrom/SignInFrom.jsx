@@ -56,7 +56,7 @@ export default function SignInFrom() {
 
       <p>Password</p>
       <input
-        type="text"
+        type="password"
         name="password"
         value={formData.password}
         onChange={handleInputChange}

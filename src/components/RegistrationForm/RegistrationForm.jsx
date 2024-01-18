@@ -27,6 +27,7 @@ export default function RegistrationForm() {
   ];
 
   const Occupations = [
+    "None",
     "Service (Govt)",
     "Service (Private)",
     "Business",
@@ -194,14 +195,14 @@ export default function RegistrationForm() {
               Organization name* is required
             </p>
           ) : (
-            "Organization name*"
+            "Organization name"
           )}
         </label>
         <input
           type="text"
           className="text-input-filed type_2"
           id="Organization"
-          {...register("organization_name", { required: true })}
+          {...register("organization_name")}
         />
       </div>
 
@@ -212,14 +213,14 @@ export default function RegistrationForm() {
               Designation name* is required
             </p>
           ) : (
-            "Designation name*"
+            "Designation name"
           )}
         </label>
         <input
           type="text"
           className="text-input-filed type_2"
           id="Designation"
-          {...register("designation_name", { required: true })}
+          {...register("designation_name")}
         />
       </div>
       <div className="col-12">
@@ -264,7 +265,7 @@ export default function RegistrationForm() {
       </div>
       <div className="col-12">
         <button type="submit" className="button-primary">
-          Become a member
+          Apply
         </button>
       </div>
     </form>

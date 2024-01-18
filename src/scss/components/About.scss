@@ -45,6 +45,19 @@
   }
 }
 
+.about-pages-section-one {
+  display: flex;
+  gap: 70px;
+  .profiles {
+    max-width: 400px;
+  }
+  .profiles-desp {
+    max-width: 635px;
+    p {
+      line-height: 160%;
+    }
+  }
+}
 @media screen and (max-width: 991px) {
   .about-section {
     flex-wrap: wrap;

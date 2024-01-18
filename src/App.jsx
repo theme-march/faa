@@ -34,7 +34,7 @@ function App() {
           element={<MembershipRegistration />}
         ></Route>
         <Route path="/events" element={<Events />}></Route>
-        <Route path="/events-details" element={<EventDetails />}></Route>
+        <Route path="/events-details/:id" element={<EventDetails />}></Route>
         <Route
           path="/events-registration"
           element={<EventRegistration />}
@@ -48,11 +48,11 @@ function App() {
           element={<EventParticipateRegistration />}
         ></Route>
         <Route path="/news" element={<News />}></Route>
-        <Route path="/news-details" element={<NewsDetails />}></Route>
+        <Route path="/news-details/:id" element={<NewsDetails />}></Route>
         <Route path="/publication" element={<Publication />}></Route>
         <Route path="/gallery" element={<Gallery />}></Route>
         <Route path="/notice-board" element={<NoticeBoard />}></Route>
-        <Route path="/contact-us" element={<ContactUs />}></Route>
+        <Route path="/contact" element={<ContactUs />}></Route>
         <Route path="/program" element={<Program />}></Route>
         <Route path="/teams-use" element={<TeamsUse />}></Route>
         <Route path="/job-application" element={<JobApplication />}></Route>
