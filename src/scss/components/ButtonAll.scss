@@ -61,3 +61,18 @@
     border: 1px solid $primary;
   }
 }
+
+.gray-round-btn {
+  font-size: 14px;
+  line-height: 20px;
+  padding: 12px 15.8px 10px 16px;
+  border: none;
+  border-radius: 15px;
+  color: $black;
+  font-weight: 500;
+  background: #cbcbce;
+  &:hover {
+    background-color: $primary;
+    color: $white;
+  }
+}

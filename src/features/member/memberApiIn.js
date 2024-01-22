@@ -21,22 +21,35 @@ const memberApi = apiSlice.injectEndpoints({
       //   invalidatesTags: ["member"],
     }),
 
-    memberGet: bulider.query({
-      query: ({ name }) => ({
-        url: `/member/?q=${name}`,
-        method: "GET",
+    memberListApproved: bulider.mutation({
+      query: (data) => ({
+        url: "/member_list_for_approved",
+        method: "POST",
+        body: data,
       }),
-      //   providesTags: ["members"],
     }),
 
-    memberGetId: bulider.query({
+    memberApproved: bulider.mutation({
+      query: (data) => ({
+        url: "/member_approved",
+        method: "POST",
+        body: data,
+      }),
+    }),
+
+    getMemberDetailsId: bulider.query({
       query: (id) => ({
-        url: `/members/${id}`,
+        url: `/user_details/${id}`,
         method: "GET",
       }),
-      //   providesTags: ["membersById"],
     }),
   }),
 });
 
-export const { useMemberRegisterMutation, useMemberSingInMutation } = memberApi;
+export const {
+  useMemberRegisterMutation,
+  useMemberSingInMutation,
+  useMemberListApprovedMutation,
+  useMemberApprovedMutation,
+  useGetMemberDetailsIdQuery,
+} = memberApi;

@@ -20,7 +20,19 @@ export default function SignInFrom() {
     e.preventDefault();
     try {
       const response = await memberSingIn(formData);
+
       if (response.data.success === true) {
+        const seessionUser = {
+          email: response.data.result.email,
+          status: response.data.result.status,
+          id: response.data.result.id,
+          session: response.data.result.session,
+          admin_approval: response.data.result.admin_approval,
+        };
+
+        const jsonData = JSON.stringify(seessionUser);
+        sessionStorage.setItem("user", jsonData);
+
         setFormData({
           email: "",
           password: "",
@@ -36,7 +48,7 @@ export default function SignInFrom() {
         });
       }
     } catch (error) {
-      toast.error("User Data Submit in Database", {
+      toast.error("User Data is not Submit Database", {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 1000,
       });

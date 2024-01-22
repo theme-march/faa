@@ -1,0 +1,52 @@
+.job-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  .left-side {
+    max-width: 570px;
+    display: flex;
+    gap: 20px;
+    .job-img {
+      img {
+        display: block;
+        min-width: 56px;
+        width: 56px;
+        height: 56px;
+        border-radius: 15px;
+        flex-shrink: 0;
+      }
+    }
+    .job-desp {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      p {
+        span {
+          color: $black;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+  .right-side {
+    text-align: right;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .job-card {
+    flex-direction: column;
+    align-items: start;
+    margin-bottom: 30px;
+    .right-side {
+      text-align: left;
+      display: flex;
+      width: 100%;
+      gap: 15px;
+      flex-direction: column-reverse;
+    }
+    .left-side {
+      flex-direction: column;
+    }
+  }
+}

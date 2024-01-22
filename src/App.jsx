@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import Layout from "./layout/Layout";
 import Home from "./pages/Home";
@@ -21,6 +21,8 @@ import JobApplication from "./pages/JobApplication";
 import EventSponsorRegistration from "./pages/EventSponsorRegistration";
 import EventParticipateRegistration from "./pages/EventParticipateRegistration";
 import EventDetails from "./pages/EventDetails";
+import Career from "./pages/Career";
+import MembersApprovedList from "./components/MembersApprovedList/MembersApprovedList";
 
 function App() {
   return (
@@ -32,6 +34,10 @@ function App() {
         <Route
           path="/member-registration"
           element={<MembershipRegistration />}
+        ></Route>
+        <Route
+          path="/members-approved-list"
+          element={<MembersApprovedList />}
         ></Route>
         <Route path="/events" element={<Events />}></Route>
         <Route path="/events-details/:id" element={<EventDetails />}></Route>
@@ -56,6 +62,7 @@ function App() {
         <Route path="/program" element={<Program />}></Route>
         <Route path="/teams-use" element={<TeamsUse />}></Route>
         <Route path="/job-application" element={<JobApplication />}></Route>
+        <Route path="/career" element={<Career />}></Route>
         <Route path="/faq" element={<Faq />}></Route>
         <Route path="/singin" element={<SignIn />}></Route>
       </Route>
