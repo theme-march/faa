@@ -41,16 +41,16 @@ function App() {
         ></Route>
         <Route path="/events" element={<Events />}></Route>
         <Route path="/events-details/:id" element={<EventDetails />}></Route>
-        <Route
+        {/* <Route
           path="/events-registration"
           element={<EventRegistration />}
-        ></Route>
+        ></Route> */}
         <Route
           path="/event-sponsor-registration"
           element={<EventSponsorRegistration />}
         ></Route>
         <Route
-          path="/event-participate-registration"
+          path="/event-participate-registration/:id"
           element={<EventParticipateRegistration />}
         ></Route>
         <Route path="/news" element={<News />}></Route>

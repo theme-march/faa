@@ -2,25 +2,16 @@ import { apiSlice } from "../api/apiSlice";
 
 const eventsApi = apiSlice.injectEndpoints({
   endpoints: (bulider) => ({
-    addevent: bulider.mutation({
-      query: (data) => ({
-        url: "/event",
-        method: "POST",
-        body: data,
-      }),
-      // invalidatesTags: ["events"],
-    }),
-
-    getEvents: bulider.query({
+    getEventList: bulider.query({
       query: () => ({
-        url: "/evetns",
+        url: "/event_list",
       }),
       // providesTags: ["events"],
     }),
 
-    getEventId: bulider.query({
+    getEventDetailsId: bulider.query({
       query: (id) => ({
-        url: `/events/${id}`,
+        url: `/event_details/${id}`,
         method: "GET",
       }),
       // providesTags: ["eventsById"],
@@ -28,5 +19,4 @@ const eventsApi = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useGetEventIdQuery, useGetEventsQuery, useAddeventMutation } =
-  eventsApi;
+export const { useGetEventListQuery, useGetEventDetailsIdQuery } = eventsApi;

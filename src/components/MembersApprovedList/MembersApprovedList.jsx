@@ -61,7 +61,11 @@ export default function MembersApprovedList() {
       member_id: memberId,
     };
     const response = await memberApproved(data);
-    memberListApproved(user);
+    const approvedListFetch = {
+      user_id: user?.id,
+      session: user?.session,
+    };
+    memberListApproved(approvedListFetch);
     if (response?.data?.success != true) {
       toast.info(response?.data?.message, {
         position: toast.POSITION.TOP_RIGHT,

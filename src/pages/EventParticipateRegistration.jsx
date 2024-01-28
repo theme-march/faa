@@ -1,8 +1,13 @@
 import React from "react";
 import { ButtonReadMoreArrowIcon } from "../components/Button/Button";
 import EventParticipateRegistrationForm from "../components/EventRegistrationForm/EventParticipateRegistrationForm";
-
+import useSinginUser from "../hook/useSinginUser";
+import { useParams } from "react-router-dom";
 export default function EventParticipateRegistration() {
+  const { id } = useParams();
+  const user = useSinginUser();
+
+  console.log(user);
   return (
     <>
       <div className="ak-height-80 ak-height-lg-60"></div>

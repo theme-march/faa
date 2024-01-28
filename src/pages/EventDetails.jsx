@@ -1,11 +1,14 @@
 import React from "react";
 import event_details from "../assets/event_details.jpg";
-import GoogleMap from "../components/GoogleMap/GoogleMap";
 import { ButtonPrimary } from "../components/Button/Button";
 import SocialLink from "../components/SocialLink/SocialLink";
 import CommonHero from "../components/CommonHero/CommonHero";
+import { useParams } from "react-router-dom";
+import { useGetEventDetailsIdQuery } from "../features/events/eventsApiInject";
 
 export default function EventDetails() {
+  const { id } = useParams();
+  const { data } = useGetEventDetailsIdQuery();
   return (
     <>
       <CommonHero title={"Event Details"} />
@@ -79,15 +82,11 @@ export default function EventDetails() {
             Cras eleifend orci quis velit finibus, ac ultricies mi sodales.
           </li>
         </ul>
-        <div>
-          <h2 className="mb-4">Location</h2>
-          <GoogleMap />
-        </div>
         <div className="ak-height-50 ak-height-lg-30"></div>
         <SocialLink />
         <div className="ak-height-60 ak-height-lg-30"></div>
         <div>
-          <ButtonPrimary to="/events-registration">
+          <ButtonPrimary to={`/event-participate-registration/${id}`}>
             Register For Event
           </ButtonPrimary>
         </div>

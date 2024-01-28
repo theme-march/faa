@@ -11,8 +11,8 @@ export default function SocialLink() {
     <div className="d-flex gap-2 gap-md-4 align-items-center flex-wrap">
       <p className="fw-bold">Social Share:</p>
       <div className="d-flex gap-5">
-        {socialLinkData.map((item) => (
-          <SocialItem to={item.link} title={item.title} />
+        {socialLinkData.map((item, i) => (
+          <SocialItem key={i} to={item.link} title={item.title} />
         ))}
       </div>
     </div>

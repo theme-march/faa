@@ -22,10 +22,10 @@ export default function EventSponsorRegistrationForm() {
         <label htmlFor="inputName" className="form-label">
           {errors.name?.type === "required" ? (
             <p role="alert " className="text-danger">
-              Name is required
+              Organization Name* is required
             </p>
           ) : (
-            "Name*"
+            "Organization Name*"
           )}
         </label>
         <input

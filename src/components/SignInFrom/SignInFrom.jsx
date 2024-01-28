@@ -67,6 +67,7 @@ export default function SignInFrom() {
         name="email"
         value={formData.email}
         onChange={handleInputChange}
+        autoComplete="email"
         className="text-input-filed"
       />
 
@@ -76,6 +77,7 @@ export default function SignInFrom() {
         name="password"
         value={formData.password}
         onChange={handleInputChange}
+        autoComplete="current-password"
         className="text-input-filed"
       />
 

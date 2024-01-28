@@ -1,5 +1,4 @@
 import React from "react";
-import CommonHero from "../components/CommonHero/CommonHero";
 import EventSponsorRegistrationForm from "../components/EventRegistrationForm/EventSponsorRegistrationForm";
 import { ButtonReadMoreArrowIcon } from "../components/Button/Button";
 
