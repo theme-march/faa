@@ -14,10 +14,10 @@ export default function MembersApprovedList() {
     useMemberListApprovedMutation();
   const [memberApproved] = useMemberApprovedMutation();
 
-  const { data: loginUserData } = useGetMemberDetailsIdQuery(user.id);
-  console.log(loginUserData);
+  const { data: loginUserData } = useGetMemberDetailsIdQuery(user?.id);
+
   useEffect(() => {
-    const loginUser = JSON.parse(sessionStorage.getItem("user"));
+    const loginUser = JSON.parse(localStorage.getItem("user"));
     setUser(loginUser);
     const data = {
       user_id: loginUser?.id,

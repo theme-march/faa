@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { useMemberSingInMutation } from "../../features/member/memberApiIn";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 export default function SignInFrom() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -31,7 +33,7 @@ export default function SignInFrom() {
         };
 
         const jsonData = JSON.stringify(seessionUser);
-        sessionStorage.setItem("user", jsonData);
+        localStorage.setItem("user", jsonData);
 
         setFormData({
           email: "",
@@ -41,6 +43,7 @@ export default function SignInFrom() {
           position: toast.POSITION.TOP_RIGHT,
           autoClose: 1000,
         });
+        navigate("/");
       } else {
         toast.info("User not found!", {
           position: toast.POSITION.TOP_RIGHT,

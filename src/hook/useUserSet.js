@@ -6,7 +6,7 @@ export default function useUserSet() {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   console.log(user);
-  const loginUser = JSON.parse(sessionStorage.getItem("user"));
+  const loginUser = JSON.parse(localStorage.getItem("user"));
 
   dispatch(setUser(loginUser));
 }

@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import MenuItem from "./MenuItem";
 import { ButtonPrimary } from "../Button/Button";
 import { useGetMenuListQuery } from "../../features/menuList/menuList";
 
 export default function NavMenu() {
+  const loginUser = JSON.parse(localStorage.getItem("user"));
+  const navigate = useNavigate();
   const { data } = useGetMenuListQuery();
   const [navBar, setNavbar] = useState("");
   const [navlist, setNavList] = useState("");
@@ -22,6 +24,12 @@ export default function NavMenu() {
       setNavList("");
     }
   };
+  const singOut = (id) => {
+    if (id) {
+      localStorage.removeItem("user");
+      navigate("/singin");
+    }
+  };
 
   return (
     <div className="ak-main_header">
@@ -29,7 +37,12 @@ export default function NavMenu() {
         <div className="ak-main_header_in">
           <div className="ak-main_header_left">
             <div className="d-flex gap-3 align-items-center">
-              <Link to={"/singin"}>Sign in</Link>
+              {loginUser ? (
+                <span onClick={() => singOut(loginUser.id)}>Sign Out</span>
+              ) : (
+                <Link to={"/singin"}>Sign in</Link>
+              )}
+
               <ButtonPrimary to={"/member-registration"}>
                 Became a Member
               </ButtonPrimary>
