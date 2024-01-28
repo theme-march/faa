@@ -38,7 +38,12 @@ export default function NavMenu() {
           <div className="ak-main_header_left">
             <div className="d-flex gap-3 align-items-center">
               {loginUser ? (
-                <span onClick={() => singOut(loginUser.id)}>Sign Out</span>
+                <span
+                  onClick={() => singOut(loginUser.id)}
+                  className="cursor-pointer"
+                >
+                  Sign Out
+                </span>
               ) : (
                 <Link to={"/singin"}>Sign in</Link>
               )}

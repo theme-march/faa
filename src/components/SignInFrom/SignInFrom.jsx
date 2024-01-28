@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useMemberSingInMutation } from "../../features/member/memberApiIn";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
 export default function SignInFrom() {
   const navigate = useNavigate();

@@ -7,7 +7,7 @@ export default function EventItem({ props }) {
   return (
     <div className="col">
       <div className="news-publices">
-        <Link to={`/events-details/${props.id}`}>
+        <Link to={`/events-details/${props?.id}`}>
           <img
             src={`http://174.138.171.172:3000/cover_image_event/${props?.cover_image}`}
             className="top-img type_2"
@@ -18,13 +18,13 @@ export default function EventItem({ props }) {
           <p className="short-title">
             <DateFormat props={props?.event_date} />
           </p>
-          <Link to={`/events-details/${props.id}`} className="title">
+          <Link to={`/events-details/${props?.id}`} className="title">
             {props?.event_title}
           </Link>
           <p className="short-title-two">Banani road 11</p>
         </div>
         <div className="footer-btn">
-          <ButtonReadMoreArrowIcon to={`/events-details/${props.id}`}>
+          <ButtonReadMoreArrowIcon to={`/events-details/${props?.id}`}>
             Read More
           </ButtonReadMoreArrowIcon>
         </div>

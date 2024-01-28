@@ -54,6 +54,7 @@ export default function MembersApprovedList() {
       </tr>
     ));
   }
+
   const handler = async (memberId) => {
     const data = {
       register_member_id: user.id,
@@ -93,7 +94,7 @@ export default function MembersApprovedList() {
       </div>
       <div className="ak-height-80 ak-height-lg-40"></div>
       <div className="row">
-        {loginUserData?.result?.admin_approval == 0 && (
+        {user?.admin_approval == 0 && (
           <table className="table table-hover table-striped">
             <thead>
               <tr>

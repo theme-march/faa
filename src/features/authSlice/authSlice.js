@@ -7,6 +7,7 @@ const initialState = {
   isError: false,
   error: "",
 };
+const loginUser = JSON.parse(localStorage.getItem("user"));
 
 const authSlice = createSlice({
   name: "auth",
@@ -14,7 +15,7 @@ const authSlice = createSlice({
   tagType: ["user"],
   reducers: {
     logOut: (state, action) => {
-      state.user = { id: null, email: "", status: 0, admin_approval: 0 };
+      state.user = { id: null, email: "", status: null, admin_approval: 0 };
     },
     setUser: (state, action) => {
       state.user = {
