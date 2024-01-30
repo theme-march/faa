@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import NewsGrid from "../components/NewsPublices/NewsGrid";
 import UncommingEvents from "../components/UncommingEvents/UncommingEvents";
 import MovingImg from "../components/MovingText/MovingImg";

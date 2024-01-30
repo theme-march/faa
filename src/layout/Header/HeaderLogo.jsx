@@ -5,6 +5,7 @@ import { FaYoutube } from "react-icons/fa";
 import { FaLinkedinIn } from "react-icons/fa";
 import { Logo } from "../../components/Logo/Logo";
 import { SocialIcon } from "../../components/SocialIcon/SocialIcon";
+import headerBg from "../../assets/headerBg.png";
 
 export default function HeaderLogo() {
   return (
@@ -12,7 +13,7 @@ export default function HeaderLogo() {
       <div
         className="header-bg-section ak-bg"
         style={{
-          backgroundImage: `url("headerBg.png")`,
+          backgroundImage: `url("${headerBg}")`,
         }}
       >
         <div className="container">
@@ -26,7 +27,7 @@ export default function HeaderLogo() {
                   <h6>Finance Alumni Association</h6>
                 </div>
               </div>
-              <p>Creating Value Through Fellowship</p>
+              <p className="logo-subtitle">Creating Value Through Fellowship</p>
             </div>
             <div className="d-flex gap-3">
               <SocialIcon>

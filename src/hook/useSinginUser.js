@@ -11,6 +11,6 @@ export default function useSinginUser() {
   } = useGetMemberDetailsIdQuery(loginUser?.id);
 
   if (isSuccess && !isError && !isLoading) {
-    return loginUserData?.result;
+    return { loginUserData, isLoading, isSuccess, isError };
   }
 }

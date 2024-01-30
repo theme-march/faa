@@ -23,6 +23,7 @@ import EventParticipateRegistration from "./pages/EventParticipateRegistration";
 import EventDetails from "./pages/EventDetails";
 import Career from "./pages/Career";
 import MembersApprovedList from "./components/MembersApprovedList/MembersApprovedList";
+import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 
 function App() {
   return (
@@ -37,7 +38,11 @@ function App() {
         ></Route>
         <Route
           path="/members-approved-list"
-          element={<MembersApprovedList />}
+          element={
+            <PrivateRoute>
+              <MembersApprovedList />
+            </PrivateRoute>
+          }
         ></Route>
         <Route path="/events" element={<Events />}></Route>
         <Route path="/events-details/:id" element={<EventDetails />}></Route>
@@ -46,7 +51,7 @@ function App() {
           element={<EventRegistration />}
         ></Route> */}
         <Route
-          path="/event-sponsor-registration"
+          path="/event-sponsor-registration/:id"
           element={<EventSponsorRegistration />}
         ></Route>
         <Route

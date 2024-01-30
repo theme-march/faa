@@ -16,7 +16,21 @@ const eventsApi = apiSlice.injectEndpoints({
       }),
       // providesTags: ["eventsById"],
     }),
+
+    AddEventRegister: bulider.mutation({
+      query: (data) => ({
+        url: "/event_register",
+        headers: { "Content-Type": "application/json" },
+        method: "POST",
+        body: data,
+      }),
+      //   invalidatesTags: ["member"],
+    }),
   }),
 });
 
-export const { useGetEventListQuery, useGetEventDetailsIdQuery } = eventsApi;
+export const {
+  useGetEventListQuery,
+  useGetEventDetailsIdQuery,
+  useAddEventRegisterMutation,
+} = eventsApi;

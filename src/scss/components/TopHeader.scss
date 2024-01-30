@@ -10,6 +10,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  .logo-subtitle {
+    letter-spacing: 2.4px;
+  }
 }
 @media screen and (max-width: 768px) {
   .top-header {

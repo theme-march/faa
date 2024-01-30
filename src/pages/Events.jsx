@@ -10,7 +10,7 @@ export default function Events() {
 
   let content = null;
   if (isLoading) {
-    content = <HomeLoading />;
+    content = [1, 2, 3, 4, 5, 6].map((event, i) => <HomeLoading key={i} />);
   }
 
   if (!isLoading && isError) {
@@ -22,7 +22,7 @@ export default function Events() {
   }
 
   if (!isLoading && !isError && eventList?.success === true) {
-    content = eventList?.result.map((event) => (
+    content = eventList?.result?.map((event) => (
       <EventItem key={event.id} props={event} />
     ));
   }

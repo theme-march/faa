@@ -37,7 +37,6 @@ export default function RegistrationForm() {
 
   const onSubmit = async (data) => {
     const resp = await memberRegister(data);
-    console.log("Form submitted successfully:", resp);
     try {
       if (resp.data.success === true) {
         toast.success("SingIn SuccessFully!", {

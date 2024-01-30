@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useMemberSingInMutation } from "../../features/member/memberApiIn";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function SignInFrom() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -24,38 +24,50 @@ export default function SignInFrom() {
     try {
       const response = await memberSingIn(formData);
 
-      if (response.data.success === true) {
-        const seessionUser = {
-          email: response.data.result.email,
-          status: response.data.result.status,
-          id: response.data.result.id,
-          session: response.data.result.session,
-          admin_approval: response.data.result.admin_approval,
-        };
+      if (response?.data?.success) {
+        const { email, status, id, session, admin_approval } =
+          response?.data?.result;
+        const sessionUser = { email, status, id, session, admin_approval };
 
-        const jsonData = JSON.stringify(seessionUser);
+        const jsonData = JSON.stringify(sessionUser);
         localStorage.setItem("user", jsonData);
+
+        const expirationTimeInMinutes = 60; // Set expiration time to 60 minutes
+        const expirationTimestamp =
+          new Date().getTime() + expirationTimeInMinutes * 60 * 1000;
+
+        const dataToStore = { expirationTimestamp };
+        localStorage.setItem("usertimeout", JSON.stringify(dataToStore));
 
         setFormData({
           email: "",
           password: "",
         });
-        toast.success("SingIn Successfully!", {
+
+        const successToastOptions = {
           position: toast.POSITION.TOP_RIGHT,
           autoClose: 1000,
-        });
-        navigate("/");
+        };
+
+        toast.success("SignIn Successfully!", successToastOptions);
+
+        let fromto = location.state?.from?.pathname || "/";
+        navigate(fromto);
       } else {
-        toast.info("User not found!", {
+        const infoToastOptions = {
           position: toast.POSITION.TOP_RIGHT,
           autoClose: 1000,
-        });
+        };
+
+        toast.info("User not found!", infoToastOptions);
       }
     } catch (error) {
-      toast.error("User Data is not Submit Database", {
+      const errorToastOptions = {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 1000,
-      });
+      };
+
+      toast.error("User Data is not Submit Database", errorToastOptions);
     }
   };
 
