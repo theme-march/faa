@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Layout from "./layout/Layout";
 import Home from "./pages/Home";
@@ -6,7 +6,7 @@ import About from "./pages/About";
 import Membership from "./pages/Membership";
 import SignIn from "./pages/SignIn";
 import MembershipRegistration from "./pages/Registration";
-import EventRegistration from "./pages/EventRegistration";
+// import EventRegistration from "./pages/EventRegistration";
 import Events from "./pages/Events";
 import News from "./pages/News";
 import NewsDetails from "./pages/NewsDetails";
@@ -24,6 +24,7 @@ import EventDetails from "./pages/EventDetails";
 import Career from "./pages/Career";
 import MembersApprovedList from "./components/MembersApprovedList/MembersApprovedList";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
+import Donation from "./pages/Donation";
 
 function App() {
   return (
@@ -63,7 +64,8 @@ function App() {
         <Route path="/publication" element={<Publication />}></Route>
         <Route path="/gallery" element={<Gallery />}></Route>
         <Route path="/notice-board" element={<NoticeBoard />}></Route>
-        <Route path="/contact" element={<ContactUs />}></Route>
+        <Route path="/donation" element={<Donation />}></Route>
+        <Route path="/contact-us" element={<ContactUs />}></Route>
         <Route path="/program" element={<Program />}></Route>
         <Route path="/teams-use" element={<TeamsUse />}></Route>
         <Route path="/job-application" element={<JobApplication />}></Route>

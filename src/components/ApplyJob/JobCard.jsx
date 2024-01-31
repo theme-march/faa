@@ -1,27 +1,31 @@
 import React from "react";
 import job_1 from "../../assets/job_1.jpg";
+import { Link } from "react-router-dom";
 
-export default function JobCard() {
+export default function JobCard({ props }) {
   return (
-    <div className="job-card">
+    <div className="job-card mt-5">
       <div className="left-side">
         <div className="job-img">
           <img src={job_1} alt="job_1" />
         </div>
         <div className="job-desp">
           <p>One Bank Ltd</p>
-          <h5>Head of Treasury</h5>
+          <h5>{props?.title}</h5>
+          <p>{props?.details}</p>
           <p>
-            The Google logo appears in numerous settings to identify the search
-            engine company. Google has used several logos over its history
-          </p>
-          <p>
-            <span>Experience:</span> Years of experience 20
+            <span>Experience:</span> {props?.experience}
           </p>
         </div>
       </div>
       <div className="right-side">
-        <button className="button-primary mb-md-5 mb-2">Apply Now</button>
+        <Link
+          className="button-primary mb-md-5 mb-2"
+          to={"https://ssl.du.ac.bd/public/images/_1703047539.pdf"}
+          target="_blank"
+        >
+          Apply Now
+        </Link>
         <div className="d-flex align-items-center gap-2 justify-content-md-end">
           <div>
             <svg

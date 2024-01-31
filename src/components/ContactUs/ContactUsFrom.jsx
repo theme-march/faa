@@ -1,17 +1,28 @@
 import React from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 
 export default function ContactUsFrom() {
   const {
     register,
     handleSubmit,
-    control,
     reset,
     formState: { errors },
   } = useForm();
+
+  const toastOptions = {
+    position: toast.POSITION.TOP_RIGHT,
+    autoClose: 1000,
+  };
+
   const onSubmit = (data) => {
-    console.log(data);
-    reset();
+    if (data) {
+      toast.success("SignIn Successfully!", toastOptions);
+
+      reset();
+    } else {
+      toast.info("User not found!", toastOptions);
+    }
   };
   return (
     <form

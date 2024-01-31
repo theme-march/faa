@@ -19,6 +19,11 @@ export default function SignInFrom() {
     });
   };
 
+  const toastOptions = {
+    position: toast.POSITION.TOP_RIGHT,
+    autoClose: 1000,
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -44,30 +49,15 @@ export default function SignInFrom() {
           password: "",
         });
 
-        const successToastOptions = {
-          position: toast.POSITION.TOP_RIGHT,
-          autoClose: 1000,
-        };
-
-        toast.success("SignIn Successfully!", successToastOptions);
+        toast.success("SignIn Successfully!", toastOptions);
 
         let fromto = location.state?.from?.pathname || "/";
         navigate(fromto);
       } else {
-        const infoToastOptions = {
-          position: toast.POSITION.TOP_RIGHT,
-          autoClose: 1000,
-        };
-
-        toast.info("User not found!", infoToastOptions);
+        toast.info("User not found!", toastOptions);
       }
     } catch (error) {
-      const errorToastOptions = {
-        position: toast.POSITION.TOP_RIGHT,
-        autoClose: 1000,
-      };
-
-      toast.error("User Data is not Submit Database", errorToastOptions);
+      toast.error("User Data is not Submit Database", toastOptions);
     }
   };
 
@@ -92,7 +82,7 @@ export default function SignInFrom() {
         autoComplete="current-password"
         className="text-input-filed"
       />
-
+      {/* 
       <div>
         <input
           type="checkbox"
@@ -105,8 +95,8 @@ export default function SignInFrom() {
         <label htmlFor="vehicle3" className="ms-2">
           I have a boat
         </label>
-      </div>
-      <button className="button-primary">Sign in</button>
+      </div> */}
+      <button className="button-primary mt-3">Sign in</button>
     </form>
   );
 }

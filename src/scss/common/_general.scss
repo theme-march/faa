@@ -546,6 +546,19 @@ input[type="checkbox"]:checked {
   object-fit: cover;
   display: block;
 }
+.custom-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.custom-checkbox:checked {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  box-shadow: none;
+}
 
 @media (max-width: 768px) {
   .gallery {

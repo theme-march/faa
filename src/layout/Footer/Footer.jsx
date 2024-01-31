@@ -24,11 +24,10 @@ export default function Footer() {
             </p>
           </div>
           <div className="menu-section">
-            <Link to="/contact">Contact us</Link>
+            <Link to="/">Home</Link>
+            <Link to="/contact-us">Contact us</Link>
             <Link to="/faq">Help & FAQ</Link>
-            <Link to="/find">Find an alumnus</Link>
-            <Link to="/member">Become a member</Link>
-            <Link to="/temas">Terms of use</Link>
+            <Link to="/member-registration">Become a member</Link>
           </div>
           <div className="social">
             <h5 className="social-title">Useful Link</h5>
@@ -36,9 +35,9 @@ export default function Footer() {
               Links of Finance Alumni Association in other countries
             </p>
             <div className="social-url">
-              <Link to="/contact">Contact us</Link>
-              <Link to="/faq">Help & FAQ</Link>
-              <Link to="/find">Find an alumnus</Link>
+              <Link to="/gallery">Gallery</Link>
+              <Link to="/about">About Us</Link>
+              <Link to="/singin">Sing In</Link>
             </div>
             <div className="social-link">
               <SocialIconTransparent>
