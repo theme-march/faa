@@ -25,6 +25,7 @@ import Career from "./pages/Career";
 import MembersApprovedList from "./components/MembersApprovedList/MembersApprovedList";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import Donation from "./pages/Donation";
+import { PaymentCencle, PaymentError, PaymentSuccess } from "./pages/Payment";
 
 function App() {
   return (
@@ -71,6 +72,9 @@ function App() {
         <Route path="/job-application" element={<JobApplication />}></Route>
         <Route path="/career" element={<Career />}></Route>
         <Route path="/faq" element={<Faq />}></Route>
+        <Route path="/payment/success" element={<PaymentSuccess />}></Route>
+        <Route path="/payment/error" element={<PaymentError />}></Route>
+        <Route path="/payment/cencle" element={<PaymentCencle />}></Route>
         <Route path="/singin" element={<SignIn />}></Route>
       </Route>
     </Routes>

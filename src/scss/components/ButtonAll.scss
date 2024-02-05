@@ -12,6 +12,7 @@
   line-height: 21px; /* 150% */
   text-transform: uppercase;
   font-weight: 400;
+  min-width: 97px;
   &:hover {
     color: $black;
     background-color: $white;

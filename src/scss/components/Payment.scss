@@ -1,0 +1,11 @@
+.payment {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+  flex-direction: column;
+  gap: 30px;
+  .payment-success {
+    max-width: 50px;
+  }
+}
