@@ -26,7 +26,8 @@ export function PaymentError() {
       <div className="payment">
         <div className="text-center">
           <img src={warning} alt=".." className="payment-success" />
-          <h4 className="text-danger">Payment System Erorr</h4>
+          <h2 className="payment-title">Payment Erorr |</h2>
+          <h4 className="text-danger">This request could not be authorized</h4>
         </div>
         <Link className="gray-round-btn" to={"/"}>
           Go To Home
@@ -41,7 +42,8 @@ export function PaymentCencle() {
       <div className="payment">
         <div className="text-center">
           <img src={close} alt=".." className="payment-success" />
-          <h4 className="text-info">Payment Cencle</h4>
+          <h2 className="payment-title">Payment Failed !</h2>
+          <h4 className="text-danger">Problem In Progressing Payment</h4>
         </div>
         <Link className="gray-round-btn" to={"/"}>
           Go To Home

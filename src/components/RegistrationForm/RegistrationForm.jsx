@@ -1,6 +1,8 @@
 import React from "react";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import { useMemberRegisterMutation } from "../../features/member/memberApiIn";
 
 export default function RegistrationForm() {
@@ -35,26 +37,33 @@ export default function RegistrationForm() {
   ];
   const [memberRegister] = useMemberRegisterMutation();
 
+  const toastOptions = {
+    position: toast.POSITION.TOP_RIGHT,
+    autoClose: 1000,
+  };
+
   const onSubmit = async (data) => {
-    const resp = await memberRegister(data);
+    let hsc_passing_year = data?.hsc_passing_year?.getFullYear().toString();
+    const postData = {
+      ...data,
+      hsc_passing_year,
+    };
+
+    const resp = await memberRegister(postData);
+    console.log(postData);
     try {
       if (resp.data.success === true) {
-        toast.success("SingIn SuccessFully!", {
-          position: toast.POSITION.TOP_RIGHT,
-          autoClose: 1000,
-        });
+        toast.success("SingIn SuccessFully!", toastOptions);
         reset();
       } else {
-        toast.info("User Allready Register!", {
-          position: toast.POSITION.TOP_RIGHT,
-          autoClose: 1000,
-        });
+        if (resp?.data?.error?.name) {
+          toast.info("SequelizeValidationError", toastOptions);
+        } else {
+          toast.info("User Allready Register!", toastOptions);
+        }
       }
     } catch (error) {
-      toast.error("SingIn DataNot Submit!", {
-        position: toast.POSITION.TOP_RIGHT,
-        autoClose: 1000,
-      });
+      toast.error("SingIn DataNot Submit!", toastOptions);
     }
   };
   return (
@@ -100,7 +109,7 @@ export default function RegistrationForm() {
         />
       </div>
 
-      <div className="col-12">
+      <div className="col-md-6">
         <label htmlFor="inputEmail" className="form-label">
           {errors.email?.type === "required" ? (
             <p role="alert " className="text-danger">
@@ -119,7 +128,37 @@ export default function RegistrationForm() {
           aria-invalid={errors.mail ? "true" : "false"}
         />
       </div>
-
+      <div className="col-md-6">
+        <Controller
+          control={control}
+          name="hsc_passing_year"
+          rules={{ required: "Date of Birth is required" }}
+          render={({ field }) => (
+            <>
+              <label htmlFor="HSCPassingYear" className="form-label">
+                {errors?.hsc_passing_year?.message ? (
+                  <p role="alert " className="text-danger">
+                    {errors?.hsc_passing_year?.message}
+                  </p>
+                ) : (
+                  "HSC Passing Year*"
+                )}
+              </label>
+              <div>
+                <DatePicker
+                  {...field}
+                  selected={field.value}
+                  onChange={(date) => field.onChange(date)}
+                  dateFormat="yyyy"
+                  showYearPicker
+                  // required
+                  className="text-input-filed type_2"
+                />
+              </div>
+            </>
+          )}
+        />
+      </div>
       <div className="col-md-6">
         <label htmlFor="batchNumberId" className="form-label">
           {errors.session?.message ? (

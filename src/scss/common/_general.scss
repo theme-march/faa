@@ -559,7 +559,9 @@ input[type="checkbox"]:checked {
   border-color: var(--primary-color);
   box-shadow: none;
 }
-
+.react-datepicker-wrapper {
+  display: block !important;
+}
 @media (max-width: 768px) {
   .gallery {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
