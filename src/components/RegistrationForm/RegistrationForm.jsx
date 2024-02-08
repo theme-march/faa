@@ -34,6 +34,7 @@ export default function RegistrationForm() {
     "Service (Private)",
     "Business",
     "Consultant",
+    "Other",
   ];
   const [memberRegister] = useMemberRegisterMutation();
 
