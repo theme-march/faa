@@ -51,7 +51,7 @@ export default function RegistrationForm() {
     };
 
     const resp = await memberRegister(postData);
-    console.log(postData);
+
     try {
       if (resp.data.success === true) {
         toast.success("SingIn SuccessFully!", toastOptions);
@@ -242,6 +242,23 @@ export default function RegistrationForm() {
           className="text-input-filed type_2"
           id="Organization"
           {...register("organization_name")}
+        />
+      </div>
+      <div className="col-md-6  d-none">
+        <label forhtml="membership_number" className="form-label">
+          {errors.membership_number?.type === "required" ? (
+            <p role="alert " className="text-danger">
+              Membership number * is required
+            </p>
+          ) : (
+            "Membership number"
+          )}
+        </label>
+        <input
+          type="text"
+          className="text-input-filed type_2 d-none"
+          id="membership_number"
+          {...register("membership_number")}
         />
       </div>
 
