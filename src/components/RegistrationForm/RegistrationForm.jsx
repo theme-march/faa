@@ -1,7 +1,7 @@
 import React from "react";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
-// import DatePicker from "react-datepicker";
+import DatePicker from "react-datepicker";
 // import "react-datepicker/dist/react-datepicker.css";
 import { useMemberRegisterMutation } from "../../features/member/memberApiIn";
 
