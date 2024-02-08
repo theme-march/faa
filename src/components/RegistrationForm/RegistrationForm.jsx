@@ -1,8 +1,8 @@
 import React from "react";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+// import DatePicker from "react-datepicker";
+// import "react-datepicker/dist/react-datepicker.css";
 import { useMemberRegisterMutation } from "../../features/member/memberApiIn";
 
 export default function RegistrationForm() {
@@ -129,7 +129,7 @@ export default function RegistrationForm() {
           aria-invalid={errors.mail ? "true" : "false"}
         />
       </div>
-      <div className="col-md-6">
+      {/*  <div className="col-md-6">
         <Controller
           control={control}
           name="hsc_passing_year"
@@ -159,7 +159,7 @@ export default function RegistrationForm() {
             </>
           )}
         />
-      </div>
+      </div> */}
       <div className="col-md-6">
         <label htmlFor="batchNumberId" className="form-label">
           {errors.session?.message ? (
