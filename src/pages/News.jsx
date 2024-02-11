@@ -1,29 +1,34 @@
 import React from "react";
 import NewsItem from "../components/NewsPublices/NewsItem";
 import CommonHero from "../components/CommonHero/CommonHero";
-import { useGetHomeIdQuery } from "../features/home/homeApiIn";
 import HomeLoading from "../components/UI/HomeLoading";
 import ErrorShow from "../components/UI/ErrorShow";
+import { useGetNewsListQuery } from "../features/news/newsApilnject";
 
 export default function News() {
-  const { data: allDataInHome, isLoading, isError } = useGetHomeIdQuery();
+  const {
+    data: newsList,
+    isLoading,
+    isError,
+  } = useGetNewsListQuery({ type: "News" });
 
   let content = null;
   if (isLoading) {
-    content = <HomeLoading />;
+    content = [1, 2, 3, 4, 5, 6].map((event, i) => <HomeLoading key={i} />);
   }
 
   if (!isLoading && isError) {
     content = <ErrorShow message={"There was a error"} />;
   }
 
-  if (!isLoading && !isError && allDataInHome?.success === false) {
+  if (!isLoading && !isError && newsList?.result.length < 0) {
     content = <ErrorShow message={"No data found"} />;
   }
 
-  if (!isLoading && !isError && allDataInHome?.success === true) {
-    const { section_6 } = allDataInHome;
-    content = section_6?.map((item) => <NewsItem key={item.id} props={item} />);
+  if (!isLoading && !isError && newsList?.result.length > 0) {
+    content = newsList?.result?.map((item) => (
+      <NewsItem key={item.id} props={item} />
+    ));
   }
 
   return (

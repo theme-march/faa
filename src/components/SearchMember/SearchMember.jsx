@@ -1,11 +1,14 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { searchMemberName } from "../../features/member/memberSearchSlice";
 
 export default function SearchMember() {
-  const { search } = useSelector((state) => state.memberSearch);
-  const [input, setInput] = useState(search);
+  const [input, setInput] = useState("");
   const dispatch = useDispatch();
+
+  const handleInputChange = (e) => {
+    setInput(e.target.value);
+  };
 
   const headerSearch = (e) => {
     e.preventDefault();
@@ -21,8 +24,8 @@ export default function SearchMember() {
             type="text"
             className="text-input-filed"
             placeholder="Name / Id / Session"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
+            value={input || ""}
+            onChange={handleInputChange}
           />
           <button className="button-primary ms-3">Search Member</button>
         </form>

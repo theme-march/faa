@@ -3,11 +3,14 @@ import CommonHero from "../components/CommonHero/CommonHero";
 import PublicationItem from "../components/Publication/PublicationItem";
 import HomeLoading from "../components/UI/HomeLoading";
 import ErrorShow from "../components/UI/ErrorShow";
-import { useGetEventListQuery } from "../features/events/eventsApiInject";
+import { useGetNewsListQuery } from "../features/news/newsApilnject";
 
 export default function Publication() {
-  const { data: eventList, isLoading, isError } = useGetEventListQuery();
-
+  const {
+    data: publicationsList,
+    isLoading,
+    isError,
+  } = useGetNewsListQuery({ type: "Publication" });
   let content = null;
   if (isLoading) {
     content = [1, 2, 3, 4, 5, 6].map((event, i) => <HomeLoading key={i} />);
@@ -17,13 +20,13 @@ export default function Publication() {
     content = <ErrorShow message={"There was a error"} />;
   }
 
-  if (!isLoading && !isError && eventList?.success === false) {
-    content = <ErrorShow message={"Event not found"} />;
+  if (!isLoading && !isError && publicationsList?.result < 0) {
+    content = <ErrorShow message={"No data found"} />;
   }
 
-  if (!isLoading && !isError && eventList?.success === true) {
-    content = eventList?.result?.map((event) => (
-      <PublicationItem key={event.id} props={event} />
+  if (!isLoading && !isError && publicationsList?.result.length > 0) {
+    content = publicationsList?.result?.map((item) => (
+      <PublicationItem key={item.id} props={item} />
     ));
   }
   return (

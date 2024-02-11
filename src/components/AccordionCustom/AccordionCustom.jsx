@@ -16,7 +16,7 @@ function CustomToggle({ children, eventKey }) {
 
 export default function AccordionCustom() {
   return (
-    <Accordion defaultActiveKey="0" flush>
+    <Accordion defaultActiveKey="0" flush className="w-100">
       <Card className="my-4">
         <Card.Header className="fw-bold">
           <CustomToggle eventKey="0">

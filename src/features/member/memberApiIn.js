@@ -43,6 +43,19 @@ const memberApi = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
+
+    getMembersList: bulider.query({
+      query: () => ({
+        url: `/member_list`,
+        method: "GET",
+      }),
+    }),
+    /* getMembersList: bulider.query({
+      query: ({ name }) => ({
+        url: `member_list?name=${name}`,
+        method: "GET",
+      }),
+    }), */
   }),
 });
 
@@ -52,4 +65,5 @@ export const {
   useMemberListApprovedMutation,
   useMemberApprovedMutation,
   useGetMemberDetailsIdQuery,
+  useGetMembersListQuery,
 } = memberApi;

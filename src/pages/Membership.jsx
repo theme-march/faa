@@ -1,11 +1,52 @@
-import React from "react";
+import React, { useEffect } from "react";
 import MemberCard from "../components/MemberCard/MemberCard";
 import SearchMember from "../components/SearchMember/SearchMember";
 import { useSelector } from "react-redux";
-import { selectorMember } from "../features/member/memberSelector";
+import { useGetMembersListQuery } from "../features/member/memberApiIn";
+import HomeLoading from "../components/UI/HomeLoading";
+import ErrorShow from "../components/UI/ErrorShow";
+import { useState } from "react";
 
 export default function Membership() {
-  const { search: name } = useSelector(selectorMember);
+  const [membersList, setMemberList] = useState([]);
+
+  const { search: name } = useSelector((state) => state.memberSearch);
+  const { data: members, isLoading, isError } = useGetMembersListQuery();
+
+  let content = null;
+  if (isLoading) {
+    content = [1, 2, 3, 4, 5, 6].map((event, i) => <HomeLoading key={i} />);
+  }
+
+  if (!isLoading && isError) {
+    content = <ErrorShow message={"There was a error"} />;
+  }
+
+  if (!isLoading && !isError && members?.result.length < 0) {
+    content = <ErrorShow message={"No data found"} />;
+  }
+
+  useEffect(() => {
+    if (!isLoading && !isError && members?.result.length > 0) {
+      const filterList = members.result.filter((item) => {
+        const itemName = item.name.toLowerCase();
+        const userTypeText = name.toLowerCase();
+        return itemName?.indexOf(userTypeText) > -1;
+      });
+
+      if (filterList) {
+        setMemberList(filterList);
+      } else {
+        setMemberList(members.result);
+      }
+    }
+  }, [members, name]);
+
+  if (membersList.length > 0) {
+    content = membersList?.map((item) => (
+      <MemberCard key={item.id} props={item} />
+    ));
+  }
 
   return (
     <>
@@ -15,18 +56,7 @@ export default function Membership() {
 
       <div className="container">
         <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
-          <MemberCard />
-          <MemberCard />
-          <MemberCard />
-          <MemberCard />
-          <MemberCard />
-          <MemberCard />
-          <MemberCard />
-          <MemberCard />
-          <MemberCard />
-          <MemberCard />
-          <MemberCard />
-          <MemberCard />
+          {content}
         </div>
       </div>
 

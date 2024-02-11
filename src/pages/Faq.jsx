@@ -11,7 +11,7 @@ export default function Faq() {
       <div className="container">
         <h2>Frequently Asked Questions</h2>
         <div className="ak-height-50 ak-height-lg-30"></div>
-        <div className="contact-us">
+        <div className="contact-us w-100">
           <AccordionCustom />
           <div className="contact-us-text">
             <ContactInfo />

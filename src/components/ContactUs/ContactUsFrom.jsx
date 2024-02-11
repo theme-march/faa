@@ -18,7 +18,6 @@ export default function ContactUsFrom() {
   const onSubmit = (data) => {
     if (data) {
       toast.success("SignIn Successfully!", toastOptions);
-
       reset();
     } else {
       toast.info("User not found!", toastOptions);
@@ -49,7 +48,7 @@ export default function ContactUsFrom() {
       </div>
       <div className="col-12">
         <label htmlFor="inputEmail" className="form-label">
-          {errors.mail?.type === "required" ? (
+          {errors.email?.type === "required" ? (
             <p role="alert " className="text-danger">
               Email Address is required
             </p>
@@ -61,8 +60,8 @@ export default function ContactUsFrom() {
           type="email"
           className="text-input-filed type_2"
           id="inputEmail"
-          {...register("mail", { required: true })}
-          aria-invalid={errors.mail ? "true" : "false"}
+          {...register("email", { required: true })}
+          aria-invalid={errors.email ? "true" : "false"}
         />
       </div>
       <div className="col-12">
@@ -87,10 +86,10 @@ export default function ContactUsFrom() {
           <p role="alert">Message</p>
         </label>
         <textarea
-          type="name"
+          type="text"
           className="text-input-filed type_2"
           id="Message"
-          {...register("name")}
+          {...register("message")}
         />
       </div>
       <div className="col-12 mt-5">

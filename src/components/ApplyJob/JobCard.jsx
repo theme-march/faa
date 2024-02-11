@@ -1,5 +1,4 @@
 import React from "react";
-import job_1 from "../../assets/job_1.jpg";
 import { Link } from "react-router-dom";
 
 export default function JobCard({ props }) {
@@ -7,14 +6,21 @@ export default function JobCard({ props }) {
     <div className="job-card mt-5">
       <div className="left-side">
         <div className="job-img">
-          <img src={job_1} alt="job_1" />
+          {props?.company_logo ? (
+            <img
+              src={`http://174.138.171.172:3000/job/${props?.company_logo}`}
+              alt="job_1"
+            />
+          ) : (
+            "No Images"
+          )}
         </div>
         <div className="job-desp">
           <p>One Bank Ltd</p>
-          <h5>{props?.title}</h5>
+          <h5>{props?.job_title}</h5>
           <p>{props?.details}</p>
           <p>
-            <span>Experience:</span> {props?.experience}
+            <span>Experience of Years:</span> {props?.experience}
           </p>
         </div>
       </div>

@@ -1,49 +1,53 @@
 import React, { useEffect, useState } from "react";
 import JobCard from "../components/ApplyJob/JobCard";
+import { useGetJobsListQuery } from "../features/jobList/jobApiInject";
+import HomeLoading from "../components/UI/HomeLoading";
+import ErrorShow from "../components/UI/ErrorShow";
 
-const joblist = [
-  {
-    title: "Head of Treasury",
-    type: "application",
-    experience: "Years of experience 20",
-    details:
-      "The Google logo appears in numerous settings to identify the search engine company. Google has used several logos over its history",
-  },
-  {
-    title: "web Development",
-    type: "web",
-    experience: "Years of experience 20",
-    details:
-      "The Google logo appears in numerous settings to identify the search engine company. Google has used several logos over its history",
-  },
-  {
-    title: "Design ui/ux",
-    type: "design",
-    experience: "Years of experience 20",
-    details:
-      "The Google logo appears in numerous settings to identify the search engine company. Google has used several logos over its history",
-  },
-];
 export default function Career() {
   const [formData, setFormData] = useState("");
-  const [jobslist, setjobslist] = useState([]);
+  const [jobsList, setjobslist] = useState([]);
+
+  const { data: jobsListFetchData, isLoading, isError } = useGetJobsListQuery();
+
+  let content = null;
+  if (isLoading) {
+    content = [1, 2, 3, 4, 5, 6].map((event, i) => <HomeLoading key={i} />);
+  }
+
+  if (!isLoading && isError) {
+    content = <ErrorShow message={"There was a error"} />;
+  }
+
+  if (!isLoading && !isError && jobsListFetchData?.result.length < 0) {
+    content = <ErrorShow message={"No data found"} />;
+  }
+
   const handleInputChange = (e) => {
     setFormData(e.target.value);
   };
 
   useEffect(() => {
-    const filterList = joblist.filter((item) => {
-      const itemName = item.title.toLowerCase();
-      const userTypeText = formData.toLowerCase();
-      return itemName.indexOf(userTypeText) > -1;
-    });
+    if (!isLoading && !isError && jobsListFetchData?.result.length > 0) {
+      const filterList = jobsListFetchData?.result?.filter((item) => {
+        const itemName = item.job_title.toLowerCase();
+        const userTypeText = formData.toLowerCase();
+        return itemName.indexOf(userTypeText) > -1;
+      });
 
-    if (filterList) {
-      setjobslist(filterList);
-    } else {
-      setjobslist(joblist);
+      if (filterList) {
+        setjobslist(filterList);
+      } else {
+        setjobslist(jobsListFetchData);
+      }
     }
-  }, [formData]);
+  }, [formData, jobsListFetchData]);
+
+  if (jobsList.length > 0) {
+    content = jobsList?.map((job, index) => (
+      <JobCard key={index} props={job} />
+    ));
+  }
 
   return (
     <>
@@ -69,14 +73,9 @@ export default function Career() {
         <div className="ak-height-30 ak-height-lg-30"></div>
         <div className="react-post">
           <h2 className="mb-3 fw-bolder">Recent posts</h2>
-          <p>{jobslist?.length} Total Search Job List</p>
+          <p>{jobsList?.length} Total Search Job List</p>
         </div>
-        {/* <div className="ak-height-25 ak-height-lg-25"></div> */}
-        <div>
-          {jobslist?.map((job, index) => (
-            <JobCard key={index} props={job} />
-          ))}
-        </div>
+        <div>{content}</div>
       </div>
       <div className="ak-height-100 ak-height-lg-60"></div>
     </>

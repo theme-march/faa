@@ -14,7 +14,7 @@ export default function EventDetails() {
     isLoading,
     isError,
   } = useGetEventDetailsIdQuery(id);
-
+  console.log(eventsDetailsData);
   let content;
   if (isLoading) {
     content = <HomeLoading />;
