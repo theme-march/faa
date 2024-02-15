@@ -24,6 +24,11 @@ export default function EventParticipateRegistrationForm(props) {
     formState: { errors },
   } = useForm();
 
+  const toastOptions = {
+    position: toast.POSITION.TOP_RIGHT,
+    autoClose: 1000,
+  };
+
   const onSubmit = async (data) => {
     try {
       const requestData = loginUser?.id
@@ -33,10 +38,7 @@ export default function EventParticipateRegistrationForm(props) {
       const response = await AddEventRegister(requestData);
 
       if (response.data.success) {
-        toast.success("Event Registration Completed", {
-          position: toast.POSITION.TOP_RIGHT,
-          autoClose: 1200,
-        });
+        toast.success("Event Registration Completed", toastOptions);
         reset();
       } else {
         toast.info(response?.data?.message, {
@@ -45,10 +47,7 @@ export default function EventParticipateRegistrationForm(props) {
         });
       }
     } catch (error) {
-      toast.error("Error processing event registration", {
-        position: toast.POSITION.TOP_RIGHT,
-        autoClose: 1200,
-      });
+      toast.error("Error processing event registration", toastOptions);
     }
   };
 

@@ -1,5 +1,7 @@
 import React from "react";
+import { FaFilePdf } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import DateFormat from "../DateFormat/DateFormat";
 
 export default function JobCard({ props }) {
   return (
@@ -25,13 +27,25 @@ export default function JobCard({ props }) {
         </div>
       </div>
       <div className="right-side">
-        <Link
-          className="button-primary mb-md-5 mb-2"
-          to={"https://ssl.du.ac.bd/public/images/_1703047539.pdf"}
-          target="_blank"
-        >
-          Apply Now
-        </Link>
+        {props?.file && (
+          <Link
+            to={`http://174.138.171.172:3000/job/${props?.file}`}
+            className="text-danger me-3"
+            target="_blank"
+          >
+            <FaFilePdf />
+          </Link>
+        )}
+        {props?.link && (
+          <Link
+            className="button-primary mb-md-5 mb-2"
+            to={props?.link}
+            target="_blank"
+          >
+            Apply Now
+          </Link>
+        )}
+
         <div className="d-flex align-items-center gap-2 justify-content-md-end">
           <div>
             <svg
@@ -47,16 +61,16 @@ export default function JobCard({ props }) {
               />
             </svg>
           </div>
-          <p>Dhaka, Bangladesh</p>
+          <p>{props?.location}</p>
         </div>
         <div className="d-flex gap-3 justify-content-md-end">
           <p>
-            <span className="fw-semibold ak-black-color">Posted:</span> 2 Days
-            ago,
+            <span className="fw-semibold ak-black-color">Posted:</span>
+            <DateFormat onlyDate={true} props={props?.post_date} />
           </p>
           <p>
-            <span className="fw-semibold ak-black-color">Deadline:</span>{" "}
-            30/12/2024
+            <span className="fw-semibold ak-black-color">Deadline:</span>
+            <DateFormat onlyDate={true} props={props?.deadline} />
           </p>
         </div>
       </div>

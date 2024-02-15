@@ -4,6 +4,7 @@ import { useGetMemberDetailsIdQuery } from "../../features/member/memberApiIn";
 import HomeLoading from "../UI/HomeLoading";
 import ErrorShow from "../UI/ErrorShow";
 import { useAddEventRegisterMutation } from "../../features/events/eventsApiInject";
+import { toast } from "react-toastify";
 
 export default function EventSponsorRegistrationForm({ props }) {
   let content = null;
@@ -24,10 +25,28 @@ export default function EventSponsorRegistrationForm({ props }) {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
-    console.log(data);
-    // AddEventRegister(data);
-    reset();
+  const toastOptions = {
+    position: toast.POSITION.TOP_RIGHT,
+    autoClose: 1000,
+  };
+
+  const onSubmit = async (data) => {
+    try {
+      const resp = await AddEventRegister(data);
+      if (resp.data.success) {
+        toast.success("EventSponsor Registration Completed", toastOptions);
+        reset();
+      } else {
+        toast.info("EventSponsor Already Registration", {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 1200,
+        });
+      }
+    } catch (e) {
+      toast.error("Error EventSponsor Registration ", toastOptions);
+    } finally {
+      reset();
+    }
   };
   if (isLoading) {
     content = <HomeLoading />;

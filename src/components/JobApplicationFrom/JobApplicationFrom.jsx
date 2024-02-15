@@ -70,7 +70,6 @@ export default function JobApplicationFrom() {
           {...register("number", { required: true })}
         />
       </div>
-
       <div className="col-md-6">
         <label htmlFor="batchNumberId" className="form-label">
           {errors.batchNumber?.message ? (

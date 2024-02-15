@@ -3,7 +3,7 @@ import { ButtonPrimary } from "../Button/Button";
 import DateFormat from "../DateFormat/DateFormat";
 
 export default function UncommingEvents({ props }) {
-  const { event_title, event_date, event_short_details, cover_image } =
+  const { event_title, event_date, event_short_details, cover_image, id } =
     props[0];
   return (
     <div className="container">
@@ -32,7 +32,7 @@ export default function UncommingEvents({ props }) {
 
           <div>
             <div className="ak-height-50 ak-height-lg-20"></div>
-            <ButtonPrimary to={"/events-registration"}>
+            <ButtonPrimary to={`/events-details/${id}`}>
               Register Now
             </ButtonPrimary>
           </div>

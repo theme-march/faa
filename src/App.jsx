@@ -17,7 +17,7 @@ import ContactUs from "./pages/ContactUs";
 import Program from "./pages/Program";
 import TeamsUse from "./pages/TeamsUse";
 import Faq from "./pages/Faq";
-import JobApplication from "./pages/JobApplication";
+// import JobApplication from "./pages/JobApplication";
 import EventSponsorRegistration from "./pages/EventSponsorRegistration";
 import EventParticipateRegistration from "./pages/EventParticipateRegistration";
 import EventDetails from "./pages/EventDetails";
@@ -69,7 +69,7 @@ function App() {
         <Route path="/contact-us" element={<ContactUs />}></Route>
         <Route path="/program" element={<Program />}></Route>
         <Route path="/teams-use" element={<TeamsUse />}></Route>
-        <Route path="/job-application" element={<JobApplication />}></Route>
+        {/* <Route path="/job-application" element={<JobApplication />}></Route> */}
         <Route path="/career" element={<Career />}></Route>
         <Route path="/faq" element={<Faq />}></Route>
         <Route path="/payment/success" element={<PaymentSuccess />}></Route>
