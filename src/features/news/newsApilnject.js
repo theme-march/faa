@@ -8,7 +8,13 @@ const newsApi = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
+    getScrollingNewList: bulider.query({
+      query: () => ({
+        url: `/scrolling_news_list`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
-export const { useGetNewsListQuery } = newsApi;
+export const { useGetNewsListQuery, useGetScrollingNewListQuery } = newsApi;

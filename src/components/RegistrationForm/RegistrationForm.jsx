@@ -3,12 +3,16 @@ import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { useMemberRegisterMutation } from "../../features/member/memberApiIn";
+import {
+  useGetMembersCategoryListQuery,
+  useMemberRegisterMutation,
+} from "../../features/member/memberApiIn";
 
 export default function RegistrationForm() {
   const {
     register,
     handleSubmit,
+    setValue,
     control,
     reset,
     formState: { errors },
@@ -36,6 +40,25 @@ export default function RegistrationForm() {
     "Consultant",
     "Other",
   ];
+
+  const { data } = useGetMembersCategoryListQuery();
+  console.log(data);
+
+  const membership_category_id = [
+    {
+      name: "Honorary Member For Life time (@Bulk amount)",
+      value: 2,
+    },
+    {
+      name: "Life time Member(@10k)",
+      value: 3,
+    },
+    {
+      name: "General Member(@1k)",
+      value: 4,
+    },
+  ];
+
   const [memberRegister] = useMemberRegisterMutation();
 
   const toastOptions = {
@@ -50,9 +73,10 @@ export default function RegistrationForm() {
       hsc_passing_year,
     };
 
-    const resp = await memberRegister(postData);
-
     try {
+      console.log(postData);
+      const resp = await memberRegister(postData);
+      console.log(resp);
       if (resp.data.success === true) {
         toast.success("SingIn SuccessFully!", toastOptions);
         reset();
@@ -60,7 +84,7 @@ export default function RegistrationForm() {
         if (resp?.data?.error?.name) {
           toast.info("SequelizeValidationError", toastOptions);
         } else {
-          toast.info("User Allready Register!", toastOptions);
+          toast.info(resp?.data?.message, toastOptions);
         }
       }
     } catch (error) {
@@ -228,6 +252,40 @@ export default function RegistrationForm() {
       </div>
 
       <div className="col-md-6">
+        <label forhtml="membershipId" className="form-label">
+          {errors.membership_type?.message ? (
+            <p role="alert " className="text-danger">
+              Select Membership Category* is required
+            </p>
+          ) : (
+            "Select Membership Category*"
+          )}
+        </label>
+        <Controller
+          name="membership_category_id"
+          control={control}
+          defaultValue=""
+          rules={{ required: "Please select an option" }}
+          render={({ field }) => (
+            <select
+              {...field}
+              id="membershipId"
+              className="form-select text-input-filed type_2"
+            >
+              <option value="0" disabled hidden>
+                Select Membership Category
+              </option>
+              {membership_category_id.map((member, i) => (
+                <option value={member.value} key={i}>
+                  {member.name}
+                </option>
+              ))}
+            </select>
+          )}
+        />
+      </div>
+
+      <div className="col-md-6">
         <label forhtml="Organization" className="form-label">
           {errors.organization_name?.type === "required" ? (
             <p role="alert " className="text-danger">
@@ -242,23 +300,6 @@ export default function RegistrationForm() {
           className="text-input-filed type_2"
           id="Organization"
           {...register("organization_name")}
-        />
-      </div>
-      <div className="col-md-6  d-none">
-        <label forhtml="membership_number" className="form-label">
-          {errors.membership_number?.type === "required" ? (
-            <p role="alert " className="text-danger">
-              Membership number * is required
-            </p>
-          ) : (
-            "Membership number"
-          )}
-        </label>
-        <input
-          type="text"
-          className="text-input-filed type_2 d-none"
-          id="membership_number"
-          {...register("membership_number")}
         />
       </div>
 
@@ -279,7 +320,31 @@ export default function RegistrationForm() {
           {...register("designation_name")}
         />
       </div>
-      <div className="col-12">
+
+      <div className="col-md-6">
+        <label forhtml="MembershipImages" className="form-label">
+          {errors._image?.type === "required" ? (
+            <p role="alert " className="text-danger">
+              Membership Images * is required
+            </p>
+          ) : (
+            "Membership Images"
+          )}
+        </label>
+        <input
+          accept="image/*"
+          className="text-input-filed type_2"
+          id="MembershipImages"
+          type="file"
+          name="_image"
+          onChange={(e) => {
+            const selectedFile = e.target.files[0];
+            setValue("_image", selectedFile);
+          }}
+        />
+      </div>
+
+      <div className="col-md-6">
         <Controller
           name="password" // The name of your form field
           control={control}
@@ -313,12 +378,31 @@ export default function RegistrationForm() {
           )}
         />
       </div>
+
+      <div className="col-md-6  d-none">
+        <label forhtml="membership_number" className="form-label">
+          {errors.membership_number?.type === "required" ? (
+            <p role="alert " className="text-danger">
+              Membership number * is required
+            </p>
+          ) : (
+            "Membership number"
+          )}
+        </label>
+        <input
+          type="text"
+          className="text-input-filed type_2 d-none"
+          id="membership_number"
+          {...register("membership_number")}
+        />
+      </div>
       <div className="col-12">
         <p className="mt-4">
           By creating an account, you agree to the Terms of Use and acknowledge
           our Privacy Policy.
         </p>
       </div>
+
       <div className="col-12">
         <button type="submit" className="button-primary">
           Apply

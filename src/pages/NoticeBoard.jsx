@@ -34,8 +34,6 @@ export default function NoticeBoard() {
   if (!isLoading && !isError && noticeList?.result.length < 0) {
     content = <ErrorShow message={"No data found"} />;
   }
-
-  console.log(isLoading);
   if (!isLoading && !isError && noticeList?.result.length > 0) {
     content = (
       <table ref={myTable} className="table table-hover table-striped">
@@ -51,15 +49,15 @@ export default function NoticeBoard() {
           </tr>
         </thead>
         <tbody>
-          {noticeList.result.map((data, index) => (
+          {noticeList?.result.map((data, index) => (
             <tr key={index}>
               <th>{data.id}</th>
-              <td>{data.desp}</td>
-              <td> {data.published}</td>
-              <td> {data.closing}</td>
+              <td>{data.notice_name}</td>
+              <td> {data.published_date}</td>
+              <td> {data.closing_date}</td>
               <td className="text-center">
                 <Link
-                  to={"https://ssl.du.ac.bd/public/images/_1703047539.pdf"}
+                  to={`http://174.138.171.172:3000/notice_board/${data.document}`}
                   className="text-danger"
                   target="_blank"
                 >

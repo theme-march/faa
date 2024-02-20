@@ -8,7 +8,6 @@ export default function JobApplication() {
       <div className="ak-height-80 ak-height-lg-60"></div>
       <SectionTitle>Job Application</SectionTitle>
       <JobApplicationFrom />
-
       <div className="ak-height-100 ak-height-lg-60"></div>
     </div>
   );

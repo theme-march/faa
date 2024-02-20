@@ -40,9 +40,6 @@ export default function News() {
           {content}
         </div>
         <div className="ak-height-40 ak-height-lg-30"></div>
-        {/*     <div className="ak-center">
-          <button className="button-white">LOAD MORE</button>
-        </div> */}
       </div>
       <div className="ak-height-100 ak-height-lg-60"></div>
     </>
