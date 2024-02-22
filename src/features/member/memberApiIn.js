@@ -4,8 +4,10 @@ const memberApi = apiSlice.injectEndpoints({
   endpoints: (bulider) => ({
     memberRegister: bulider.mutation({
       query: (data) => ({
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
         url: "/member_register",
-        headers: { "Content-Type": "application/json" },
         method: "POST",
         body: data,
       }),

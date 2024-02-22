@@ -41,8 +41,7 @@ export default function RegistrationForm() {
     "Other",
   ];
 
-  const { data } = useGetMembersCategoryListQuery();
-  console.log(data);
+  // const { data: membership_category_id } = useGetMembersCategoryListQuery();
 
   const membership_category_id = [
     {
@@ -72,13 +71,12 @@ export default function RegistrationForm() {
       ...data,
       hsc_passing_year,
     };
-
     try {
-      console.log(postData);
       const resp = await memberRegister(postData);
       console.log(resp);
       if (resp.data.success === true) {
         toast.success("SingIn SuccessFully!", toastOptions);
+
         reset();
       } else {
         if (resp?.data?.error?.name) {
@@ -91,12 +89,14 @@ export default function RegistrationForm() {
       toast.error("SingIn DataNot Submit!", toastOptions);
     }
   };
+
   return (
     <form
       className="row g-3"
       onSubmit={handleSubmit(onSubmit)}
       autoComplete="on"
       method="POST"
+      encType="multipart/form-data"
     >
       <div className="col-md-6">
         <label htmlFor="inputName" className="form-label">
@@ -110,6 +110,7 @@ export default function RegistrationForm() {
         </label>
         <input
           type="name"
+          name="name"
           className="text-input-filed type_2"
           id="inputName"
           {...register("name", { required: true })}
@@ -217,6 +218,7 @@ export default function RegistrationForm() {
           )}
         />
       </div>
+
       <div className="col-md-6">
         <label forhtml="occupationId" className="form-label">
           {errors.occupation?.message ? (
@@ -275,7 +277,7 @@ export default function RegistrationForm() {
               <option value="0" disabled hidden>
                 Select Membership Category
               </option>
-              {membership_category_id.map((member, i) => (
+              {membership_category_id?.map((member, i) => (
                 <option value={member.value} key={i}>
                   {member.name}
                 </option>
@@ -338,8 +340,10 @@ export default function RegistrationForm() {
           type="file"
           name="_image"
           onChange={(e) => {
-            const selectedFile = e.target.files[0];
-            setValue("_image", selectedFile);
+            const selectedFiles = e.target.files;
+            if (selectedFiles && selectedFiles.length > 0) {
+              setValue("_image", selectedFiles[0]);
+            }
           }}
         />
       </div>
