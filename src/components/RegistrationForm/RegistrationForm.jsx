@@ -88,24 +88,6 @@ export default function RegistrationForm() {
     } catch (error) {
       toast.error("SignIn Data Not Submitted!", toastOptions);
     }
-
-    // try {
-    //   const resp = await memberRegister(postData);
-    //   console.log(resp);
-    //   if (resp.data.success === true) {
-    //     toast.success("SingIn SuccessFully!", toastOptions);
-    //
-    //     reset();
-    //   } else {
-    //     if (resp?.data?.error?.name) {
-    //       toast.info("SequelizeValidationError", toastOptions);
-    //     } else {
-    //       toast.info(resp?.data?.message, toastOptions);
-    //     }
-    //   }
-    // } catch (error) {
-    //   toast.error("SingIn DataNot Submit!", toastOptions);
-    // }
   };
 
   return (

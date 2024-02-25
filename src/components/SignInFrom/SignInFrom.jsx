@@ -30,8 +30,15 @@ export default function SignInFrom() {
       const response = await memberSingIn(formData);
 
       if (response?.data?.success) {
-        const { email, status, id, session, admin_approval, name } =
-          response?.data?.result;
+        const {
+          email,
+          status,
+          id,
+          session,
+          admin_approval,
+          name,
+          member_image,
+        } = response?.data?.result;
         const sessionUser = {
           email,
           status,
@@ -39,6 +46,7 @@ export default function SignInFrom() {
           session,
           admin_approval,
           name,
+          img: member_image,
         };
 
         const jsonData = JSON.stringify(sessionUser);

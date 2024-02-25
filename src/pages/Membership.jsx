@@ -12,7 +12,6 @@ export default function Membership() {
 
   const { search: name } = useSelector((state) => state.memberSearch);
   const { data: members, isLoading, isError } = useGetMembersListQuery();
-  console.log(members);
 
   let content = null;
   if (isLoading) {

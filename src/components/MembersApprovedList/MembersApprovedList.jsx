@@ -76,7 +76,6 @@ export default function MembersApprovedList() {
     sameSessionUsers,
     loginUserData?.approval_list
   );
-  console.log(filteredArray);
 
   return (
     <div className="container">

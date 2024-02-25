@@ -17,7 +17,7 @@ export default function EventSponsorRegistrationForm({ props }) {
     isError,
   } = useGetMemberDetailsIdQuery(loginUser?.id);
   const [AddEventRegister, { data }] = useAddEventRegisterMutation();
-  console.log(data);
+
   const {
     register,
     handleSubmit,
@@ -31,14 +31,13 @@ export default function EventSponsorRegistrationForm({ props }) {
   };
 
   const onSubmit = async (data) => {
-    console.log(data);
     const postData = {
       ...data,
       event_id: props.toString(),
     };
     try {
       const resp = await AddEventRegister(postData);
-      console.log(resp);
+
       if (resp.data.success) {
         toast.success("EventSponsor Registration Completed", toastOptions);
         reset();
