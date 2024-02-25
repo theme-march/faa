@@ -46,7 +46,6 @@ export default function MembersApprovedList() {
     [fetchData, loginUser.id, memberApproved]
   );
 
-  console.log(sameSessionUsers);
   const renderTableHeaders = (isAdminApproval) => {
     return (
       <tr>
@@ -55,7 +54,6 @@ export default function MembersApprovedList() {
         <th scope="col">Mobile</th>
         <th scope="col">Email</th>
         <th scope="col">Session</th>
-        {isAdminApproval && <th scope="col">Approved Members</th>}
         {isAdminApproval && <th scope="col">Admin Approved</th>}
         {!isAdminApproval && (
           <th scope="col" className="text-center">
@@ -65,6 +63,20 @@ export default function MembersApprovedList() {
       </tr>
     );
   };
+
+  function filterById(arr1, arr2) {
+    if (arr1 && arr2) {
+      const idSet = new Set(arr2?.map((obj) => obj.id));
+      return arr1.filter((obj) => idSet.has(obj.id));
+    } else {
+      return [];
+    }
+  }
+  const filteredArray = filterById(
+    sameSessionUsers,
+    loginUserData?.approval_list
+  );
+  console.log(filteredArray);
 
   return (
     <div className="container">
@@ -98,18 +110,18 @@ export default function MembersApprovedList() {
       {loginUser?.admin_approval === 0 && (
         <>
           <div className="ak-height-80 ak-height-lg-40"></div>
+          <h3 className="mb-3">Approved Members</h3>
           <div className="row">
             <table className="table table-hover table-striped">
               <thead>{renderTableHeaders(true)}</thead>
               <tbody>
-                {loginUserData?.approval_list?.map((data, index) => (
+                {filteredArray?.map((data, index) => (
                   <tr key={index}>
                     <th>{data.id}</th>
                     <td>{data.name}</td>
                     <td>{data.phone_number}</td>
                     <td>{data.email}</td>
                     <td>{data.session}</td>
-                    <td className="text-center">{data.count}</td>
                     <td className="text-center">
                       <button className="btn btn-primary btn-sm disabled">
                         Pending

@@ -17,7 +17,7 @@ export default function EventSponsorRegistrationForm({ props }) {
     isError,
   } = useGetMemberDetailsIdQuery(loginUser?.id);
   const [AddEventRegister, { data }] = useAddEventRegisterMutation();
-
+  console.log(data);
   const {
     register,
     handleSubmit,
@@ -31,8 +31,14 @@ export default function EventSponsorRegistrationForm({ props }) {
   };
 
   const onSubmit = async (data) => {
+    console.log(data);
+    const postData = {
+      ...data,
+      event_id: props.toString(),
+    };
     try {
-      const resp = await AddEventRegister(data);
+      const resp = await AddEventRegister(postData);
+      console.log(resp);
       if (resp.data.success) {
         toast.success("EventSponsor Registration Completed", toastOptions);
         reset();
@@ -44,8 +50,6 @@ export default function EventSponsorRegistrationForm({ props }) {
       }
     } catch (e) {
       toast.error("Error EventSponsor Registration ", toastOptions);
-    } finally {
-      reset();
     }
   };
   if (isLoading) {
@@ -83,7 +87,7 @@ export default function EventSponsorRegistrationForm({ props }) {
         </div>
         <div className="col-md-6">
           <label htmlFor="distributorName" className="form-label">
-            {errors.distributorName?.type === "required" ? (
+            {errors.distributor_name?.type === "required" ? (
               <p role="alert " className="text-danger">
                 Distributor Name is required
               </p>
@@ -95,12 +99,12 @@ export default function EventSponsorRegistrationForm({ props }) {
             type="text"
             className="text-input-filed type_2"
             id="distributorName"
-            {...register("distributorName", { required: true })}
+            {...register("distributor_name", { required: true })}
           />
         </div>
         <div className="col-md-6">
           <label htmlFor="inputEmail" className="form-label">
-            {errors.mail?.type === "required" ? (
+            {errors.email?.type === "required" ? (
               <p role="alert " className="text-danger">
                 Email Address is required
               </p>
@@ -113,13 +117,13 @@ export default function EventSponsorRegistrationForm({ props }) {
             type="email"
             className="text-input-filed type_2"
             id="inputEmail"
-            {...register("mail", { required: true })}
-            aria-invalid={errors.mail ? "true" : "false"}
+            {...register("email", { required: true })}
+            aria-invalid={errors.email ? "true" : "false"}
           />
         </div>
         <div className="col-md-6">
           <label htmlFor="inputNumber" className="form-label">
-            {errors.number && errors.number?.type === "required" ? (
+            {errors.phone_number && errors.phone_number?.type === "required" ? (
               <p role="alert " className="text-danger">
                 Phone Number is required
               </p>
@@ -131,7 +135,7 @@ export default function EventSponsorRegistrationForm({ props }) {
             className="text-input-filed type_2"
             id="inputNumber"
             type="number"
-            {...register("number", { required: true })}
+            {...register("phone_number", { required: true })}
           />
         </div>
         <div className="col-md-6">
@@ -194,7 +198,7 @@ export default function EventSponsorRegistrationForm({ props }) {
                 Name* is required
               </p>
             ) : (
-              "Organization Name*"
+              "Full Name*"
             )}
           </label>
           <input
@@ -262,7 +266,7 @@ export default function EventSponsorRegistrationForm({ props }) {
         </div>
         <div className="col-md-6">
           <label htmlFor="distributorName" className="form-label">
-            {errors.distributorName?.type === "required" ? (
+            {errors.distributor_name?.type === "required" ? (
               <p role="alert " className="text-danger">
                 Distributor Name is required
               </p>
@@ -274,7 +278,7 @@ export default function EventSponsorRegistrationForm({ props }) {
             type="text"
             className="text-input-filed type_2"
             id="distributorName"
-            {...register("distributorName", { required: true })}
+            {...register("distributor_name", { required: true })}
           />
         </div>
 
@@ -315,15 +319,12 @@ export default function EventSponsorRegistrationForm({ props }) {
         <input
           type="number"
           value={id}
-          className="text-input-filed type_2 d-none"
+          disabled
+          hidden
+          className="text-input-filed type_2 "
           {...register("member_id")}
         />
-        <input
-          type="text"
-          value={props}
-          className="text-input-filed type_2 d-none"
-          {...register("event_id")}
-        />
+
         <div className="col-12 mt-5">
           <button type="submit" className="button-primary">
             Next To Pay

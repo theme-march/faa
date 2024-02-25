@@ -6,8 +6,13 @@ import { FaLinkedinIn } from "react-icons/fa";
 import { Logo } from "../../components/Logo/Logo";
 import { SocialIcon } from "../../components/SocialIcon/SocialIcon";
 import headerBg from "../../assets/headerBg.png";
+import { useNavigate } from "react-router-dom";
 
 export default function HeaderLogo() {
+  const navigate = useNavigate();
+  const hendlerOnClicks = () => {
+    navigate("/");
+  };
   return (
     <div>
       <div
@@ -18,7 +23,10 @@ export default function HeaderLogo() {
       >
         <div className="container">
           <div className="header-text-section">
-            <div className="header-logo-section">
+            <div
+              className="header-logo-section  cursor-pointer"
+              onClick={hendlerOnClicks}
+            >
               <div className="d-flex align-items-end gap-1">
                 <div>
                   <Logo />

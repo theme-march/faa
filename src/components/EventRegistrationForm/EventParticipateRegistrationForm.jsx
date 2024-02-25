@@ -37,7 +37,7 @@ export default function EventParticipateRegistrationForm(props) {
 
       const response = await AddEventRegister(requestData);
 
-      if (response.data.success) {
+      if (response?.data?.success) {
         toast.success("Event Registration Completed", toastOptions);
         reset();
       } else {

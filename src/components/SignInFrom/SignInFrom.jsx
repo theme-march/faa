@@ -30,9 +30,16 @@ export default function SignInFrom() {
       const response = await memberSingIn(formData);
 
       if (response?.data?.success) {
-        const { email, status, id, session, admin_approval } =
+        const { email, status, id, session, admin_approval, name } =
           response?.data?.result;
-        const sessionUser = { email, status, id, session, admin_approval };
+        const sessionUser = {
+          email,
+          status,
+          id,
+          session,
+          admin_approval,
+          name,
+        };
 
         const jsonData = JSON.stringify(sessionUser);
         localStorage.setItem("user", jsonData);

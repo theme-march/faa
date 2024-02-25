@@ -71,23 +71,41 @@ export default function RegistrationForm() {
       ...data,
       hsc_passing_year,
     };
-    try {
-      const resp = await memberRegister(postData);
-      console.log(resp);
-      if (resp.data.success === true) {
-        toast.success("SingIn SuccessFully!", toastOptions);
 
+    const formData = new FormData();
+    Object.keys(postData).forEach((key) => {
+      formData.append(key, data[key]);
+    });
+
+    try {
+      const resp = await memberRegister(formData);
+      if (resp.data?.success) {
+        toast.success("SignIn Successfully!", toastOptions);
         reset();
       } else {
-        if (resp?.data?.error?.name) {
-          toast.info("SequelizeValidationError", toastOptions);
-        } else {
-          toast.info(resp?.data?.message, toastOptions);
-        }
+        toast.info(resp?.data?.message || "An error occurred", toastOptions);
       }
     } catch (error) {
-      toast.error("SingIn DataNot Submit!", toastOptions);
+      toast.error("SignIn Data Not Submitted!", toastOptions);
     }
+
+    // try {
+    //   const resp = await memberRegister(postData);
+    //   console.log(resp);
+    //   if (resp.data.success === true) {
+    //     toast.success("SingIn SuccessFully!", toastOptions);
+    //
+    //     reset();
+    //   } else {
+    //     if (resp?.data?.error?.name) {
+    //       toast.info("SequelizeValidationError", toastOptions);
+    //     } else {
+    //       toast.info(resp?.data?.message, toastOptions);
+    //     }
+    //   }
+    // } catch (error) {
+    //   toast.error("SingIn DataNot Submit!", toastOptions);
+    // }
   };
 
   return (
@@ -116,7 +134,6 @@ export default function RegistrationForm() {
           {...register("name", { required: true })}
         />
       </div>
-
       <div className="col-md-6">
         <label htmlFor="inputNumber" className="form-label">
           {errors.phone_number && errors.phone_number?.type === "required" ? (
@@ -134,7 +151,6 @@ export default function RegistrationForm() {
           {...register("phone_number", { required: true })}
         />
       </div>
-
       <div className="col-md-6">
         <label htmlFor="inputEmail" className="form-label">
           {errors.email?.type === "required" ? (
@@ -218,7 +234,6 @@ export default function RegistrationForm() {
           )}
         />
       </div>
-
       <div className="col-md-6">
         <label forhtml="occupationId" className="form-label">
           {errors.occupation?.message ? (
@@ -252,7 +267,6 @@ export default function RegistrationForm() {
           )}
         />
       </div>
-
       <div className="col-md-6">
         <label forhtml="membershipId" className="form-label">
           {errors.membership_type?.message ? (
@@ -274,8 +288,8 @@ export default function RegistrationForm() {
               id="membershipId"
               className="form-select text-input-filed type_2"
             >
-              <option value="0" disabled hidden>
-                Select Membership Category
+              <option value="" disabled hidden>
+                Select an option
               </option>
               {membership_category_id?.map((member, i) => (
                 <option value={member.value} key={i}>
@@ -286,7 +300,6 @@ export default function RegistrationForm() {
           )}
         />
       </div>
-
       <div className="col-md-6">
         <label forhtml="Organization" className="form-label">
           {errors.organization_name?.type === "required" ? (
@@ -304,7 +317,6 @@ export default function RegistrationForm() {
           {...register("organization_name")}
         />
       </div>
-
       <div className="col-md-6">
         <label htmlFor="Designation" className="form-label">
           {errors.designation_name?.type === "required" ? (
@@ -322,7 +334,6 @@ export default function RegistrationForm() {
           {...register("designation_name")}
         />
       </div>
-
       <div className="col-md-6">
         <label forhtml="MembershipImages" className="form-label">
           {errors._image?.type === "required" ? (
@@ -347,7 +358,6 @@ export default function RegistrationForm() {
           }}
         />
       </div>
-
       <div className="col-md-6">
         <Controller
           name="password" // The name of your form field
@@ -382,8 +392,7 @@ export default function RegistrationForm() {
           )}
         />
       </div>
-
-      <div className="col-md-6  d-none">
+      <div className="col-md-6 d-none">
         <label forhtml="membership_number" className="form-label">
           {errors.membership_number?.type === "required" ? (
             <p role="alert " className="text-danger">
@@ -395,23 +404,26 @@ export default function RegistrationForm() {
         </label>
         <input
           type="text"
-          className="text-input-filed type_2 d-none"
+          disabled
+          hidden
+          value={"0"}
+          className="text-input-filed type_2 "
           id="membership_number"
           {...register("membership_number")}
         />
       </div>
       <div className="col-12">
         <p className="mt-4">
-          By creating an account, you agree to the Terms of Use and acknowledge
+          By creating an account, you agree to the Terms of Use and acknowledge
           our Privacy Policy.
         </p>
       </div>
-
       <div className="col-12">
         <button type="submit" className="button-primary">
           Apply
         </button>
       </div>
+        
     </form>
   );
 }
