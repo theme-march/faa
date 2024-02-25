@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useMemo } from "react";
 import DataTable from "datatables.net-dt";
 import { Link } from "react-router-dom";
 import { FaFilePdf } from "react-icons/fa6";
@@ -8,8 +8,6 @@ import { useGetNoticeListQuery } from "../features/notice/noticeApiInject";
 
 export default function NoticeBoard() {
   const myTable = useRef(null);
-  let content = null;
-
   const {
     data: noticeList,
     isLoading,
@@ -18,24 +16,24 @@ export default function NoticeBoard() {
   } = useGetNoticeListQuery();
 
   useEffect(() => {
-    let table = new DataTable(myTable.current, {
-      retrieve: true,
-    });
+    if (isSuccess) {
+      const table = new DataTable(myTable.current, {
+        retrieve: true,
+      });
+      return () => {
+        table.destroy(); // Destroy the DataTable instance when unmounting
+      };
+    }
   }, [isSuccess]);
 
-  if (isLoading) {
-    content = <HomeLoading />;
-  }
+  const memoizedNoticeList = useMemo(() => noticeList, [noticeList]);
+  const tableContent = useMemo(() => {
+    if (isLoading) return <HomeLoading />;
+    if (isError) return <ErrorShow message={"There was an error"} />;
+    if (!memoizedNoticeList || memoizedNoticeList.result.length === 0)
+      return <ErrorShow message={"No data found"} />;
 
-  if (!isLoading && isError) {
-    content = <ErrorShow message={"There was a error"} />;
-  }
-
-  if (!isLoading && !isError && noticeList?.result.length < 0) {
-    content = <ErrorShow message={"No data found"} />;
-  }
-  if (!isLoading && !isError && noticeList?.result.length > 0) {
-    content = (
+    return (
       <table ref={myTable} className="table table-hover table-striped">
         <thead>
           <tr>
@@ -49,12 +47,12 @@ export default function NoticeBoard() {
           </tr>
         </thead>
         <tbody>
-          {noticeList?.result.map((data, index) => (
-            <tr key={index}>
+          {memoizedNoticeList.result.map((data) => (
+            <tr key={data.id}>
               <th>{data.id}</th>
               <td>{data.notice_name}</td>
-              <td> {data.published_date}</td>
-              <td> {data.closing_date}</td>
+              <td>{data.published_date}</td>
+              <td>{data.closing_date}</td>
               <td className="text-center">
                 <Link
                   to={`http://174.138.171.172:3000/notice_board/${data.document}`}
@@ -69,15 +67,15 @@ export default function NoticeBoard() {
         </tbody>
       </table>
     );
-  }
+  }, [isLoading, isError, memoizedNoticeList]);
 
   return (
     <div className="container">
-      <div className="ak-height-80 ak-height-lg-40"></div>
+      <div className="ak-height-80 ak-height-lg-40" />
       <h2 className="table-title">Notice Board</h2>
-      <div className="ak-height-30 ak-height-lg-30"></div>
-      <div className="">{content}</div>
-      <div className="ak-height-100 ak-height-lg-60"></div>
+      <div className="ak-height-30 ak-height-lg-30" />
+      {tableContent}
+      <div className="ak-height-100 ak-height-lg-60" />
     </div>
   );
 }

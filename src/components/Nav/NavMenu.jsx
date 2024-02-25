@@ -60,10 +60,10 @@ export default function NavMenu() {
                       <Dropdown.Item>
                         {loginUser?.name.slice(0, 10)}
                       </Dropdown.Item>
-                      <Dropdown.Item>
-                        <span onClick={() => navigate("/member-registration")}>
-                          Create a Member
-                        </span>
+                      <Dropdown.Item
+                        onClick={() => navigate("/member-registration")}
+                      >
+                        Create a Member
                       </Dropdown.Item>
                       <Dropdown.Divider />
                       <Dropdown.Item>
