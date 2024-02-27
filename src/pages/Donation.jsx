@@ -1,8 +1,15 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
+import { useAddDonationRegisterMutation } from "../features/donation/donationApiInject";
+import { useNavigate } from "react-router-dom";
+import { useGetMemberDetailsIdQuery } from "../features/member/memberApiIn";
 
 export default function Donation() {
+  const navigate = useNavigate();
+  const [isChecked, setIsChecked] = useState(false);
+  const loginUser = JSON.parse(localStorage.getItem("user"));
+  const { data: memberData } = useGetMemberDetailsIdQuery(loginUser?.id);
   const {
     register,
     handleSubmit,
@@ -15,30 +22,71 @@ export default function Donation() {
     autoClose: 1000,
   };
 
-  const onSubmit = (data) => {
-    if (data) {
-      toast.success("SignIn Successfully!", toastOptions);
+  const [AddDonationRegister] = useAddDonationRegisterMutation();
 
-      reset();
+  const onSubmit = async (data) => {
+    if (isChecked) {
+      if (data) {
+        const postData = {
+          member_id: "",
+          ...data,
+        };
+        const resp = await AddDonationRegister(postData);
+        if (resp.data.success) {
+          toast.success("Donation Registration Completed", toastOptions);
+          reset();
+        } else {
+          toast.info("Donation Already Registration", {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 1200,
+          });
+        }
+      } else {
+        toast.info("User not found!", toastOptions);
+      }
     } else {
-      toast.info("User not found!", toastOptions);
+      if (loginUser) {
+        const { name, organization_name, email, phone_number, id } =
+          memberData.result;
+
+        const postData = {
+          member_id: id.toString(),
+          name,
+          organization_name,
+          email_address: email,
+          phone_number,
+          ...data,
+        };
+        if (postData) {
+          const resp = await AddDonationRegister(postData);
+
+          if (resp.data.success) {
+            toast.success("Donation Registration Completed", toastOptions);
+            reset();
+          } else {
+            toast.info("Donation Already Registration", {
+              position: toast.POSITION.TOP_RIGHT,
+              autoClose: 1200,
+            });
+          }
+        } else {
+          toast.info("User not found!", toastOptions);
+        }
+      } else {
+        navigate("/singin");
+      }
     }
   };
 
-  // State to track the checkbox's checked status
-  const [isChecked, setIsChecked] = useState(false);
-
-  // Function to handle checkbox click
   const handleCheckboxClick = () => {
-    // Update the isChecked state
     setIsChecked(!isChecked);
+    reset();
   };
 
   return (
     <div className="container">
       <div className="ak-height-100 ak-height-lg-60"></div>
       <form
-        action="POST"
         onSubmit={handleSubmit(onSubmit)}
         autoComplete="on"
         className="row g-3"
@@ -48,12 +96,12 @@ export default function Donation() {
             <input
               className="form-check-input custom-checkbox"
               type="radio"
-              name="inlineRadioOptions"
-              id="inlineRadio1"
+              name="donationType"
+              id="memberRadio"
               checked={!isChecked}
               onChange={handleCheckboxClick}
             />
-            <label className="form-check-label" htmlFor="inlineRadio1">
+            <label className="form-check-label" htmlFor="memberRadio">
               Donate as a member
             </label>
           </div>
@@ -61,119 +109,100 @@ export default function Donation() {
             <input
               className="form-check-input custom-checkbox"
               type="radio"
-              name="inlineRadioOptions"
-              id="inlineRadio3"
+              name="donationType"
+              id="guestRadio"
               checked={isChecked}
               onChange={handleCheckboxClick}
             />
-            <label className="form-check-label" htmlFor="inlineRadio3">
+            <label className="form-check-label" htmlFor="guestRadio">
               Donate as a guest
             </label>
           </div>
         </div>
-        <div className="col-12">
-          <label htmlFor="inputNameMember" className="form-label">
-            {errors.member_name?.type === "required" ? (
-              <p role="alert " className="text-danger">
-                Name*
-              </p>
-            ) : (
-              "Name*"
-            )}
-          </label>
-          <input
-            type="name"
-            className="text-input-filed type_2"
-            id="inputNameMember"
-            required
-            {...register("member_name", { required: true })}
-          />
-        </div>
+
         {isChecked && (
           <>
             <div className="col-12">
-              <label htmlFor="inputOrganization" className="form-label">
-                {errors.organization_name?.type === "required" ? (
-                  <p role="alert " className="text-danger">
-                    Organization Name
-                  </p>
-                ) : (
-                  "Organization Name*"
-                )}
+              <label htmlFor="inputName" className="form-label">
+                Name*
               </label>
               <input
-                type="number"
+                type="text"
+                className="text-input-filed type_2"
+                id="inputName"
+                name="name"
+                {...register("name", { required: true })}
+              />
+              {errors.name && <p className="text-danger">Name is required.</p>}
+            </div>
+            <div className="col-12">
+              <label htmlFor="inputOrganization" className="form-label">
+                Organization Name*
+              </label>
+              <input
+                type="text"
                 className="text-input-filed type_2"
                 id="inputOrganization"
-                {...register("organization_name")}
+                {...register("organization_name", { required: true })}
               />
+              {errors.organization_name && (
+                <p className="text-danger">Organization Name is required.</p>
+              )}
             </div>
             <div className="col-12">
               <label htmlFor="inputEmail" className="form-label">
-                {errors.email?.type === "required" ? (
-                  <p role="alert " className="text-danger">
-                    Email Address
-                  </p>
-                ) : (
-                  "Email Address*"
-                )}
+                Email Address*
               </label>
               <input
                 type="email"
                 className="text-input-filed type_2"
                 id="inputEmail"
-                required
-                {...register("email", { required: true })}
+                {...register("email_address", { required: true })}
               />
+              {errors.email_address && (
+                <p className="text-danger">Email Address is required.</p>
+              )}
             </div>
             <div className="col-12">
               <label htmlFor="inputPhone" className="form-label">
-                {errors.phone_number?.type === "required" ? (
-                  <p role="alert " className="text-danger">
-                    Phone Number
-                  </p>
-                ) : (
-                  "Phone Number*"
-                )}
+                Phone Number*
               </label>
               <input
-                type="number"
+                type="tel"
                 className="text-input-filed type_2"
                 id="inputPhone"
-                required
                 {...register("phone_number", { required: true })}
               />
+              {errors.phone_number && (
+                <p className="text-danger">Phone Number is required.</p>
+              )}
             </div>
           </>
         )}
         <div className="col-12">
           <label htmlFor="inputAmount" className="form-label">
-            {errors.pay_amount?.type === "required" ? (
-              <p role="alert " className="text-danger">
-                Pay Amount*
-              </p>
-            ) : (
-              "Pay Amount*"
-            )}
+            Pay Amount*
           </label>
           <input
             type="number"
             className="text-input-filed type_2"
             id="inputAmount"
-            required
             {...register("pay_amount", { required: true })}
           />
+          {errors.pay_amount && (
+            <p className="text-danger">Pay Amount is required.</p>
+          )}
         </div>
         <div className="col-12">
           <div className="form-check form-check-inline">
             <input
               className="form-check-input custom-checkbox"
               type="radio"
-              name="inlineRadioOptions"
+              name="paymentMethod"
               id="bkash"
-              required
               value="bkash"
-              {...register("payment")}
+              required
+              {...register("payment_type", { required: true })}
             />
             <label className="form-check-label" htmlFor="bkash">
               Bkash Payment
@@ -183,11 +212,11 @@ export default function Donation() {
             <input
               className="form-check-input custom-checkbox"
               type="radio"
-              name="inlineRadioOptions"
+              name="paymentMethod"
               id="ssl_commerz"
-              value="ssl_commerz"
               required
-              {...register("payment")}
+              value="ssl_commerz"
+              {...register("payment_type", { required: true })}
             />
             <label className="form-check-label" htmlFor="ssl_commerz">
               SSLCommerz
@@ -197,34 +226,27 @@ export default function Donation() {
             <input
               className="form-check-input custom-checkbox"
               type="radio"
-              name="inlineRadioOptions"
+              name="paymentMethod"
               id="cash_payment"
               required
               value="cash_payment"
-              {...register("payment")}
+              {...register("payment_type", { required: true })}
             />
             <label className="form-check-label" htmlFor="cash_payment">
-              Cash payment
+              Cash Payment
             </label>
           </div>
         </div>
         <div className="col-12">
-          <div className="form-check form-check-inline">
+          <div className="form-check">
             <input
-              className="form-check-input custom-checkbox"
-              type="radio"
-              name="check_btn"
-              id="check_btn"
+              className="form-check-input"
+              type="checkbox"
+              id="termsCheckbox"
               required
-              value="check_btn"
-              {...register("check_btn")}
             />
-            <label className="form-check-label" htmlFor="check_btn">
-              There are many variations of passages of Lorem Ipsum available,
-              but the majority have suffered alteration in some form, by
-              injected humour, or randomised words which don't look even
-              slightly believable. If you are going to use a passage of Lorem
-              Ipsum
+            <label className="form-check-label" htmlFor="termsCheckbox">
+              I agree to the terms and conditions
             </label>
           </div>
         </div>

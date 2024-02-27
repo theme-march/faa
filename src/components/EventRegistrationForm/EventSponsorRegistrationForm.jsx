@@ -7,7 +7,6 @@ import { useAddEventRegisterMutation } from "../../features/events/eventsApiInje
 import { toast } from "react-toastify";
 
 export default function EventSponsorRegistrationForm({ props }) {
-  let content = null;
   const loginUser = JSON.parse(localStorage.getItem("user"));
 
   const {
@@ -51,16 +50,9 @@ export default function EventSponsorRegistrationForm({ props }) {
       toast.error("Error EventSponsor Registration ", toastOptions);
     }
   };
-  if (isLoading) {
-    content = <HomeLoading />;
-  }
 
-  if (!isLoading && isError) {
-    content = <ErrorShow message={"There was a error"} />;
-  }
-
-  if (!isLoading && !isError && loginUserData?.success === false) {
-    content = (
+  if (!loginUser) {
+    return (
       <form
         className="row g-3"
         onSubmit={handleSubmit(onSubmit)}
@@ -180,7 +172,23 @@ export default function EventSponsorRegistrationForm({ props }) {
     );
   }
 
-  if (!isLoading && !isError && isSuccess && loginUserData?.success === true) {
+  let content = null;
+
+  if (loginUser && isLoading) {
+    content = <HomeLoading />;
+  }
+
+  if (!isLoading && isError) {
+    content = <ErrorShow message={"There was a error"} />;
+  }
+
+  if (
+    loginUser &&
+    !isLoading &&
+    !isError &&
+    isSuccess &&
+    loginUserData?.success === true
+  ) {
     const { email, phone_number, organization_name, name, id } =
       loginUserData.result;
     content = (

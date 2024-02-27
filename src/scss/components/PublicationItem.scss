@@ -4,11 +4,17 @@
   position: relative;
   height: 446.246px;
   flex-shrink: 0;
+  overflow: hidden;
+  transition: all 0.5s;
   .top-img {
     width: 100%;
     height: 100%;
+    transition: all 0.5s;
     object-fit: cover;
     background-repeat: no-repeat;
+  }
+  :hover > .top-img {
+    scale: 1.1;
   }
   .publication-title {
     position: absolute;
@@ -25,6 +31,9 @@
       font-size: 18px;
       color: #000;
       font-weight: 500;
+      &:hover {
+        color: var(--primary-color);
+      }
     }
   }
 }

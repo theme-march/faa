@@ -34,7 +34,6 @@ export default function EventParticipateRegistrationForm(props) {
       const requestData = loginUser?.id
         ? { member_id: loginUser.id, event_id: eventId, ...loginUser }
         : { event_id: eventId, ...data };
-
       const response = await AddEventRegister(requestData);
 
       if (response?.data?.success) {
@@ -50,14 +49,6 @@ export default function EventParticipateRegistrationForm(props) {
       toast.error("Error processing event registration", toastOptions);
     }
   };
-
-  if (isLoading) {
-    return <HomeLoading />;
-  }
-
-  if (isError) {
-    return <ErrorShow message={"There was an error"} />;
-  }
 
   const renderForm = () => (
     <form
@@ -180,28 +171,35 @@ export default function EventParticipateRegistrationForm(props) {
     </form>
   );
 
-  return (
-    <>
-      {!isLoading &&
-        !isError &&
-        loginUserData?.success === false &&
-        !loginUser &&
-        renderForm()}
-      {!isLoading &&
-        !isError &&
-        isSuccess &&
-        loginUserData?.success === true &&
-        loginUser && (
-          <div className="col-12 mt-5">
-            <button
-              type="submit"
-              className="button-primary"
-              onClick={handleSubmit(onSubmit)}
-            >
-              Next To Pay
-            </button>
-          </div>
-        )}
-    </>
-  );
+  if (!loginUser) {
+    return renderForm();
+  }
+
+  if (loginUser) {
+    if (isError) {
+      return <ErrorShow message={"There was an error"} />;
+    }
+    if (isLoading) {
+      return <HomeLoading />;
+    }
+    if (
+      !isLoading &&
+      !isError &&
+      isSuccess &&
+      loginUserData?.success === true &&
+      loginUser
+    ) {
+      return (
+        <div className="col-12 mt-5">
+          <button
+            type="submit"
+            className="button-primary"
+            onClick={handleSubmit(onSubmit)}
+          >
+            Next To Pay
+          </button>
+        </div>
+      );
+    }
+  }
 }

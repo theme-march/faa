@@ -64,19 +64,6 @@ export default function MembersApprovedList() {
     );
   };
 
-  function filterById(arr1, arr2) {
-    if (arr1 && arr2) {
-      const idSet = new Set(arr2?.map((obj) => obj.id));
-      return arr1.filter((obj) => idSet.has(obj.id));
-    } else {
-      return [];
-    }
-  }
-  const filteredArray = filterById(
-    sameSessionUsers,
-    loginUserData?.approval_list
-  );
-
   return (
     <div className="container">
       <div className="ak-height-80 ak-height-lg-40"></div>
@@ -114,7 +101,7 @@ export default function MembersApprovedList() {
             <table className="table table-hover table-striped">
               <thead>{renderTableHeaders(true)}</thead>
               <tbody>
-                {filteredArray?.map((data, index) => (
+                {loginUserData?.approval_list?.map((data, index) => (
                   <tr key={index}>
                     <th>{data.id}</th>
                     <td>{data.name}</td>

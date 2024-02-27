@@ -8,6 +8,12 @@ const newsApi = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
+    getNewsDetailsId: bulider.query({
+      query: (id) => ({
+        url: `/news_details/${id}`,
+        method: "GET",
+      }),
+    }),
     getScrollingNewList: bulider.query({
       query: () => ({
         url: `/scrolling_news_list`,
@@ -17,4 +23,8 @@ const newsApi = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useGetNewsListQuery, useGetScrollingNewListQuery } = newsApi;
+export const {
+  useGetNewsListQuery,
+  useGetScrollingNewListQuery,
+  useGetNewsDetailsIdQuery,
+} = newsApi;
