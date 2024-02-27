@@ -1,6 +1,4 @@
 import React from "react";
-import new_details_1 from "../assets/newpublication/new_details_1.jpg";
-import new_details_2 from "../assets/newpublication/new_details_2.jpg";
 import SocialLink from "../components/SocialLink/SocialLink";
 import CommonHero from "../components/CommonHero/CommonHero";
 import { useParams } from "react-router-dom";

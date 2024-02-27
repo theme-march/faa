@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
 import DatePicker from "react-datepicker";
@@ -9,6 +9,7 @@ import {
 } from "../../features/member/memberApiIn";
 
 export default function RegistrationForm() {
+  const [showPassword, setShowPassword] = useState(false);
   const {
     register,
     handleSubmit,
@@ -63,6 +64,12 @@ export default function RegistrationForm() {
   const toastOptions = {
     position: toast.POSITION.TOP_RIGHT,
     autoClose: 1000,
+  };
+
+  const validateStrongPassword = (value) => {
+    const strongPasswordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$/;
+    return strongPasswordRegex.test(value);
   };
 
   const onSubmit = async (data) => {
@@ -347,10 +354,13 @@ export default function RegistrationForm() {
           defaultValue=""
           rules={{
             required: "Password is required",
-            minLength: {
+            /*   minLength: {
               value: 8,
               message: "Password must be at least 8 characters",
-            },
+            }, */
+            validate: (value) =>
+              validateStrongPassword(value) ||
+              "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character",
           }}
           render={({ field }) => (
             <div>
@@ -363,13 +373,22 @@ export default function RegistrationForm() {
                   "Password*"
                 )}
               </label>
-              <input
-                id="Password"
-                autoComplete="current-password"
-                type="password"
-                {...field}
-                className="text-input-filed type_2"
-              />
+              <div className="input-group flex-nowrap">
+                <input
+                  id="Password"
+                  autoComplete="current-password"
+                  type={showPassword ? "text" : "password"}
+                  {...field}
+                  className="text-input-filed type_2"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="btn btn-outline-secondary"
+                >
+                  {showPassword ? "Hide" : "Show"}
+                </button>
+              </div>
             </div>
           )}
         />
@@ -405,7 +424,6 @@ export default function RegistrationForm() {
           Apply
         </button>
       </div>
-        
     </form>
   );
 }
