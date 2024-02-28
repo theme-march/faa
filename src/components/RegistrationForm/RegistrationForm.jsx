@@ -42,22 +42,7 @@ export default function RegistrationForm() {
     "Other",
   ];
 
-  // const { data: membership_category_id } = useGetMembersCategoryListQuery();
-
-  const membership_category_id = [
-    {
-      name: "Honorary Member For Life time (@Bulk amount)",
-      value: 2,
-    },
-    {
-      name: "Life time Member(@10k)",
-      value: 3,
-    },
-    {
-      name: "General Member(@1k)",
-      value: 4,
-    },
-  ];
+  const { data: membership_category_id } = useGetMembersCategoryListQuery();
 
   const [memberRegister] = useMemberRegisterMutation();
 
@@ -66,14 +51,10 @@ export default function RegistrationForm() {
     autoClose: 1000,
   };
 
-  const validateStrongPassword = (value) => {
-    const strongPasswordRegex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$/;
-    return strongPasswordRegex.test(value);
-  };
-
   const onSubmit = async (data) => {
-    let hsc_passing_year = data?.hsc_passing_year?.getFullYear().toString();
+    let hsc_passing_year = data?.hsc_passing_year
+      ? data?.hsc_passing_year?.getFullYear().toString()
+      : "none";
     const postData = {
       ...data,
       hsc_passing_year,
@@ -163,7 +144,7 @@ export default function RegistrationForm() {
         <Controller
           control={control}
           name="hsc_passing_year"
-          rules={{ required: "Date of Birth is required" }}
+          // rules={{ required: "HSC Passing Year" }}
           render={({ field }) => (
             <>
               <label htmlFor="HSCPassingYear" className="form-label">
@@ -172,7 +153,7 @@ export default function RegistrationForm() {
                     {errors?.hsc_passing_year?.message}
                   </p>
                 ) : (
-                  "HSC Passing Year*"
+                  "HSC Passing Year"
                 )}
               </label>
               <div>
@@ -182,7 +163,6 @@ export default function RegistrationForm() {
                   onChange={(date) => field.onChange(date)}
                   dateFormat="yyyy"
                   showYearPicker
-                  // required
                   className="text-input-filed type_2"
                 />
               </div>
@@ -280,9 +260,9 @@ export default function RegistrationForm() {
               <option value="" disabled hidden>
                 Select an option
               </option>
-              {membership_category_id?.map((member, i) => (
-                <option value={member.value} key={i}>
-                  {member.name}
+              {membership_category_id?.result?.map((member, i) => (
+                <option value={member.id} key={i}>
+                  {member.category_name}
                 </option>
               ))}
             </select>
@@ -354,13 +334,10 @@ export default function RegistrationForm() {
           defaultValue=""
           rules={{
             required: "Password is required",
-            /*   minLength: {
+            minLength: {
               value: 8,
               message: "Password must be at least 8 characters",
-            }, */
-            validate: (value) =>
-              validateStrongPassword(value) ||
-              "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character",
+            },
           }}
           render={({ field }) => (
             <div>

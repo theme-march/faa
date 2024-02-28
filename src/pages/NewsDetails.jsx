@@ -1,10 +1,11 @@
 import React from "react";
 import SocialLink from "../components/SocialLink/SocialLink";
 import CommonHero from "../components/CommonHero/CommonHero";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useGetNewsDetailsIdQuery } from "../features/news/newsApilnject";
 import HomeLoading from "../components/UI/HomeLoading";
 import ErrorShow from "../components/UI/ErrorShow";
+import { FaFilePdf } from "react-icons/fa";
 
 export default function NewsDetails() {
   const { id } = useParams();
@@ -30,7 +31,7 @@ export default function NewsDetails() {
   }
 
   if (!isLoading && !isError && newsDetails?.success === true && isSuccess) {
-    const { title, cover_image, details } = newsDetails.result;
+    const { title, cover_image, details, file } = newsDetails.result;
 
     content = (
       <>
@@ -54,7 +55,16 @@ export default function NewsDetails() {
           />
 
           <div className="ak-height-40 ak-height-lg-30"></div>
-          <div className="ak-border-width"></div>
+          {file && (
+            <Link
+              to={`http://174.138.171.172:3000/publication/${file}`}
+              className="text-danger me-3 fs-1"
+              target="_blank"
+            >
+              <FaFilePdf />
+            </Link>
+          )}
+          <div className="ak-border-width mt-2"></div>
           <div className="ak-height-40 ak-height-lg-30"></div>
           <SocialLink />
           <div className="ak-height-100 ak-height-lg-60"></div>

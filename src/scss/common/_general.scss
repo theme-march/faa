@@ -596,3 +596,16 @@ input[type="checkbox"]:checked {
     --bs-dropdown-link-active-bg: var(--primary-color) !important;
   }
 }
+
+.technology-partner {
+  display: block;
+  color: #fffc;
+  text-align: center;
+  &:hover {
+    color: #fffc;
+  }
+  span {
+    color: #fff;
+    text-decoration: underline;
+  }
+}

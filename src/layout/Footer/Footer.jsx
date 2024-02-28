@@ -55,7 +55,15 @@ export default function Footer() {
             </div>
           </div>
         </div>
-        <div className="ak-height-90 ak-height-lg-60"></div>
+        <div className="ak-height-70 ak-height-lg-30"></div>
+        <a
+          href="https://braincode.com.bd/"
+          target="_blank"
+          className="technology-partner"
+        >
+          Technology Partner: <span>Brain Code Ltd.</span>
+        </a>
+        <div className="ak-height-20 ak-height-lg-20"></div>
       </div>
     </footer>
   );

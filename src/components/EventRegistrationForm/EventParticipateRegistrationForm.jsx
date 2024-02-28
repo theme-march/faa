@@ -31,19 +31,55 @@ export default function EventParticipateRegistrationForm(props) {
 
   const onSubmit = async (data) => {
     try {
-      const requestData = loginUser?.id
-        ? { member_id: loginUser.id, event_id: eventId, ...loginUser }
-        : { event_id: eventId, ...data };
-      const response = await AddEventRegister(requestData);
+      if (loginUser) {
+        if (loginUserData.success) {
+          const {
+            id,
+            name,
+            organization_name,
+            designation_name,
+            email,
+            phone_number,
+          } = loginUserData?.result;
 
-      if (response?.data?.success) {
-        toast.success("Event Registration Completed", toastOptions);
-        reset();
-      } else {
-        toast.info(response?.data?.message, {
-          position: toast.POSITION.TOP_RIGHT,
-          autoClose: 1200,
-        });
+          const postData = {
+            event_id: eventId,
+            member_id: id,
+            full_name: name,
+            organization_name,
+            designation_name,
+            email,
+            phone_number,
+            address: "member user",
+          };
+          if (postData) {
+            const response = await AddEventRegister(postData);
+            if (response?.data?.success) {
+              toast.success("Event Registration Completed", toastOptions);
+              reset();
+            } else {
+              toast.info(response?.data?.message, {
+                position: toast.POSITION.TOP_RIGHT,
+                autoClose: 1200,
+              });
+            }
+          }
+        }
+      }
+      if (!loginUser) {
+        const postData = { event_id: eventId, ...data, member_id: "" };
+        if (postData) {
+          const response = await AddEventRegister(postData);
+          if (response?.data?.success) {
+            toast.success("Event Registration Completed", toastOptions);
+            reset();
+          } else {
+            toast.info(response?.data?.message, {
+              position: toast.POSITION.TOP_RIGHT,
+              autoClose: 1200,
+            });
+          }
+        }
       }
     } catch (error) {
       toast.error("Error processing event registration", toastOptions);

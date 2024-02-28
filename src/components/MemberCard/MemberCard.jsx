@@ -3,7 +3,7 @@ import member from "../../assets/member/member_1.jpg";
 export default function MemberCard({ props }) {
   return (
     <div className="col">
-      <div className="member-card">
+      <div className="member-card  h-100">
         <img
           src={
             props.member_image
@@ -19,8 +19,11 @@ export default function MemberCard({ props }) {
             ? "Honorary Member"
             : props?.membership_category_id == 3
             ? "Life time Member"
-            : "General Member"}
+            : props?.membership_category_id == 4
+            ? "General Member"
+            : "Abumni Member"}
         </p>
+        <p> {props?.admin_approval == 0 && "Approval Pending..."}</p>
       </div>
     </div>
   );

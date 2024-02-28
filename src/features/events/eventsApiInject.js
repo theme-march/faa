@@ -26,6 +26,14 @@ const eventsApi = apiSlice.injectEndpoints({
       }),
       //   invalidatesTags: ["member"],
     }),
+    AddEventSponsorRegister: bulider.mutation({
+      query: (data) => ({
+        url: "/event_sponsor_register",
+        method: "POST",
+        body: data,
+      }),
+      //   invalidatesTags: ["member"],
+    }),
   }),
 });
 
@@ -33,4 +41,5 @@ export const {
   useGetEventListQuery,
   useGetEventDetailsIdQuery,
   useAddEventRegisterMutation,
+  useAddEventSponsorRegisterMutation,
 } = eventsApi;

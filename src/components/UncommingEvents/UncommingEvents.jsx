@@ -3,8 +3,14 @@ import { ButtonPrimary } from "../Button/Button";
 import DateFormat from "../DateFormat/DateFormat";
 
 export default function UncommingEvents({ props }) {
-  const { event_title, event_date, event_short_details, cover_image, id } =
-    props[0];
+  const {
+    event_title,
+    event_date,
+    event_short_details,
+    cover_image,
+    id,
+    event_venue,
+  } = props[0];
   return (
     <div className="container">
       <div className="upcomming-event">
@@ -21,8 +27,12 @@ export default function UncommingEvents({ props }) {
                 <DateFormat props={event_date} />
               </span>
             </p>
+            <p className="event-text my-2">
+              Venue: <span> {event_venue}</span>
+            </p>
+
             <div className="event-text d-flex">
-              <p className="flex-shrink-0">Short Details: </p>
+              <p className="flex-shrink-0">Details: </p>
               <span
                 className="flex-shrink-1"
                 dangerouslySetInnerHTML={{ __html: event_short_details }}

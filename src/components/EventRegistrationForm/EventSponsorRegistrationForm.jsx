@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { useGetMemberDetailsIdQuery } from "../../features/member/memberApiIn";
 import HomeLoading from "../UI/HomeLoading";
 import ErrorShow from "../UI/ErrorShow";
-import { useAddEventRegisterMutation } from "../../features/events/eventsApiInject";
+import { useAddEventSponsorRegisterMutation } from "../../features/events/eventsApiInject";
 import { toast } from "react-toastify";
 
 export default function EventSponsorRegistrationForm({ props }) {
@@ -15,7 +15,8 @@ export default function EventSponsorRegistrationForm({ props }) {
     isSuccess,
     isError,
   } = useGetMemberDetailsIdQuery(loginUser?.id);
-  const [AddEventRegister, { data }] = useAddEventRegisterMutation();
+  const [AddEventSponsorRegister, { data }] =
+    useAddEventSponsorRegisterMutation();
 
   const {
     register,
@@ -35,7 +36,7 @@ export default function EventSponsorRegistrationForm({ props }) {
       event_id: props.toString(),
     };
     try {
-      const resp = await AddEventRegister(postData);
+      const resp = await AddEventSponsorRegister(postData);
 
       if (resp.data.success) {
         toast.success("EventSponsor Registration Completed", toastOptions);
