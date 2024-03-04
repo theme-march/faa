@@ -40,6 +40,7 @@ export default function RegistrationForm() {
       : "none";
     const postData = {
       ...data,
+      membership_number: "0",
       hsc_passing_year,
     };
 
@@ -50,6 +51,7 @@ export default function RegistrationForm() {
 
     try {
       const resp = await memberRegister(formData);
+      console.log(resp);
       if (resp.data?.success) {
         toast.success("SignIn Successfully!", toastOptions);
         reset();
@@ -353,7 +355,7 @@ export default function RegistrationForm() {
           )}
         />
       </div>
-      <div className="col-md-6 d-none">
+      {/*   <div className="col-md-6">
         <label forhtml="membership_number" className="form-label">
           {errors.membership_number?.type === "required" ? (
             <p role="alert " className="text-danger">
@@ -365,12 +367,31 @@ export default function RegistrationForm() {
         </label>
         <input
           type="text"
-          disabled
-          hidden
+          name="membership_number"
           value={"0"}
+          defaultValue={"0"}
+          disabled
           className="text-input-filed type_2 "
           id="membership_number"
           {...register("membership_number")}
+        />
+      </div> */}
+      <div className="col-md-6">
+        <label forhtml="member_address" className="form-label">
+          {errors.address?.type === "required" ? (
+            <p role="alert " className="text-danger">
+              Address is required
+            </p>
+          ) : (
+            "Your Address"
+          )}
+        </label>
+        <input
+          type="text"
+          name="address"
+          className="text-input-filed type_2 "
+          id="member_address"
+          {...register("address")}
         />
       </div>
       <div className="col-12">

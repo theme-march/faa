@@ -14,9 +14,9 @@ export default function Home() {
   const { data: allDataInHome, isLoading, isError } = useGetHomeIdQuery();
 
   let content = null;
-  if (isLoading) {
+  /*   if (isLoading) {
     content = <HomeLoading />;
-  }
+  } */
 
   if (!isLoading && isError) {
     content = <ErrorShow message={"There was a error"} />;
