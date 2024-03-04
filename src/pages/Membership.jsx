@@ -1,49 +1,54 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import MemberCard from "../components/MemberCard/MemberCard";
 import SearchMember from "../components/SearchMember/SearchMember";
 import { useSelector } from "react-redux";
 import { useGetMembersListQuery } from "../features/member/memberApiIn";
 import HomeLoading from "../components/UI/HomeLoading";
 import ErrorShow from "../components/UI/ErrorShow";
-import { useState } from "react";
 
 export default function Membership() {
   const [membersList, setMemberList] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(12);
 
   const { search: name } = useSelector((state) => state.memberSearch);
   const { data: members, isLoading, isError } = useGetMembersListQuery();
 
+  useEffect(() => {
+    if (!isLoading && !isError && members?.result.length > 0) {
+      let filteredList = members.result;
+
+      if (name) {
+        const searchTerm = name.toLowerCase();
+        filteredList = filteredList.filter((item) =>
+          item.name.toLowerCase().includes(searchTerm)
+        );
+      }
+
+      setMemberList(filteredList);
+    }
+  }, [members, name, isLoading, isError]);
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = membersList.slice(indexOfFirstItem, indexOfLastItem);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  const pageNumbers = [];
+  for (let i = 1; i <= Math.ceil(membersList.length / itemsPerPage); i++) {
+    pageNumbers.push(i);
+  }
+
   let content = null;
   if (isLoading) {
     content = [1, 2, 3, 4, 5, 6].map((event, i) => <HomeLoading key={i} />);
-  }
-
-  if (!isLoading && isError) {
-    content = <ErrorShow message={"There was a error"} />;
-  }
-
-  if (!isLoading && !isError && members?.result.length < 0) {
+  } else if (isError) {
+    content = <ErrorShow message={"There was an error"} />;
+  } else if (membersList.length === 0) {
     content = <ErrorShow message={"No data found"} />;
-  }
-
-  useEffect(() => {
-    if (!isLoading && !isError && members?.result.length > 0) {
-      const filterList = members.result.filter((item) => {
-        const itemName = item.name.toLowerCase();
-        const userTypeText = name.toLowerCase();
-        return itemName?.indexOf(userTypeText) > -1;
-      });
-
-      if (filterList) {
-        setMemberList(filterList);
-      } else {
-        setMemberList(members.result);
-      }
-    }
-  }, [members, name]);
-
-  if (membersList.length > 0) {
-    content = membersList?.map((item) => (
+  } else {
+    content = currentItems.map((item) => (
       <MemberCard key={item.id} props={item} />
     ));
   }
@@ -58,6 +63,19 @@ export default function Membership() {
         <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
           {content}
         </div>
+      </div>
+
+      <div className="ak-height-20"></div>
+      <div className="container">
+        <ul className="pagination justify-content-center">
+          {pageNumbers.map((number) => (
+            <li key={number} className="page-item">
+              <button onClick={() => paginate(number)} className="page-link">
+                {number}
+              </button>
+            </li>
+          ))}
+        </ul>
       </div>
 
       <div className="ak-height-100 ak-height-lg-60"></div>
