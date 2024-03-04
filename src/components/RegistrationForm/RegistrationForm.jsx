@@ -5,6 +5,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import {
   useGetMembersCategoryListQuery,
+  useGetMembersOccupationListQuery,
+  useGetMembersSessionListQuery,
   useMemberRegisterMutation,
 } from "../../features/member/memberApiIn";
 
@@ -19,28 +21,9 @@ export default function RegistrationForm() {
     formState: { errors },
   } = useForm();
 
-  const BatchSession = [
-    "DUIBA001",
-    "DUIBA002",
-    "DUIBA003",
-    "DUIBA004",
-    "DUIBA005",
-    "DUIBA006",
-    "DUIBA007",
-    "DUFIN 1990-1994",
-    "DUFIN 1994-1998",
-    "DUFIN 1998-2002",
-    "DUFIN 2002-2006",
-  ];
+  const { data: BatchSession } = useGetMembersSessionListQuery();
 
-  const Occupations = [
-    "None",
-    "Service (Govt)",
-    "Service (Private)",
-    "Business",
-    "Consultant",
-    "Other",
-  ];
+  const { data: Occupations } = useGetMembersOccupationListQuery();
 
   const { data: membership_category_id } = useGetMembersCategoryListQuery();
 
@@ -194,9 +177,9 @@ export default function RegistrationForm() {
               <option value="" disabled hidden>
                 Select an option
               </option>
-              {BatchSession.map((batchNumber, i) => (
-                <option value={batchNumber} key={i}>
-                  {batchNumber}
+              {BatchSession?.result?.map((batchNumber, i) => (
+                <option value={batchNumber.batch_session_name} key={i}>
+                  {batchNumber.batch_session_name}
                 </option>
               ))}
             </select>
@@ -227,9 +210,9 @@ export default function RegistrationForm() {
               <option value="" disabled hidden>
                 Select an option
               </option>
-              {Occupations.map((occupation, i) => (
-                <option value={occupation} key={i}>
-                  {occupation}
+              {Occupations?.result?.map((occupation, i) => (
+                <option value={occupation.occupation_name} key={i}>
+                  {occupation.occupation_name}
                 </option>
               ))}
             </select>

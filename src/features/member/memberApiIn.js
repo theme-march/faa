@@ -56,6 +56,18 @@ const memberApi = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
+    getMembersSessionList: bulider.query({
+      query: () => ({
+        url: `/batch_session_list`,
+        method: "GET",
+      }),
+    }),
+    getMembersOccupationList: bulider.query({
+      query: () => ({
+        url: `/occupation_list`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -67,4 +79,6 @@ export const {
   useGetMemberDetailsIdQuery,
   useGetMembersListQuery,
   useGetMembersCategoryListQuery,
+  useGetMembersOccupationListQuery,
+  useGetMembersSessionListQuery,
 } = memberApi;
