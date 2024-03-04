@@ -6,45 +6,45 @@ import ErrorShow from "../components/UI/ErrorShow";
 
 export default function Career() {
   const [formData, setFormData] = useState("");
-  const [jobsList, setjobslist] = useState([]);
+  const [jobsList, setJobsList] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   const { data: jobsListFetchData, isLoading, isError } = useGetJobsListQuery();
 
-  let content = null;
-  if (isLoading) {
-    content = [1, 2, 3, 4, 5, 6].map((event, i) => <HomeLoading key={i} />);
-  }
-
-  if (!isLoading && isError) {
-    content = <ErrorShow message={"There was a error"} />;
-  }
-
-  if (!isLoading && !isError && jobsListFetchData?.result.length < 0) {
-    content = <ErrorShow message={"No data found"} />;
-  }
+  useEffect(() => {
+    if (jobsListFetchData?.result) {
+      setJobsList(jobsListFetchData.result);
+    }
+  }, [jobsListFetchData]);
 
   const handleInputChange = (e) => {
+    setCurrentPage(1);
     setFormData(e.target.value);
   };
 
-  useEffect(() => {
-    if (!isLoading && !isError && jobsListFetchData?.result.length > 0) {
-      const filterList = jobsListFetchData?.result?.filter((item) => {
-        const itemName = item.job_title.toLowerCase();
-        const userTypeText = formData.toLowerCase();
-        return itemName.indexOf(userTypeText) > -1;
-      });
+  const filteredJobs = jobsList.filter((job) =>
+    job.job_title.toLowerCase().includes(formData.toLowerCase())
+  );
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentJobs = filteredJobs.slice(indexOfFirstItem, indexOfLastItem);
 
-      if (filterList) {
-        setjobslist(filterList);
-      } else {
-        setjobslist(jobsListFetchData);
-      }
-    }
-  }, [formData, jobsListFetchData]);
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const nextPage = () => setCurrentPage((prev) => prev + 1);
+  const prevPage = () => setCurrentPage((prev) => prev - 1);
 
-  if (jobsList.length > 0) {
-    content = jobsList?.map((job, index) => (
+  let content = null;
+  if (isLoading) {
+    content = Array.from({ length: itemsPerPage }, (_, i) => (
+      <HomeLoading key={i} />
+    ));
+  } else if (isError) {
+    content = <ErrorShow message={"There was a error"} />;
+  } else if (filteredJobs.length === 0) {
+    content = <ErrorShow message={"No data found"} />;
+  } else {
+    content = currentJobs.map((job, index) => (
       <JobCard key={index} props={job} />
     ));
   }
@@ -54,30 +54,76 @@ export default function Career() {
       <div className="ak-height-50 ak-height-lg-60"></div>
       <div className="container container-max-width-910">
         <div className="ak-height-35 ak-height-lg-35"></div>
-        {/* <form method="POST"> */}
         <div className="d-flex gap-3">
           <input
             type="text"
             className="text-input-filed w-100"
             id="Search"
             name="search_job"
-            value={formData || ""}
+            value={formData}
             placeholder="Job Search"
             onChange={handleInputChange}
           />
-          {/* <button className="gray-round-btn w-25" type="submit">
-            Job Search
-          </button> */}
         </div>
-        {/* </form> */}
         <div className="ak-height-30 ak-height-lg-30"></div>
         <div className="react-post">
           <h2 className="mb-3 fw-bolder">Recent posts</h2>
-          <p>{jobsList?.length} Total Search Job List</p>
+          <p>{filteredJobs.length} Total Search Job List</p>
         </div>
         <div>{content}</div>
+        <Pagination
+          itemsPerPage={itemsPerPage}
+          totalItems={filteredJobs.length}
+          paginate={paginate}
+          currentPage={currentPage}
+          nextPage={nextPage}
+          prevPage={prevPage}
+        />
       </div>
       <div className="ak-height-100 ak-height-lg-60"></div>
     </>
   );
 }
+
+const Pagination = ({
+  itemsPerPage,
+  totalItems,
+  currentPage,
+  paginate,
+  nextPage,
+  prevPage,
+}) => {
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
+
+  return (
+    <nav>
+      <ul className="pagination my-4">
+        <li className={`page-item${currentPage === 1 ? " disabled" : ""}`}>
+          <button onClick={prevPage} className="page-link">
+            prev
+          </button>
+        </li>
+        {pageNumbers.map((number) => (
+          <li
+            key={number}
+            className={`page-item${currentPage === number ? " active" : ""}`}
+          >
+            <button onClick={() => paginate(number)} className="page-link">
+              {number}
+            </button>
+          </li>
+        ))}
+        <li
+          className={`page-item${
+            currentPage === totalPages ? " disabled" : ""
+          }`}
+        >
+          <button onClick={nextPage} className="page-link">
+            next
+          </button>
+        </li>
+      </ul>
+    </nav>
+  );
+};
