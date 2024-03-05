@@ -13,7 +13,6 @@ export default function AboutUs({ props }) {
           loop={true}
           effect="fade"
           speed={1200}
-          autoplay={true}
           slidesPerView={"1"}
           onSwiper={(swiper) => {
             swiperTestimonialRef.current = swiper;
