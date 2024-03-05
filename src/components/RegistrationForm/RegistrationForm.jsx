@@ -102,7 +102,7 @@ export default function RegistrationForm() {
         <input
           className="text-input-filed type_2"
           id="inputNumber"
-          type="number"
+          type="text"
           {...register("phone_number", { required: true })}
         />
       </div>
@@ -129,7 +129,7 @@ export default function RegistrationForm() {
         <Controller
           control={control}
           name="hsc_passing_year"
-          // rules={{ required: "HSC Passing Year" }}
+          rules={{ required: "HSC Passing Year" }}
           render={({ field }) => (
             <>
               <label htmlFor="HSCPassingYear" className="form-label">
@@ -295,7 +295,7 @@ export default function RegistrationForm() {
               Membership Images * is required
             </p>
           ) : (
-            "Membership Images"
+            "Images Size 300 * 300 & 1MB MAX is required"
           )}
         </label>
         <input
@@ -355,27 +355,7 @@ export default function RegistrationForm() {
           )}
         />
       </div>
-      {/*   <div className="col-md-6">
-        <label forhtml="membership_number" className="form-label">
-          {errors.membership_number?.type === "required" ? (
-            <p role="alert " className="text-danger">
-              Membership number * is required
-            </p>
-          ) : (
-            "Membership number"
-          )}
-        </label>
-        <input
-          type="text"
-          name="membership_number"
-          value={"0"}
-          defaultValue={"0"}
-          disabled
-          className="text-input-filed type_2 "
-          id="membership_number"
-          {...register("membership_number")}
-        />
-      </div> */}
+
       <div className="col-md-6">
         <label forhtml="member_address" className="form-label">
           {errors.address?.type === "required" ? (

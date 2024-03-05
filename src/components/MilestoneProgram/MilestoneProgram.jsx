@@ -8,7 +8,7 @@ export default function MilestoneProgram({ props }) {
       <div className="row align-items-center justify-content-between gap-5">
         <div className="col-lg-5">
           <div>
-            <h1>{title}</h1>
+            <h2>{title}</h2>
             <div className="ak-height-25 ak-height-lg-20"></div>
             <p dangerouslySetInnerHTML={{ __html: details }} />
             <div className="ak-height-25 ak-height-lg-20"></div>

@@ -13,7 +13,10 @@ export default function MemberCard({ props }) {
           alt="..."
           className="member-img"
         />
-        <p className="member-name">{props?.name}</p>
+        <p className="member-name ak-primary-color">{props?.name}</p>
+        <p className="member-name ">
+          HSC/Eqvelitent: {props?.hsc_passing_year}
+        </p>
         <p className="member-title">
           {props?.membership_category_id == 2
             ? "Honorary Member"
@@ -23,7 +26,7 @@ export default function MemberCard({ props }) {
             ? "General Member"
             : "Abumni Member"}
         </p>
-        <p> {props?.admin_approval == 0 && "Approval Pending..."}</p>
+        <p> {props?.admin_approval == 0 && "only registon member"}</p>
       </div>
     </div>
   );

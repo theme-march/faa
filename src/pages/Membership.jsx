@@ -20,12 +20,20 @@ export default function Membership() {
 
       if (name) {
         const searchTerm = name.toLowerCase();
-        filteredList = filteredList.filter((item) =>
-          item.name.toLowerCase().includes(searchTerm)
+        filteredList = filteredList.filter(
+          (item) =>
+            item.name.toLowerCase().includes(searchTerm) ||
+            item.designation_name.toLowerCase().includes(searchTerm) ||
+            item.occupation.toLowerCase().includes(searchTerm) ||
+            item.phone_number.toLowerCase().includes(searchTerm) ||
+            item.hsc_passing_year.toLowerCase().includes(searchTerm) ||
+            item.email.toLowerCase().includes(searchTerm) ||
+            item.session.toLowerCase().includes(searchTerm)
         );
       }
 
       setMemberList(filteredList);
+      setCurrentPage(1);
     }
   }, [members, name, isLoading, isError]);
 
@@ -65,7 +73,7 @@ export default function Membership() {
         </div>
       </div>
 
-      <div className="ak-height-20"></div>
+      <div className="ak-height-20 ak-height-lg-20"></div>
       <div className="container">
         <ul className="pagination justify-content-center">
           {pageNumbers.map((number) => (

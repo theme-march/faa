@@ -1,6 +1,6 @@
 .ak-moving-section-wrap {
   overflow: hidden;
-  max-width: 30%;
+  max-width: 50%;
   &.type_2 {
     max-width: 100%;
   }
@@ -44,7 +44,7 @@
 }
 
 .ak-animation-speed-30 {
-  animation: slide-left 10s linear infinite;
+  animation: slide-left 20s linear infinite;
 }
 
 .ak-animation-speed-40 {
