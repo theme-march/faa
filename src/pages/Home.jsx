@@ -46,7 +46,6 @@ export default function Home() {
   if (!isLoading && !isError && allDataInHome?.success === true) {
     const { section_1, section_2, section_3, section_4, section_5, section_6 } =
       allDataInHome;
-    console.log(allDataInHome);
     content = (
       <>
         <Modal

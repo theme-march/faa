@@ -6,6 +6,33 @@ export default function AboutUs({ props }) {
   const swiperTestimonialRef = useRef();
   const { details, title, url } = props?.details;
 
+  const sliderData = [
+    {
+      id: 1,
+      title: "slider1",
+      url: "/",
+      image: "https://ssl.du.ac.bd/fontView/images/slider/16999543181.jpg",
+      details:
+        "This property returns the number of code units in the string. JavaScript uses UTF-16 encoding, where each Unicode character may be encoded ",
+    },
+    {
+      id: 2,
+      title: "slider2",
+      url: "/",
+      image: "https://ssl.du.ac.bd/fontView/images/slider/16999543181.jpg",
+      details:
+        "This property returns the number of code units in the string. JavaScript uses UTF-16 encoding, where each Unicode character may be encoded ",
+    },
+    {
+      id: 3,
+      title: "slider3",
+      url: "/",
+      image: "https://ssl.du.ac.bd/fontView/images/slider/16999543181.jpg",
+      details:
+        "This property returns the number of code units in the string. JavaScript uses UTF-16 encoding, where each Unicode character may be encoded ",
+    },
+  ];
+
   return (
     <div>
       <div className="ak-slider ak-slider-about">
@@ -18,30 +45,25 @@ export default function AboutUs({ props }) {
             swiperTestimonialRef.current = swiper;
           }}
         >
-          {props?.media_data.map((image) => (
-            <SwiperSlide key={image.id}>
-              <img
-                className="slider-img"
-                src={`https://ssl.du.ac.bd/fontView/images/slider/16999543181.jpg`}
-                alt="..."
-              />
+          {sliderData.map((item) => (
+            <SwiperSlide key={item.id}>
+              <img className="slider-img" src={item.image} alt="..." />
               <div className="over-lay"></div>
 
               <div className="container">
                 <div className="about-content">
                   <h1 className="title" data-swiper-parallax="300">
-                    {image.title}
+                    {item.title}
                   </h1>
                   <div className="ak-height-25 ak-height-lg-20"></div>
                   <p
                     className="desp"
                     data-swiper-parallax="100"
-                    dangerouslySetInnerHTML={{ __html: image.title }}
+                    dangerouslySetInnerHTML={{ __html: item.details }}
                   />
                   <div className="ak-height-25 ak-height-lg-20"></div>
                   <div className="d-inline-flex">
-                    {" "}
-                    <ButtonPrimary to={"/about"} data-swiper-parallax="300">
+                    <ButtonPrimary to={item.url} data-swiper-parallax="300">
                       VIEW MORE
                     </ButtonPrimary>
                   </div>
@@ -50,6 +72,7 @@ export default function AboutUs({ props }) {
             </SwiperSlide>
           ))}
         </Swiper>
+
         <div className="ak-swiper-controll-about">
           <div
             className="controll-btn"
