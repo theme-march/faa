@@ -81,7 +81,7 @@ export default function NavMenu() {
                 <>
                   <Link to={"/singin"}>Sign in</Link>
                   <ButtonPrimary to={"/member-registration"}>
-                    Became a Member
+                    Become a Member
                   </ButtonPrimary>
                 </>
               )}

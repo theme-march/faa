@@ -9,6 +9,7 @@ import {
   useGetMembersSessionListQuery,
   useMemberRegisterMutation,
 } from "../../features/member/memberApiIn";
+import ImageUploadComponent from "../ImageUploadComponent/ImageCompression";
 
 export default function RegistrationForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -16,6 +17,8 @@ export default function RegistrationForm() {
     register,
     handleSubmit,
     setValue,
+    setError,
+    clearErrors,
     control,
     reset,
     formState: { errors },
@@ -35,9 +38,7 @@ export default function RegistrationForm() {
   };
 
   const onSubmit = async (data) => {
-    let hsc_passing_year = data?.hsc_passing_year
-      ? data?.hsc_passing_year?.getFullYear().toString()
-      : "none";
+    let hsc_passing_year = data?.hsc_passing_year;
     const postData = {
       ...data,
       membership_number: "0",
@@ -129,7 +130,7 @@ export default function RegistrationForm() {
         <Controller
           control={control}
           name="hsc_passing_year"
-          rules={{ required: "HSC Passing Year" }}
+          rules={{ required: "HSC / Equivalent Passing Year " }}
           render={({ field }) => (
             <>
               <label htmlFor="HSCPassingYear" className="form-label">
@@ -138,7 +139,7 @@ export default function RegistrationForm() {
                     {errors?.hsc_passing_year?.message}
                   </p>
                 ) : (
-                  "HSC Passing Year"
+                  "HSC / Equivalent Passing Year"
                 )}
               </label>
               <div>
@@ -288,30 +289,16 @@ export default function RegistrationForm() {
           {...register("designation_name")}
         />
       </div>
+
       <div className="col-md-6">
-        <label forhtml="MembershipImages" className="form-label">
-          {errors._image?.type === "required" ? (
-            <p role="alert " className="text-danger">
-              Membership Images * is required
-            </p>
-          ) : (
-            "Images Size 300 * 300 & 1MB MAX is required"
-          )}
-        </label>
-        <input
-          accept="image/*"
-          className="text-input-filed type_2"
-          id="MembershipImages"
-          type="file"
-          name="_image"
-          onChange={(e) => {
-            const selectedFiles = e.target.files;
-            if (selectedFiles && selectedFiles.length > 0) {
-              setValue("_image", selectedFiles[0]);
-            }
-          }}
+        <ImageUploadComponent
+          errors={errors}
+          setValue={setValue}
+          clearErrors={clearErrors}
+          setError={setError}
         />
       </div>
+
       <div className="col-md-6">
         <Controller
           name="password" // The name of your form field
