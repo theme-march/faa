@@ -4,7 +4,7 @@ export const apiSlice = createApi({
   reducerPath: "apiSlice",
   tagTypes: ["events", "eventsById"],
   baseQuery: fetchBaseQuery({
-    baseUrl: "/api",
+    baseUrl: "/api/v1/",
   }),
   endpoints: (bulider) => ({}),
 });
