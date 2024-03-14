@@ -7,9 +7,7 @@ export default function MemberCard({ props }) {
       <div className="member-card  h-100">
         <img
           src={
-            props.member_image
-              ? `http://174.138.171.172:3000/member/${props.member_image}`
-              : member
+            props.member_image ? `/images/member/${props.member_image}` : member
           }
           alt="..."
           className="member-img"

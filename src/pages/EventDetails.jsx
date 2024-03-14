@@ -36,7 +36,7 @@ export default function EventDetails() {
           {eventsDetailsData?.media.map((media, index) => (
             <div className="gallery-item" key={index}>
               <img
-                src={`http://174.138.171.172:3000/event_image/${media?.image}`}
+                src={`/images/event_image/${media?.image}`}
                 alt="..."
                 className="ak-img"
               />

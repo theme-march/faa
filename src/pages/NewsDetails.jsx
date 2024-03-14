@@ -42,7 +42,7 @@ export default function NewsDetails() {
           <div className="ak-height-30 ak-height-lg-30"></div>
           <div className="news-details-cover-img">
             <img
-              src={`http://174.138.171.172:3000/publication/${cover_image}`}
+              src={`/images/publication/${cover_image}`}
               alt="..."
               className="mb-4 ak-center"
             />
@@ -57,7 +57,7 @@ export default function NewsDetails() {
           <div className="ak-height-40 ak-height-lg-30"></div>
           {file && (
             <Link
-              to={`http://174.138.171.172:3000/publication/${file}`}
+              to={`/images/publication/${file}`}
               className="text-danger me-3 fs-1"
               target="_blank"
             >

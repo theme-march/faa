@@ -55,7 +55,7 @@ export default function NoticeBoard() {
               <td>{data.closing_date}</td>
               <td className="text-center">
                 <Link
-                  to={`http://174.138.171.172:3000/notice_board/${data.document}`}
+                  to={`/images/notice_board/${data.document}`}
                   className="text-danger"
                   target="_blank"
                 >

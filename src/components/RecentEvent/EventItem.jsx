@@ -9,7 +9,7 @@ export default function EventItem({ props }) {
       <div className="news-publices">
         <Link to={`/events-details/${props?.id}`}>
           <img
-            src={`http://174.138.171.172:3000/cover_image_event/${props?.cover_image}`}
+            src={`/images/cover_image_event/${props?.cover_image}`}
             className="top-img type_2"
             alt="..."
           />

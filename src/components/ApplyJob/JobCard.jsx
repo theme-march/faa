@@ -9,10 +9,7 @@ export default function JobCard({ props }) {
       <div className="left-side">
         <div className="job-img">
           {props?.company_logo ? (
-            <img
-              src={`http://174.138.171.172:3000/job/${props?.company_logo}`}
-              alt="job_1"
-            />
+            <img src={`/images/job/${props?.company_logo}`} alt="job_1" />
           ) : (
             "No Images"
           )}
@@ -29,7 +26,7 @@ export default function JobCard({ props }) {
       <div className="right-side">
         {props?.file && (
           <Link
-            to={`http://174.138.171.172:3000/job/${props?.file}`}
+            to={`/images/job/${props?.file}`}
             className="text-danger me-3"
             target="_blank"
           >

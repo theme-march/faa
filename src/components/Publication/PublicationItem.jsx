@@ -5,19 +5,16 @@ export default function PublicationItem({ props }) {
   return (
     <div className="col">
       <div className="publication-item">
-        <Link
-          to={`http://174.138.171.172:3000/publication/${props.file}`}
-          target="_blank"
-        >
+        <Link to={`/images/publication/${props.file}`} target="_blank">
           <img
-            src={`http://174.138.171.172:3000/publication/${props?.cover_image}`}
+            src={`/images/publication/${props?.cover_image}`}
             className="top-img"
             alt="..."
           />
         </Link>
         <div className="publication-title">
           <Link
-            to={`http://174.138.171.172:3000/publication/${props.file}`}
+            to={`/images/publication/${props.file}`}
             className="ttile"
             target="_blank"
           >

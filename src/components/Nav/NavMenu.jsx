@@ -50,7 +50,7 @@ export default function NavMenu() {
                       <Image
                         src={
                           loginUser?.img
-                            ? `http://174.138.171.172:3000/member/${loginUser?.img}`
+                            ? `/images/member/${loginUser?.img}`
                             : member
                         }
                       />
