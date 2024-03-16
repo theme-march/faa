@@ -13,8 +13,7 @@ export default function ContactInfo() {
       <p>(406) 555-0120</p>
       <p>example@email.com</p>
       <p className="contact-us-address">
-        AWR NIB Tower (Level-4) House - 99, Road - 11, Block - C Banani,
-        Dhaka-1213 Bangladesh
+        Department of Finance, University of Dhaka
       </p>
       <div className="ak-height-50 ak-height-lg-30"></div>
       <div className="d-flex gap-3">

@@ -65,6 +65,11 @@ export default function NavMenu() {
                       >
                         Create a Member
                       </Dropdown.Item>
+                      <Dropdown.Item
+                        onClick={() => navigate("/members-approved-list")}
+                      >
+                        Approval Process
+                      </Dropdown.Item>
                       <Dropdown.Divider />
                       <Dropdown.Item>
                         <span

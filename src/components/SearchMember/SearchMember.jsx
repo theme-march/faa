@@ -23,7 +23,7 @@ export default function SearchMember() {
           <input
             type="text"
             className="text-input-filed"
-            placeholder="Name / ID / Session / Organization / HSC"
+            placeholder="Name / ID / Session / Batch / HSC / Organization"
             value={input || ""}
             onChange={handleInputChange}
           />
