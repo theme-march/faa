@@ -9,7 +9,14 @@ const homeApi = apiSlice.injectEndpoints({
       }),
       //   providesTags: ["homeTags"],
     }),
+    getHomeSlider: bulider.query({
+      query: () => ({
+        url: "/home_slider",
+        method: "GET",
+      }),
+      //   providesTags: ["homeTags"],
+    }),
   }),
 });
 
-export const { useGetHomeIdQuery } = homeApi;
+export const { useGetHomeIdQuery, useGetHomeSliderQuery } = homeApi;

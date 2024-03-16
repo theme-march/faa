@@ -1,37 +1,12 @@
 import React, { useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { ButtonPrimary } from "../Button/Button";
+import { useGetHomeSliderQuery } from "../../features/home/homeApiIn";
 
-export default function AboutUs({ props }) {
+export default function AboutUs() {
   const swiperTestimonialRef = useRef();
-  const { details, title, url } = props?.details;
 
-  const sliderData = [
-    {
-      id: 1,
-      title: "slider1",
-      url: "/",
-      image: "https://ssl.du.ac.bd/fontView/images/slider/16999543181.jpg",
-      details:
-        "This property returns the number of code units in the string. JavaScript uses UTF-16 encoding, where each Unicode character may be encoded ",
-    },
-    {
-      id: 2,
-      title: "slider2",
-      url: "/",
-      image: "https://ssl.du.ac.bd/fontView/images/slider/16999543181.jpg",
-      details:
-        "This property returns the number of code units in the string. JavaScript uses UTF-16 encoding, where each Unicode character may be encoded ",
-    },
-    {
-      id: 3,
-      title: "slider3",
-      url: "/",
-      image: "https://ssl.du.ac.bd/fontView/images/slider/16999543181.jpg",
-      details:
-        "This property returns the number of code units in the string. JavaScript uses UTF-16 encoding, where each Unicode character may be encoded ",
-    },
-  ];
+  const { data: sliderData } = useGetHomeSliderQuery();
 
   return (
     <div>
@@ -45,7 +20,7 @@ export default function AboutUs({ props }) {
             swiperTestimonialRef.current = swiper;
           }}
         >
-          {sliderData.map((item) => (
+          {sliderData?.result?.map((item) => (
             <SwiperSlide key={item.id}>
               <img className="slider-img" src={item.image} alt="..." />
               <div className="over-lay"></div>

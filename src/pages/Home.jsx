@@ -31,7 +31,7 @@ export default function Home() {
       allDataInHome;
     content = (
       <>
-        <AboutUs props={section_1[0]} />
+        <AboutUs />
 
         <div className="ak-height-80 ak-height-lg-30"></div>
         <MilestoneProgram props={section_1[1]} />
