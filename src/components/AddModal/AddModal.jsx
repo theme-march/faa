@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import addImages from "../../assets/addshow/addphoto.jpg";
+import { useGetHomePopupQuery } from "../../features/home/homeApiIn";
 
 export default function AddModal() {
   const [showModal, setShowModal] = useState(false);
@@ -17,6 +18,8 @@ export default function AddModal() {
   const handleCloseModal = () => {
     setShowModal(false);
   };
+
+  const { data } = useGetHomePopupQuery();
   return (
     <Modal
       show={showModal}
@@ -25,10 +28,13 @@ export default function AddModal() {
       centered
     >
       <Modal.Header closeButton>
-        <Modal.Title>Smart ICT LAB</Modal.Title>
+        <Modal.Title>{data?.result[0]?.title}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <img src={addImages} className="add-images-home" />
+        <img
+          src={`/images/home_popup_image/${data?.result[0]?.image}`}
+          className="add-images-home"
+        />
       </Modal.Body>
       <Modal.Footer>
         <Button className="button-primary" onClick={handleCloseModal}>

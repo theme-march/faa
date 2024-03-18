@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
 import DatePicker from "react-datepicker";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 import "react-datepicker/dist/react-datepicker.css";
 import {
   useGetMembersCategoryListQuery,
@@ -39,6 +41,7 @@ export default function RegistrationForm() {
 
   const onSubmit = async (data) => {
     let hsc_passing_year = data?.hsc_passing_year;
+
     const postData = {
       ...data,
       membership_number: "0",
@@ -52,7 +55,7 @@ export default function RegistrationForm() {
 
     try {
       const resp = await memberRegister(formData);
-      console.log(resp);
+
       if (resp.data?.success) {
         toast.success("SignIn Successfully!", toastOptions);
         reset();
@@ -92,19 +95,27 @@ export default function RegistrationForm() {
       </div>
       <div className="col-md-6">
         <label htmlFor="inputNumber" className="form-label">
-          {errors.phone_number && errors.phone_number?.type === "required" ? (
+          {errors?.phone_number?.message ? (
             <p role="alert " className="text-danger">
               Phone Number is required
             </p>
           ) : (
-            "Phone Number*"
+            "Phone Number With country code*"
           )}
         </label>
-        <input
-          className="text-input-filed type_2"
-          id="inputNumber"
-          type="text"
-          {...register("phone_number", { required: true })}
+        <Controller
+          name="phone_number"
+          control={control}
+          rules={{ required: "Please select country code" }}
+          defaultValue=""
+          render={({ field }) => (
+            <PhoneInput
+              {...field}
+              country={"bd"}
+              placeholder="Enter Phone Number"
+              inputClass="form-select text-input-filed type_2"
+            />
+          )}
         />
       </div>
       <div className="col-md-6">
@@ -118,6 +129,7 @@ export default function RegistrationForm() {
           )}
         </label>
         <input
+          name="email"
           type="email"
           autoComplete="current-email"
           className="text-input-filed type_2"
@@ -266,6 +278,7 @@ export default function RegistrationForm() {
           )}
         </label>
         <input
+          name="organization_name"
           type="text"
           className="text-input-filed type_2"
           id="Organization"
@@ -283,6 +296,7 @@ export default function RegistrationForm() {
           )}
         </label>
         <input
+          name="designation_name"
           type="text"
           className="text-input-filed type_2"
           id="Designation"

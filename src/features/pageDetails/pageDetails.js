@@ -10,13 +10,14 @@ const pageDetails = apiSlice.injectEndpoints({
       }),
     }),
 
-    /*  getPageDetails: bulider.query({
+    getAboutUsMessage: bulider.query({
       query: () => ({
-        url: "page_details",
+        url: "/about_us_message",
         method: "GET",
       }),
-    }), */
+    }),
   }),
 });
 
-export const { useAddPageDetailsMutation } = pageDetails;
+export const { useAddPageDetailsMutation, useGetAboutUsMessageQuery } =
+  pageDetails;

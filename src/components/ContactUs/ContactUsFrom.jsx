@@ -1,6 +1,7 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
+import { useAddContactMutation } from "../../features/contact/contactApiIn";
 
 export default function ContactUsFrom() {
   const {
@@ -15,12 +16,19 @@ export default function ContactUsFrom() {
     autoClose: 1000,
   };
 
-  const onSubmit = (data) => {
-    if (data) {
-      toast.success("SignIn Successfully!", toastOptions);
-      reset();
-    } else {
-      toast.info("User not found!", toastOptions);
+  const [addContact] = useAddContactMutation();
+
+  const onSubmit = async (data) => {
+    try {
+      const resp = await addContact(data);
+      if (resp.data.success) {
+        toast.success("Massages sent successfully", toastOptions);
+        reset();
+      } else {
+        toast.info("Massages not sent", toastOptions);
+      }
+    } catch (error) {
+      toast.error("Server Error problem", toastOptions);
     }
   };
   return (
@@ -40,6 +48,8 @@ export default function ContactUsFrom() {
           )}
         </label>
         <input
+          required
+          name="name"
           type="name"
           className="text-input-filed type_2"
           id="inputName"
@@ -57,6 +67,8 @@ export default function ContactUsFrom() {
           )}
         </label>
         <input
+          required
+          name="email"
           type="email"
           className="text-input-filed type_2"
           id="inputEmail"
@@ -66,7 +78,7 @@ export default function ContactUsFrom() {
       </div>
       <div className="col-12">
         <label htmlFor="inputNumber" className="form-label">
-          {errors.number && errors.number?.type === "required" ? (
+          {errors.text && errors.text?.type === "required" ? (
             <p role="alert " className="text-danger">
               Phone Number is required
             </p>
@@ -75,10 +87,12 @@ export default function ContactUsFrom() {
           )}
         </label>
         <input
+          required
+          name="phone_number"
           className="text-input-filed type_2"
           id="inputNumber"
-          type="number"
-          {...register("number", { required: true })}
+          type="text"
+          {...register("phone_number", { required: true })}
         />
       </div>
       <div className="col-12">
@@ -86,7 +100,9 @@ export default function ContactUsFrom() {
           <p role="alert">Message</p>
         </label>
         <textarea
+          required
           type="text"
+          name="message"
           className="text-input-filed type_2"
           id="Message"
           {...register("message")}

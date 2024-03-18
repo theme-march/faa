@@ -22,7 +22,11 @@ export default function AboutUs() {
         >
           {sliderData?.result?.map((item) => (
             <SwiperSlide key={item.id}>
-              <img className="slider-img" src={item.image} alt="..." />
+              <img
+                className="slider-img"
+                src={`/images/home_slider_image/${item.image}`}
+                alt="..."
+              />
               <div className="over-lay"></div>
 
               <div className="container">
