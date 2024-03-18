@@ -7,7 +7,7 @@ import AddModal from "../components/AddModal/AddModal";
 export default function Layout() {
   return (
     <>
-      {/* <AddModal /> */}
+      <AddModal />
       <Header />
       <ScrollTop />
       <div className="pages-min-height">

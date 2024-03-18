@@ -6,19 +6,20 @@ import { useGetHomePopupQuery } from "../../features/home/homeApiIn";
 export default function AddModal() {
   const [showModal, setShowModal] = useState(false);
 
+  const { data } = useGetHomePopupQuery();
+
   useEffect(() => {
     const hasVisitedBefore = sessionStorage.getItem("hasVisitedBefore");
     if (!hasVisitedBefore) {
       setShowModal(true);
       sessionStorage.setItem("hasVisitedBefore", true);
     }
-  }, [showModal]);
+  }, [showModal, data]);
 
   const handleCloseModal = () => {
     setShowModal(false);
   };
 
-  const { data } = useGetHomePopupQuery();
   return (
     <Modal
       show={showModal}
