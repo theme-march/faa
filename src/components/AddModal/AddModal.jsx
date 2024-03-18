@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import addImages from "../../assets/addshow/addphoto.jpg";
 import { useGetHomePopupQuery } from "../../features/home/homeApiIn";
 
 export default function AddModal() {
