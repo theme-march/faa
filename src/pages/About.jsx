@@ -1,8 +1,6 @@
-import React, { Suspense, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import CommonHero from "../components/CommonHero/CommonHero";
 import usePagesDetails from "../hook/usePagesDetails";
-import aboutPagesOne from "../assets/aboutPagesOne.png";
-import aboutPagesTwo from "../assets/aboutPagesTwo.png";
 import Shimmer from "../components/Shimmer/Shimmer";
 import { useGetAboutUsMessageQuery } from "../features/pageDetails/pageDetails";
 
@@ -38,8 +36,6 @@ export default function About() {
       </div>
     ));
   }
-
-  console.log(data?.result);
 
   return (
     <>
