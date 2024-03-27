@@ -17,18 +17,20 @@ export default function ContactInfo() {
       </p>
       <div className="ak-height-50 ak-height-lg-30"></div>
       <div className="d-flex gap-3">
-        <SocialIcon>
+        <SocialIcon link={"https://www.facebook.com/groups/135676929841458"}>
           <FaFacebookF />
         </SocialIcon>
-        <SocialIcon>
+        <SocialIcon link={"https://twitter.com/FAA_dubd"}>
           <FaTwitter />
         </SocialIcon>
-        <SocialIcon>
+        <SocialIcon
+          link={"https://www.youtube.com/channel/UCYCf3eHZf66sm02mRl0Ex"}
+        >
           <FaYoutube />
         </SocialIcon>
-        <SocialIcon>
+        {/*  <SocialIcon>
           <FaLinkedinIn />
-        </SocialIcon>
+        </SocialIcon> */}
       </div>
     </div>
   );

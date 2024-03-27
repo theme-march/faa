@@ -38,18 +38,22 @@ export default function HeaderLogo() {
               <p className="logo-subtitle">Creating Value Through Fellowship</p>
             </div>
             <div className="d-flex gap-3">
-              <SocialIcon>
+              <SocialIcon
+                link={"https://www.facebook.com/groups/135676929841458"}
+              >
                 <FaFacebookF />
               </SocialIcon>
-              <SocialIcon>
+              <SocialIcon link={"https://twitter.com/FAA_dubd"}>
                 <FaTwitter />
               </SocialIcon>
-              <SocialIcon>
+              <SocialIcon
+                link={"https://www.youtube.com/channel/UCYCf3eHZf66sm02mRl0Ex"}
+              >
                 <FaYoutube />
               </SocialIcon>
-              <SocialIcon>
-                <FaLinkedinIn />
-              </SocialIcon>
+              {/*  <SocialIcon>
+          <FaLinkedinIn />
+        </SocialIcon> */}
             </div>
           </div>
         </div>

@@ -9,7 +9,7 @@ import ErrorShow from "../components/UI/ErrorShow";
 export default function Membership() {
   const [membersList, setMemberList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(12);
+  const [itemsPerPage] = useState(80);
 
   const { search: name } = useSelector((state) => state.memberSearch);
   const { data: members, isLoading, isError } = useGetMembersListQuery();
@@ -22,13 +22,13 @@ export default function Membership() {
         const searchTerm = name.toLowerCase();
         filteredList = filteredList.filter(
           (item) =>
-            item.name.toLowerCase().includes(searchTerm) ||
-            item.designation_name.toLowerCase().includes(searchTerm) ||
-            item.occupation.toLowerCase().includes(searchTerm) ||
-            item.phone_number.toLowerCase().includes(searchTerm) ||
-            item.hsc_passing_year.toLowerCase().includes(searchTerm) ||
-            item.email.toLowerCase().includes(searchTerm) ||
-            item.session.toLowerCase().includes(searchTerm)
+            item?.name?.toLowerCase().includes(searchTerm) ||
+            item?.designation_name?.toLowerCase().includes(searchTerm) ||
+            item?.occupation?.toLowerCase().includes(searchTerm) ||
+            item?.phone_number?.toLowerCase().includes(searchTerm) ||
+            item?.hsc_passing_year?.toLowerCase().includes(searchTerm) ||
+            item?.email?.toLowerCase().includes(searchTerm) ||
+            item?.session?.toLowerCase().includes(searchTerm)
         );
       }
 

@@ -26,6 +26,7 @@ import MembersApprovedList from "./components/MembersApprovedList/MembersApprove
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import Donation from "./pages/Donation";
 import { PaymentCencle, PaymentError, PaymentSuccess } from "./pages/Payment";
+import MemberDetails from "./pages/MemberDetails";
 
 function App() {
   return (
@@ -46,12 +47,17 @@ function App() {
             </PrivateRoute>
           }
         ></Route>
+        <Route
+          path="/member-details/:id"
+          element={
+            <PrivateRoute>
+              <MemberDetails />
+            </PrivateRoute>
+          }
+        ></Route>
         <Route path="/events" element={<Events />}></Route>
         <Route path="/events-details/:id" element={<EventDetails />}></Route>
-        {/* <Route
-          path="/events-registration"
-          element={<EventRegistration />}
-        ></Route> */}
+
         <Route
           path="/event-sponsor-registration/:id"
           element={<EventSponsorRegistration />}
@@ -69,7 +75,6 @@ function App() {
         <Route path="/contact-us" element={<ContactUs />}></Route>
         <Route path="/program" element={<Program />}></Route>
         <Route path="/teams-use" element={<TeamsUse />}></Route>
-        {/* <Route path="/job-application" element={<JobApplication />}></Route> */}
         <Route path="/career" element={<Career />}></Route>
         <Route path="/faq" element={<Faq />}></Route>
         <Route path="/payment/success" element={<PaymentSuccess />}></Route>

@@ -20,7 +20,8 @@ export default function Footer() {
             <p className="logo-title">Finance Alumni Association</p>
             <p className="logo-desp">
               FAA is a social network of ex-students of the Department of
-              Finance, University of Dhaka (DU)
+              Finance, University of Dhaka (DU) Campus, <br />
+              Nilkhet Road, Dhaka - 1000
             </p>
           </div>
           <div className="menu-section">
@@ -40,16 +41,20 @@ export default function Footer() {
               <Link to="/singin">Sing In</Link>
             </div>
             <div className="social-link">
-              <SocialIconTransparent>
+              {/* <SocialIconTransparent>
                 <FaLinkedinIn />
-              </SocialIconTransparent>
-              <SocialIconTransparent>
+              </SocialIconTransparent> */}
+              <SocialIconTransparent
+                link={"https://www.facebook.com/groups/135676929841458"}
+              >
                 <FaFacebookF />
               </SocialIconTransparent>
-              <SocialIconTransparent>
+              <SocialIconTransparent
+                link={"https://www.youtube.com/channel/UCYCf3eHZf66sm02mRl0Ex"}
+              >
                 <FaYoutube />
               </SocialIconTransparent>
-              <SocialIconTransparent>
+              <SocialIconTransparent link={"https://twitter.com/FAA_dubd"}>
                 <FaTwitter />
               </SocialIconTransparent>
             </div>
