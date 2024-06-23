@@ -63,6 +63,10 @@ export default function MemberDetails() {
             <RenderDetailRow label="Name" value={name} />
             <RenderDetailRow label="Email" value={email} />
             <RenderDetailRow
+              label="Membership number"
+              value={membership_number}
+            />
+            <RenderDetailRow
               label="HSC Passing Year"
               value={
                 hsc_passing_year?.length > 10 ? (
@@ -86,9 +90,12 @@ export default function MemberDetails() {
 
 function RenderDetailRow({ label, value }) {
   return (
-    <div className="d-flex gap-3 align-items-center  p-2">
-      <h6>{label}:</h6>
-      <p>{value}</p>
-    </div>
+    label &&
+    value && (
+      <div className="d-flex gap-3 align-items-center  p-2">
+        <h6>{label}:</h6>
+        <p>{value}</p>
+      </div>
+    )
   );
 }

@@ -10,8 +10,8 @@ export default function ContactInfo() {
   return (
     <div className="contact-us-info">
       <h3>Finance Alumni Association</h3>
-      <p>(406) 555-0120</p>
-      <p>example@email.com</p>
+      <p>+8801819214814 </p>
+      <p>faa.dubd@outlook.com</p>
       <p className="contact-us-address">
         Department of Finance, University of Dhaka
       </p>
@@ -20,16 +20,13 @@ export default function ContactInfo() {
         <SocialIcon link={"https://www.facebook.com/groups/135676929841458"}>
           <FaFacebookF />
         </SocialIcon>
-        <SocialIcon link={"https://twitter.com/FAA_dubd"}>
+        {/*  <SocialIcon link={"https://twitter.com/FAA_dubd"}>
           <FaTwitter />
         </SocialIcon>
         <SocialIcon
           link={"https://www.youtube.com/channel/UCYCf3eHZf66sm02mRl0Ex"}
         >
           <FaYoutube />
-        </SocialIcon>
-        {/*  <SocialIcon>
-          <FaLinkedinIn />
         </SocialIcon> */}
       </div>
     </div>

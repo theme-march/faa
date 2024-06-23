@@ -43,17 +43,14 @@ export default function HeaderLogo() {
               >
                 <FaFacebookF />
               </SocialIcon>
-              <SocialIcon link={"https://twitter.com/FAA_dubd"}>
+              {/*   <SocialIcon link={"https://twitter.com/FAA_dubd"}>
                 <FaTwitter />
               </SocialIcon>
               <SocialIcon
                 link={"https://www.youtube.com/channel/UCYCf3eHZf66sm02mRl0Ex"}
               >
                 <FaYoutube />
-              </SocialIcon>
-              {/*  <SocialIcon>
-          <FaLinkedinIn />
-        </SocialIcon> */}
+              </SocialIcon> */}
             </div>
           </div>
         </div>

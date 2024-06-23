@@ -17,7 +17,7 @@ export default function Membership() {
   useEffect(() => {
     if (!isLoading && !isError && members?.result.length > 0) {
       let filteredList = members.result;
-
+      console.log(filteredList);
       if (name) {
         const searchTerm = name.toLowerCase();
         filteredList = filteredList.filter(
@@ -28,6 +28,7 @@ export default function Membership() {
             item?.phone_number?.toLowerCase().includes(searchTerm) ||
             item?.hsc_passing_year?.toLowerCase().includes(searchTerm) ||
             item?.email?.toLowerCase().includes(searchTerm) ||
+            item?.membership_number?.toLowerCase().includes(searchTerm) ||
             item?.session?.toLowerCase().includes(searchTerm)
         );
       }

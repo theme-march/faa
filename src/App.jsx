@@ -27,6 +27,7 @@ import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import Donation from "./pages/Donation";
 import { PaymentCencle, PaymentError, PaymentSuccess } from "./pages/Payment";
 import MemberDetails from "./pages/MemberDetails";
+import TermsCondition from "./pages/TermsCondition";
 
 function App() {
   return (
@@ -77,6 +78,7 @@ function App() {
         <Route path="/teams-use" element={<TeamsUse />}></Route>
         <Route path="/career" element={<Career />}></Route>
         <Route path="/faq" element={<Faq />}></Route>
+        <Route path="/terms-condition" element={<TermsCondition />}></Route>
         <Route path="/payment/success" element={<PaymentSuccess />}></Route>
         <Route path="/payment/error" element={<PaymentError />}></Route>
         <Route path="/payment/cencle" element={<PaymentCencle />}></Route>

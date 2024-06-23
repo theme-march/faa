@@ -5,13 +5,14 @@ const ImageUploadComponent = ({ setError, clearErrors, errors, setValue }) => {
   return (
     <>
       <label htmlFor="MembershipImages" className="form-label">
-        {errors._image?.type === "required" ? (
+        {/*   {errors._image?.type !== "required" ? (
           <p role="alert" className="text-danger">
             Membership Images Size 300 * 300 & UPTO 500 KB is required
           </p>
         ) : (
           "Images Size 300 * 300 & UPTO 500 KB"
-        )}
+        )} */}
+        "Images Size 300 * 300 & UPTO 500 KB"
       </label>
       <input
         accept="image/*"

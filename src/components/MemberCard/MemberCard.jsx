@@ -6,8 +6,8 @@ export default function MemberCard({ props }) {
   return (
     <Link to={`/member-details/${props?.id}`}>
       <div className="col h-100">
-        <div className="member-card  h-100">
-          <img
+        <div className="member-card text-center  h-100">
+          {/*  <img
             src={
               props?.member_image
                 ? `/images/member/${props.member_image}`
@@ -15,7 +15,7 @@ export default function MemberCard({ props }) {
             }
             alt="..."
             className="member-img"
-          />
+          /> */}
           <p className="member-name ak-primary-color">{props?.name}</p>
           {props?.hsc_passing_year && (
             <p className="member-name">

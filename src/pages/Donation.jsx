@@ -105,7 +105,7 @@ export default function Donation() {
               Donate as a member
             </label>
           </div>
-          <div className="form-check form-check-inline">
+          {/*  <div className="form-check form-check-inline">
             <input
               className="form-check-input custom-checkbox"
               type="radio"
@@ -117,7 +117,7 @@ export default function Donation() {
             <label className="form-check-label" htmlFor="guestRadio">
               Donate as a guest
             </label>
-          </div>
+          </div> */}
         </div>
 
         {isChecked && (

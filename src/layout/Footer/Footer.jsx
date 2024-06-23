@@ -1,6 +1,7 @@
 import React from "react";
 import { LogoWhite } from "../../components/Logo/Logo";
 import { Link } from "react-router-dom";
+import payment from "../../assets/sslcommerz-banner.png";
 import {
   FaFacebookF,
   FaLinkedinIn,
@@ -26,9 +27,9 @@ export default function Footer() {
           </div>
           <div className="menu-section">
             <Link to="/">Home</Link>
-            <Link to="/contact-us">Contact us</Link>
-            <Link to="/faq">Help & FAQ</Link>
-            <Link to="/member-registration">Become a member</Link>
+            <Link to="/terms-condition">Terms & Condition</Link>
+            <Link to="/terms-condition">Refund Policy</Link>
+            <Link to="/terms-condition">Privacy Policy</Link>
           </div>
           <div className="social">
             <h5 className="social-title">Useful Link</h5>
@@ -36,8 +37,8 @@ export default function Footer() {
               Links of Finance Alumni Association in other countries
             </p>
             <div className="social-url">
-              <Link to="/gallery">Gallery</Link>
-              <Link to="/about">About Us</Link>
+              <Link to="/faq">Help & FAQ</Link>
+              <Link to="/contact-us">Contact us</Link>
               <Link to="/singin">Sing In</Link>
             </div>
             <div className="social-link">
@@ -49,18 +50,20 @@ export default function Footer() {
               >
                 <FaFacebookF />
               </SocialIconTransparent>
-              <SocialIconTransparent
+              {/*   <SocialIconTransparent
                 link={"https://www.youtube.com/channel/UCYCf3eHZf66sm02mRl0Ex"}
               >
                 <FaYoutube />
               </SocialIconTransparent>
               <SocialIconTransparent link={"https://twitter.com/FAA_dubd"}>
                 <FaTwitter />
-              </SocialIconTransparent>
+              </SocialIconTransparent> */}
             </div>
           </div>
         </div>
-        <div className="ak-height-70 ak-height-lg-30"></div>
+        <div className="ak-height-40 ak-height-lg-30"></div>
+        <img src={payment} alt="..." />
+        <div className="ak-height-40 ak-height-lg-30"></div>
         <a
           href="https://braincode.com.bd/"
           target="_blank"

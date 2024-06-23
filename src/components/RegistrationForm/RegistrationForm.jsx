@@ -82,7 +82,9 @@ export default function RegistrationForm() {
               Name is required
             </p>
           ) : (
-            "Name*"
+            <p>
+              Name <span className="text-danger">*</span>
+            </p>
           )}
         </label>
         <input
@@ -100,7 +102,10 @@ export default function RegistrationForm() {
               Phone Number is required
             </p>
           ) : (
-            "Phone Number With country code*"
+            <p>
+              Phone Number With country code{" "}
+              <span className="text-danger">*</span>
+            </p>
           )}
         </label>
         <Controller
@@ -125,7 +130,9 @@ export default function RegistrationForm() {
               Email Address is required
             </p>
           ) : (
-            "Email*"
+            <p>
+              Email <span className="text-danger">*</span>
+            </p>
           )}
         </label>
         <input
@@ -175,7 +182,10 @@ export default function RegistrationForm() {
               Select Batch number/ Session* is required
             </p>
           ) : (
-            "Select Batch number/ Session*"
+            <p>
+              Select Batch number/ Session{" "}
+              <span className="text-danger">*</span>
+            </p>
           )}
         </label>
         <Controller
@@ -208,7 +218,9 @@ export default function RegistrationForm() {
               Select Current Occupation* is required
             </p>
           ) : (
-            "Select Current Occupation*"
+            <p>
+              Select Current Occupation <span className="text-danger">*</span>
+            </p>
           )}
         </label>
         <Controller
@@ -241,7 +253,9 @@ export default function RegistrationForm() {
               Select Membership Category* is required
             </p>
           ) : (
-            "Select Membership Category*"
+            <p>
+              Select Membership Category<span className="text-danger">*</span>
+            </p>
           )}
         </label>
         <Controller
@@ -274,7 +288,9 @@ export default function RegistrationForm() {
               Organization name* is required
             </p>
           ) : (
-            "Organization name"
+            <p>
+              Organization name<span className="text-danger">*</span>
+            </p>
           )}
         </label>
         <input
@@ -292,7 +308,9 @@ export default function RegistrationForm() {
               Designation name* is required
             </p>
           ) : (
-            "Designation name"
+            <p>
+              Designation name<span className="text-danger">*</span>
+            </p>
           )}
         </label>
         <input
@@ -303,7 +321,6 @@ export default function RegistrationForm() {
           {...register("designation_name")}
         />
       </div>
-
       <div className="col-md-6">
         <ImageUploadComponent
           errors={errors}
@@ -311,8 +328,43 @@ export default function RegistrationForm() {
           clearErrors={clearErrors}
           setError={setError}
         />
-      </div>
 
+        {/* <>
+            <label htmlFor="MembershipImages" className="form-label">
+              <p>"Images Size 300 * 300 & UPTO 500 KB"</p>
+            </label>
+            <input
+              accept="image/*"
+              className="text-input-filed type_2"
+              id="MembershipImages"
+              type="file"
+              name="_image"
+              onChange={(e) => {
+                const selectedFile = e.target.files[0];
+                if (selectedFile) {
+                  if (selectedFile.size > 512000) {
+                    setError("_image", {
+                      type: "maxFileSize",
+                      message:
+                        "File size should be less than or equal to 500 KB ",
+                    });
+                  } else {
+                    setValue("_image", selectedFile);
+                    clearErrors("_image");
+                  }
+                }
+              }}
+            />
+            {errors._image && errors._image.type === "maxFileSize" && (
+              <>
+                <span className="text-danger">{errors._image.message}</span>
+                <Link to="https://imageresizer.com/">
+                  Click Here: imageresizer
+                </Link>
+              </>
+            )}
+          </> */}
+      </div>
       <div className="col-md-6">
         <Controller
           name="password" // The name of your form field
@@ -333,7 +385,9 @@ export default function RegistrationForm() {
                     {errors.password.message}
                   </p>
                 ) : (
-                  "Password*"
+                  <p>
+                    Password <span className="text-danger">*</span>
+                  </p>
                 )}
               </label>
               <div className="input-group flex-nowrap">
@@ -356,7 +410,6 @@ export default function RegistrationForm() {
           )}
         />
       </div>
-
       <div className="col-md-6">
         <label forhtml="member_address" className="form-label">
           {errors.address?.type === "required" ? (
