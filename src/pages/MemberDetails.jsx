@@ -4,6 +4,8 @@ import { useGetMemberDetailsIdQuery } from "../features/member/memberApiIn";
 import ErrorShow from "../components/UI/ErrorShow";
 import DateFormat from "../components/DateFormat/DateFormat";
 
+import demoImgMember from "../assets/member/member_1.jpg";
+
 export default function MemberDetails() {
   const { id } = useParams();
   const {
@@ -51,11 +53,15 @@ export default function MemberDetails() {
         <div className="ak-height-80 ak-height-lg-30"></div>
         <div className="row d-flex justify-content-between">
           <div className="col-md-4">
-            <img
-              src={`/images/member/${member_image}`}
-              className="col-12"
-              alt="member"
-            />
+            {member_image ? (
+              <img
+                src={`/images/member/${member_image}`}
+                className="col-12"
+                alt="member"
+              />
+            ) : (
+              <img src={demoImgMember} className="col-12" alt="member" />
+            )}
           </div>
           <div className="col-md-7">
             <div className="ak-height-lg-30"></div>

@@ -17,7 +17,6 @@ export default function Membership() {
   useEffect(() => {
     if (!isLoading && !isError && members?.result.length > 0) {
       let filteredList = members.result;
-      console.log(filteredList);
       if (name) {
         const searchTerm = name.toLowerCase();
         filteredList = filteredList.filter(

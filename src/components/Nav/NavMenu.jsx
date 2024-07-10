@@ -57,7 +57,15 @@ export default function NavMenu() {
                     </Dropdown.Toggle>
 
                     <Dropdown.Menu>
-                      <Dropdown.Item>
+                      <Dropdown.Item
+                        onClick={() =>
+                          navigate(
+                            loginUser?.id
+                              ? `/member-details/${loginUser?.id}`
+                              : "/singin"
+                          )
+                        }
+                      >
                         {loginUser?.name.slice(0, 10)}
                       </Dropdown.Item>
                       <Dropdown.Item
@@ -65,11 +73,11 @@ export default function NavMenu() {
                       >
                         Create a Member
                       </Dropdown.Item>
-                      <Dropdown.Item
+                      {/*  <Dropdown.Item
                         onClick={() => navigate("/members-approved-list")}
                       >
                         Approval Process
-                      </Dropdown.Item>
+                      </Dropdown.Item> */}
                       <Dropdown.Divider />
                       <Dropdown.Item>
                         <span

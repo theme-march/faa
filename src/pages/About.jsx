@@ -49,8 +49,8 @@ export default function About() {
             </div>
           </div>
           <div className="col-md-10 order-md-0 order-1">
-            {data?.result?.map((elem) => (
-              <>
+            {data?.result?.map((elem, index) => (
+              <div key={index}>
                 <div className="about-pages-section-one">
                   <div className="profiles">
                     <div>
@@ -74,7 +74,7 @@ export default function About() {
                   </div>
                 </div>
                 <div className="ak-height-50 ak-height-lg-50"></div>{" "}
-              </>
+              </div>
             ))}
           </div>
           <div className="mb-5 order-md-0 order-3">

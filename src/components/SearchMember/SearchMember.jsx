@@ -8,13 +8,13 @@ export default function SearchMember() {
 
   const handleInputChange = (e) => {
     setInput(e.target.value);
+    dispatch(searchMemberName(input));
   };
 
   const headerSearch = (e) => {
     e.preventDefault();
     dispatch(searchMemberName(input));
   };
-
   return (
     <div className="search-member-section">
       <div>

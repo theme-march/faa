@@ -22,7 +22,7 @@ import EventSponsorRegistration from "./pages/EventSponsorRegistration";
 import EventParticipateRegistration from "./pages/EventParticipateRegistration";
 import EventDetails from "./pages/EventDetails";
 import Career from "./pages/Career";
-import MembersApprovedList from "./components/MembersApprovedList/MembersApprovedList";
+// import MembersApprovedList from "./components/MembersApprovedList/MembersApprovedList";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import Donation from "./pages/Donation";
 import { PaymentCencle, PaymentError, PaymentSuccess } from "./pages/Payment";
@@ -40,14 +40,14 @@ function App() {
           path="/member-registration"
           element={<MembershipRegistration />}
         ></Route>
-        <Route
+        {/*  <Route
           path="/members-approved-list"
           element={
             <PrivateRoute>
               <MembersApprovedList />
             </PrivateRoute>
           }
-        ></Route>
+        ></Route> */}
         <Route
           path="/member-details/:id"
           element={
