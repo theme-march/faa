@@ -41,7 +41,7 @@ export default function MemberCard({ props }) {
             </p>
           )}
 
-          <ButtonMore to={`/member-details/${props?.id}`}>View More</ButtonMore>
+          <ButtonMore to={`/member-details/${props?.id}`}>Details</ButtonMore>
         </div>
       </div>
     </Link>
