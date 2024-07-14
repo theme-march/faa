@@ -1,12 +1,17 @@
 import React from "react";
 import member from "../../assets/member/member_1.jpg";
 import DateFormat from "../DateFormat/DateFormat";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ButtonMore } from "../Button/Button";
 export default function MemberCard({ props }) {
-  console.log(props);
+  const navigator = useNavigate();
+
+  const handerClick = (id) => {
+    navigator(`/member-details/${id}`);
+  };
+
   return (
-    <Link to={`/member-details/${props?.id}`}>
+    <div onClick={() => handerClick(props.id)} className="cursor-pointer">
       <div className="col h-100">
         <div className="member-card text-center  h-100">
           {/*  <img
@@ -44,6 +49,6 @@ export default function MemberCard({ props }) {
           <ButtonMore to={`/member-details/${props?.id}`}>Details</ButtonMore>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }

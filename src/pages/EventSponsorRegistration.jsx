@@ -23,7 +23,8 @@ export default function EventSponsorRegistration() {
           </span>
         </p>
       </div>
-      <EventSponsorRegistrationForm props={eventId} />
+      {eventId && <EventSponsorRegistrationForm props={eventId} />}
+
       <div className="ak-height-100 ak-height-lg-60"></div>
     </div>
   );

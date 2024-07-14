@@ -99,7 +99,6 @@ export default function MemberDetails() {
 }
 
 function RenderDetailRow({ label, value }) {
-  console.log(value);
   return (
     label &&
     value && (

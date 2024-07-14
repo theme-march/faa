@@ -10,7 +10,6 @@ export default function EventRegistrationForm() {
     formState: { errors },
   } = useForm();
   const onSubmit = (data) => {
-    console.log(data);
     reset();
   };
   return (

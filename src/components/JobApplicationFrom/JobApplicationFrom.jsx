@@ -9,7 +9,6 @@ export default function JobApplicationFrom() {
     formState: { errors },
   } = useForm();
   const onSubmit = (data) => {
-    console.log(data);
     reset();
   };
   return (

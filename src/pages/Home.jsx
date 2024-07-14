@@ -32,25 +32,39 @@ export default function Home() {
     content = (
       <>
         <AboutUs />
-
         <div className="ak-height-80 ak-height-lg-30"></div>
         <MilestoneProgram />
+        <div className="ak-height-80 ak-height-lg-30"></div>
+        {section_2.length !== 0 ? (
+          <RecentEvent props={section_2} />
+        ) : (
+          <p className="container">Data not load</p>
+        )}
+        <div className="ak-height-80 ak-height-lg-30"></div>
+        {section_3.length !== 0 ? (
+          <RecentEvent props={section_3} />
+        ) : (
+          <p className="container">Data not load</p>
+        )}
 
         <div className="ak-height-80 ak-height-lg-30"></div>
-        <DonationCareer props={section_2} />
-
+        {section_4.length !== 0 ? (
+          <MovingImg props={section_4} />
+        ) : (
+          <p className="container">Data not load</p>
+        )}
         <div className="ak-height-80 ak-height-lg-30"></div>
-        <RecentEvent props={section_3} />
-
+        {section_5.length !== 0 ? (
+          <UncommingEvents props={section_5} />
+        ) : (
+          <p className="container">Data not load</p>
+        )}
         <div className="ak-height-80 ak-height-lg-30"></div>
-        <MovingImg props={section_4} />
-
-        <div className="ak-height-80 ak-height-lg-30"></div>
-        <UncommingEvents props={section_5} />
-
-        <div className="ak-height-80 ak-height-lg-30"></div>
-        <NewsGrid props={section_6} />
-
+        {section_6.length !== 0 ? (
+          <NewsGrid props={section_6} />
+        ) : (
+          <p className="container">Data not load</p>
+        )}
         <div className="ak-height-80 ak-height-lg-30"></div>
       </>
     );
