@@ -23,6 +23,19 @@ const homeApi = apiSlice.injectEndpoints({
       }),
       //   providesTags: ["homeTags"],
     }),
+    getMilestoneProgram: bulider.query({
+      query: () => ({
+        url: "/programs_list",
+        method: "GET",
+      }),
+      //   providesTags: ["homeTags"],
+    }),
+    getMilestoneProgramId: bulider.query({
+      query: (id) => ({
+        url: `/programs_details?id=${id}`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -30,4 +43,6 @@ export const {
   useGetHomeIdQuery,
   useGetHomeSliderQuery,
   useGetHomePopupQuery,
+  useGetMilestoneProgramQuery,
+  useGetMilestoneProgramIdQuery,
 } = homeApi;

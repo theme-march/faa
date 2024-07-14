@@ -52,3 +52,14 @@
     line-height: 170%;
   }
 }
+
+.singleMilestoneProgram-img {
+  height: 400px;
+}
+
+@media screen and (max-width: 768px) {
+  .singleMilestoneProgram-img {
+    height: 100%;
+    width: 100%;
+  }
+}

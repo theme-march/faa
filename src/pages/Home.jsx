@@ -19,7 +19,7 @@ export default function Home() {
   }
 
   if (!isLoading && isError) {
-    content = <ErrorShow message={"There was a error"} />;
+    content = <ErrorShow message={"Item not found"} />;
   }
 
   if (!isLoading && !isError && allDataInHome?.success === false) {
@@ -27,14 +27,14 @@ export default function Home() {
   }
 
   if (!isLoading && !isError && allDataInHome?.success === true) {
-    const { section_1, section_2, section_3, section_4, section_5, section_6 } =
+    const { section_2, section_3, section_4, section_5, section_6 } =
       allDataInHome;
     content = (
       <>
         <AboutUs />
 
         <div className="ak-height-80 ak-height-lg-30"></div>
-        <MilestoneProgram props={section_1[1]} />
+        <MilestoneProgram />
 
         <div className="ak-height-80 ak-height-lg-30"></div>
         <DonationCareer props={section_2} />

@@ -236,6 +236,48 @@ export default function Donation() {
               Cash Payment
             </label>
           </div>
+          <div className="form-check form-check-inline">
+            <input
+              className="form-check-input custom-checkbox"
+              type="radio"
+              name="paymentMethod"
+              id="visa"
+              required
+              value="visa"
+              {...register("payment_type", { required: true })}
+            />
+            <label className="form-check-label" htmlFor="visa">
+              Visa
+            </label>
+          </div>
+          <div className="form-check form-check-inline">
+            <input
+              className="form-check-input custom-checkbox"
+              type="radio"
+              name="paymentMethod"
+              id="mastercard"
+              required
+              value="mastercard"
+              {...register("payment_type", { required: true })}
+            />
+            <label className="form-check-label" htmlFor="mastercard">
+              Master-card
+            </label>
+          </div>
+          <div className="form-check form-check-inline">
+            <input
+              className="form-check-input custom-checkbox"
+              type="radio"
+              name="paymentMethod"
+              id="americanexpress"
+              required
+              value="americanexpress"
+              {...register("payment_type", { required: true })}
+            />
+            <label className="form-check-label" htmlFor="americanexpress">
+              American-express
+            </label>
+          </div>
         </div>
         <div className="col-12">
           <div className="form-check">

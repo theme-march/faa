@@ -17,7 +17,7 @@ export default function Publication() {
   }
 
   if (!isLoading && isError) {
-    content = <ErrorShow message={"There was a error"} />;
+    content = <ErrorShow message={"Item not found"} />;
   }
 
   if (!isLoading && !isError && publicationsList?.result < 0) {

@@ -1,0 +1,43 @@
+.error-section {
+  height: 80vh;
+  width: 100vw;
+  background-repeat: no-repeat;
+  .error-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 65px 98px;
+    gap: 15px;
+    border-left: 2px solid $primary;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(7.5px);
+    .erro-sub-title {
+      text-transform: uppercase;
+    }
+    .error-title {
+      font-size: 200px;
+      line-height: 88%;
+    }
+    .erro-desp {
+      max-width: 847px;
+    }
+    .go-to-home {
+      margin-top: 20px;
+    }
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .error-section {
+    .error-content {
+      padding: 65px 15px;
+      text-align: center;
+      .erro-sub-title {
+        margin-bottom: 10px;
+      }
+      .error-title {
+        font-size: 100px;
+      }
+    }
+  }
+}

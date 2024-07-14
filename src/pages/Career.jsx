@@ -40,7 +40,7 @@ export default function Career() {
       <HomeLoading key={i} />
     ));
   } else if (isError) {
-    content = <ErrorShow message={"There was a error"} />;
+    content = <ErrorShow message={"Item not found"} />;
   } else if (filteredJobs.length === 0) {
     content = <ErrorShow message={"No data found"} />;
   } else {

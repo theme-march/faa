@@ -10,7 +10,7 @@ export default function TopHeader() {
     content = "Loding...";
   }
   if (!isLoading && isError) {
-    content = "There was a error";
+    content = "Item not found";
   }
 
   if (!isLoading && !isError) {

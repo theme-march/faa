@@ -28,12 +28,20 @@ import Donation from "./pages/Donation";
 import { PaymentCencle, PaymentError, PaymentSuccess } from "./pages/Payment";
 import MemberDetails from "./pages/MemberDetails";
 import TermsCondition from "./pages/TermsCondition";
+import ProgramsDetails from "./pages/ProgramsDetails";
+import AllPrograms from "./pages/AllPrograms";
+import ErrorPages from "./pages/ErrorPages";
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />}></Route>
+        <Route path="/all-programs" element={<AllPrograms />}></Route>
+        <Route
+          path="/programs-details/:id"
+          element={<ProgramsDetails />}
+        ></Route>
         <Route path="/about" element={<About />}></Route>
         <Route path="/membership" element={<Membership />}></Route>
         <Route
@@ -83,6 +91,7 @@ function App() {
         <Route path="/payment/error" element={<PaymentError />}></Route>
         <Route path="/payment/cencle" element={<PaymentCencle />}></Route>
         <Route path="/singin" element={<SignIn />}></Route>
+        <Route path="/*" element={<ErrorPages />}></Route>
       </Route>
     </Routes>
   );
