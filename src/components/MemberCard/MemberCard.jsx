@@ -2,7 +2,9 @@ import React from "react";
 import member from "../../assets/member/member_1.jpg";
 import DateFormat from "../DateFormat/DateFormat";
 import { Link } from "react-router-dom";
+import { ButtonMore } from "../Button/Button";
 export default function MemberCard({ props }) {
+  console.log(props);
   return (
     <Link to={`/member-details/${props?.id}`}>
       <div className="col h-100">
@@ -28,20 +30,18 @@ export default function MemberCard({ props }) {
             </p>
           )}
           {props?.admin_approval !== 0 && (
-            <p className="member-title text-dark">
+            <p className="member-title text-dark mb-2">
               {props?.membership_category_id == 2
                 ? "Honorary Member"
                 : props?.membership_category_id == 3
                 ? "Life time Member"
                 : props?.membership_category_id == 4
                 ? "General Member"
-                : "Abumni Member"}
+                : "Registration Member"}
             </p>
           )}
-          <p className="member-title">
-            {" "}
-            {props?.admin_approval == 0 && "Registration pending"}
-          </p>
+
+          <ButtonMore to={`/member-details/${props?.id}`}>View More</ButtonMore>
         </div>
       </div>
     </Link>

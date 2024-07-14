@@ -86,6 +86,10 @@ export default function MemberDetails() {
             <RenderDetailRow label="Occupation" value={occupation} />
             <RenderDetailRow label="Organization" value={organization_name} />
             <RenderDetailRow label="Phone Number" value={phone_number} />
+            <RenderDetailRow
+              label="Membership Category"
+              value={membership_category_id}
+            />
           </div>
         </div>
         <div className="ak-height-80 ak-height-lg-30"></div>
@@ -95,12 +99,22 @@ export default function MemberDetails() {
 }
 
 function RenderDetailRow({ label, value }) {
+  console.log(value);
   return (
     label &&
     value && (
       <div className="d-flex gap-3 align-items-center  p-2">
         <h6>{label}:</h6>
-        <p>{value}</p>
+        <p> {label == "Membership Category" ? "" : value}</p>
+        <p className="member-title text-dark">
+          {parseInt(value) === 2
+            ? "Honorary Member"
+            : parseInt(value) === 3
+            ? "Life time Member"
+            : parseInt(value) === 4
+            ? "General Member"
+            : ""}
+        </p>
       </div>
     )
   );

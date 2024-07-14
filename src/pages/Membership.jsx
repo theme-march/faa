@@ -13,7 +13,6 @@ export default function Membership() {
 
   const { search: name } = useSelector((state) => state.memberSearch);
   const { data: members, isLoading, isError } = useGetMembersListQuery();
-
   useEffect(() => {
     if (!isLoading && !isError && members?.result.length > 0) {
       let filteredList = members.result;
