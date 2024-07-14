@@ -51,7 +51,7 @@ export default function ProgramsDetails() {
           <h2>{title}</h2>
           <div className="ak-height-60 ak-height-lg-30"></div>
           <img
-            src={`http://139.162.11.50:3000/programs/${image}`}
+            src={`/images/programs/${image}`}
             alt="..."
             className="mb-4 ak-center singleMilestoneProgram-img"
           />
