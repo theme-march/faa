@@ -7,6 +7,7 @@ export default function AboutUs() {
   const swiperTestimonialRef = useRef();
 
   const { data: sliderData } = useGetHomeSliderQuery();
+  console.log(sliderData);
 
   return (
     <div>
@@ -41,11 +42,6 @@ export default function AboutUs() {
                     dangerouslySetInnerHTML={{ __html: item.details }}
                   />
                   <div className="ak-height-25 ak-height-lg-20"></div>
-                  <div className="d-inline-flex">
-                    <ButtonPrimary to={item.url} data-swiper-parallax="300">
-                      VIEW MORE
-                    </ButtonPrimary>
-                  </div>
                 </div>
               </div>
             </SwiperSlide>

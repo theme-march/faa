@@ -32,8 +32,10 @@ export default function Home() {
     content = (
       <>
         <AboutUs />
+
         <div className="ak-height-80 ak-height-lg-30"></div>
         <MilestoneProgram />
+
         <div className="ak-height-80 ak-height-lg-30"></div>
         {section_2.length !== 0 ? (
           <DonationCareer props={section_2} />
