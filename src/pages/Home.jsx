@@ -36,7 +36,7 @@ export default function Home() {
         <MilestoneProgram />
         <div className="ak-height-80 ak-height-lg-30"></div>
         {section_2.length !== 0 ? (
-          <RecentEvent props={section_2} />
+          <DonationCareer props={section_2} />
         ) : (
           <p className="container">Data not load</p>
         )}
