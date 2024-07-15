@@ -13,7 +13,8 @@ export default function ContactInfo() {
       <p>+8801819214814 </p>
       <p>faa.dubd@outlook.com</p>
       <p className="contact-us-address">
-        Department of Finance, University of Dhaka
+        Department of Finance, University of Dhaka (DU) Campus, Nilkhet Road,
+        <br /> Dhaka - 1000
       </p>
       <div className="ak-height-50 ak-height-lg-30"></div>
       <div className="d-flex gap-3">

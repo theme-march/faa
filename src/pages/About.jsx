@@ -85,6 +85,7 @@ export default function About() {
                       <img
                         src={`/images/about_us_message_image/${elem?.image}`}
                         alt="Dr. Mahmood Osman Imam"
+                        className="about_us_message_image"
                       />
                       <p className="fw-bold mt-2">{elem?.name}</p>
                       <p className="ak-primary-color fw-semibold">
