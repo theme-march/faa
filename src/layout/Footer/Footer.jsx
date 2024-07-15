@@ -31,8 +31,8 @@ export default function Footer() {
             <Link to="/terms-condition?id=termsconditions">
               Terms & Condition
             </Link>
-            <Link to="/terms-condition?id=privacypolicy">Refund Policy</Link>
-            <Link to="/terms-condition?id=refundpolicy">Privacy Policy</Link>
+            <Link to="/terms-condition?id=privacypolicy">Privacy Policy</Link>
+            <Link to="/terms-condition?id=refundpolicy">Refund Policy</Link>
           </div>
           <div className="social">
             <h5 className="social-title">Useful Link</h5>
