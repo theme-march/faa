@@ -25,11 +25,14 @@ export default function Footer() {
               Nilkhet Road, Dhaka - 1000
             </p>
           </div>
+
           <div className="menu-section">
             <Link to="/">Home</Link>
-            <Link to="/terms-condition">Terms & Condition</Link>
-            <Link to="/terms-condition">Refund Policy</Link>
-            <Link to="/terms-condition">Privacy Policy</Link>
+            <Link to="/terms-condition?id=termsconditions">
+              Terms & Condition
+            </Link>
+            <Link to="/terms-condition?id=privacypolicy">Refund Policy</Link>
+            <Link to="/terms-condition?id=refundpolicy">Privacy Policy</Link>
           </div>
           <div className="social">
             <h5 className="social-title">Useful Link</h5>

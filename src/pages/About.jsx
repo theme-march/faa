@@ -1,49 +1,77 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import CommonHero from "../components/CommonHero/CommonHero";
 import usePagesDetails from "../hook/usePagesDetails";
 import Shimmer from "../components/Shimmer/Shimmer";
 import { useGetAboutUsMessageQuery } from "../features/pageDetails/pageDetails";
+import { useLocation } from "react-router-dom";
 
 export default function About() {
   const pagesDetails = usePagesDetails();
-  const [allsection, setallSection] = useState({});
+  const [allSection, setAllSection] = useState({});
+  const { data, error, isLoading } = useGetAboutUsMessageQuery();
+  const location = useLocation();
+  const [fetchError, setFetchError] = useState(null);
 
-  const { data } = useGetAboutUsMessageQuery();
+  // This function will parse the query parameters from the URL
+  const getQueryParams = useCallback((search) => {
+    return new URLSearchParams(search);
+  }, []);
 
-  function handreler(id) {
-    let content = pagesDetails?.result?.find((element) => element.id == id);
-    setallSection(content);
-  }
+  const queryParams = useMemo(
+    () => getQueryParams(location.search),
+    [location.search, getQueryParams]
+  );
+  const title = queryParams.get("id"); // Get the 'id' query parameter
+
+  const handler = useCallback(
+    (title) => {
+      try {
+        const content = pagesDetails?.result?.find(
+          (element) => element.title === title
+        );
+        setAllSection(content);
+      } catch (err) {
+        setFetchError("An error occurred while fetching the page details.");
+        console.error(err);
+      }
+    },
+    [pagesDetails]
+  );
 
   useEffect(() => {
-    if (!allsection?.title) {
-      setallSection(pagesDetails?.result[0]);
+    try {
+      if (!allSection?.title && pagesDetails?.result?.length > 0) {
+        const initialSection = pagesDetails?.result?.find(
+          (element) => element.title === title
+        );
+        setAllSection(initialSection || pagesDetails?.result[0]);
+      }
+    } catch (err) {
+      setFetchError("An error occurred while initializing the section.");
+      console.error(err);
     }
-  }, [allsection, pagesDetails]);
+  }, [allSection, pagesDetails, title]);
 
   let content;
-  if (
-    pagesDetails?.result?.length == undefined &&
-    pagesDetails?.result == undefined
-  ) {
+  if (isLoading) {
     content = <Shimmer />;
-  }
-
-  if (pagesDetails?.result?.length > 0) {
-    content = pagesDetails?.result?.map((page) => (
-      <div key={page?.id} className="cursor-pointer ak-primary-color-hover">
-        <p onClick={() => handreler(page?.id)}>{page?.title}</p>
+  } else if (error || fetchError) {
+    content = <div>Error loading data: {error?.message || fetchError}</div>;
+  } else if (pagesDetails?.result?.length > 0) {
+    content = pagesDetails.result.map((page) => (
+      <div key={page.id} className="cursor-pointer ak-primary-color-hover">
+        <p onClick={() => handler(page.title)}>{page.title}</p>
       </div>
     ));
   }
 
   return (
     <>
-      <CommonHero title={"About Us"} />
+      <CommonHero title="About Us" />
       <div className="ak-height-100 ak-height-lg-60"></div>
       <div className="container">
         <div className="row">
-          <div className="col-md-2  order-md-0 order-2">
+          <div className="col-md-2 order-md-0 order-2">
             <div className="d-flex flex-column gap-3">
               <div className="d-flex flex-column gap-3">{content}</div>
             </div>
@@ -73,23 +101,22 @@ export default function About() {
                     />
                   </div>
                 </div>
-                <div className="ak-height-50 ak-height-lg-50"></div>{" "}
+                <div className="ak-height-50 ak-height-lg-50"></div>
               </div>
             ))}
           </div>
           <div className="mb-5 order-md-0 order-3">
             <h2 className="ak-primary-color text-center mb-4">
-              {allsection?.title}
+              {allSection?.title}
             </h2>
             <p
               dangerouslySetInnerHTML={{
-                __html: allsection?.details,
+                __html: allSection?.details,
               }}
             />
           </div>
         </div>
       </div>
-
       <div className="ak-height-100 ak-height-lg-60"></div>
     </>
   );
