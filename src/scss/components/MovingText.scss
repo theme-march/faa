@@ -77,10 +77,15 @@
 }
 .ak-slide-event-sponors {
   overflow: hidden;
+  position: relative;
+  width: 100%;
   .swiper-slide {
-    width: 20%;
+    width: calc(16.666% - 60px);
+    margin-right: 60px;
     .slider-img {
-      margin-left: 45px;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
   }
 }
@@ -102,10 +107,8 @@
   .ak-slide-event-sponors {
     overflow: hidden;
     .swiper-slide {
-      width: 40%;
-      .slider-img {
-        margin-left: 10px;
-      }
+      width: calc(33.333% - 20px);
+      margin-right: 20px;
     }
   }
 }

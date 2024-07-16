@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import { useGetEventDetailsIdQuery } from "../features/events/eventsApiInject";
 import HomeLoading from "../components/UI/HomeLoading";
 import ErrorShow from "../components/UI/ErrorShow";
+import DateFormat from "../components/DateFormat/DateFormat";
 
 export default function EventDetails() {
   const { id } = useParams();
@@ -31,7 +32,16 @@ export default function EventDetails() {
   if (!isLoading && !isError && eventsDetailsData?.success === true) {
     content = (
       <>
-        <h2 className="mb-4">{eventsDetailsData?.result[0]?.event_title}</h2>
+        <h2 className="mb-3">{eventsDetailsData?.result[0]?.event_title}</h2>
+        <p>
+          Date & Time:
+          <span>
+            <DateFormat props={eventsDetailsData?.result[0]?.event_date} />
+          </span>
+        </p>
+        <p className="mb-3">
+          Venue: <span> {eventsDetailsData?.result[0]?.event_venue}</span>
+        </p>
         <div className="gallery">
           {eventsDetailsData?.media.map((media, index) => (
             <div className="gallery-item" key={index}>
@@ -55,7 +65,7 @@ export default function EventDetails() {
   return (
     <>
       <CommonHero title={"Event Details"} />
-      <div className="ak-height-80 ak-height-lg-60"></div>
+      <div className="ak-height-60 ak-height-lg-60"></div>
       <div className="container container-max-width-910">
         {content}
         <div className="ak-height-50 ak-height-lg-30"></div>

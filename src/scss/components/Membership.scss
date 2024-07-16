@@ -1,5 +1,3 @@
-
-
 .search-member-section {
   display: flex;
   justify-content: center;
@@ -27,7 +25,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 34.788px 55.661px 34.788px 55.662px;
+  padding: 15px;
   box-shadow: 1.112px 12.707px 34.788px 20.664px rgba(0, 0, 0, 0.02);
   .member-img {
     display: flex;
@@ -42,7 +40,12 @@
   }
   .member-title {
     color: $primary;
-    font-size: 18px;
+    font-size: 15px;
+  }
+  .details-btn {
+    color: #808080;
+    margin-top: 12px;
+    font-size: 16px;
   }
 }
 

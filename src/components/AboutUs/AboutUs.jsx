@@ -1,5 +1,6 @@
 import React, { useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay } from "swiper/modules";
 import { useGetHomeSliderQuery } from "../../features/home/homeApiIn";
 
 export default function AboutUs() {
@@ -13,14 +14,16 @@ export default function AboutUs() {
         <Swiper
           loop={true}
           effect="fade"
-          speed={1200}
+          speed={1500}
+          modules={[Autoplay]}
+          autoplay={{ delay: 2000 }}
           slidesPerView={"1"}
           onSwiper={(swiper) => {
             swiperTestimonialRef.current = swiper;
           }}
         >
-          {sliderData?.result?.map((item) => (
-            <SwiperSlide key={item.id}>
+          {sliderData?.result?.map((item, index) => (
+            <SwiperSlide key={index}>
               <img
                 className="slider-img"
                 src={`/images/home_slider_image/${item.image}`}

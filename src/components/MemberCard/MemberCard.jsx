@@ -23,10 +23,12 @@ export default function MemberCard({ props }) {
             alt="..."
             className="member-img"
           /> */}
-          <p className="member-name ak-primary-color">{props?.name}</p>
+          <p className="member-name ak-primary-color member-name ak-font-18">
+            {props?.name}
+          </p>
           {props?.hsc_passing_year && (
             <p className="member-name">
-              <span className="ms-1"> HSC/Eqvelitent: </span>
+              <span className="ms-1 ak-font-16"> HSC/Eqvelitent: </span>
               {props?.hsc_passing_year?.length > 10 ? (
                 <DateFormat props={props?.hsc_passing_year} onlyYear={true} />
               ) : (
@@ -35,7 +37,7 @@ export default function MemberCard({ props }) {
             </p>
           )}
           {props?.admin_approval !== 0 && (
-            <p className="member-title text-dark mb-2">
+            <p className="member-title text-dark mb-2 ak-font-16">
               {props?.membership_category_id == 2
                 ? "Honorary Member"
                 : props?.membership_category_id == 3
@@ -46,7 +48,9 @@ export default function MemberCard({ props }) {
             </p>
           )}
 
-          <ButtonMore to={`/member-details/${props?.id}`}>Details</ButtonMore>
+          <ButtonMore to={`/member-details/${props?.id}`}>
+            <span className="details-btn">Details</span>
+          </ButtonMore>
         </div>
       </div>
     </div>

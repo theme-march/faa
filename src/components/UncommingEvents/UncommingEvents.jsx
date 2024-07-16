@@ -51,7 +51,7 @@ export default function UncommingEvents({ props }) {
           <img
             src={`/images/cover_image_event/${cover_image}`}
             className="ak-bg w-100 h-100"
-            alt="upcommingevent"
+            alt="upcommingevent rounded"
           />
         </div>
       </div>
