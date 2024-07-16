@@ -36,9 +36,13 @@ export default function Footer() {
           </div>
           <div className="social">
             <h5 className="social-title">Useful Link</h5>
-            <p className="social-short-title">
+            <Link
+              target="_blank"
+              to="https://www.facebook.com/groups/376471082747654/"
+              className="social-short-title"
+            >
               Links of Finance Alumni Association in other countries
-            </p>
+            </Link>
             <div className="social-url">
               <Link to="/faq">Help & FAQ</Link>
               <Link to="/contact-us">Contact us</Link>

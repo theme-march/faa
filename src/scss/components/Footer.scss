@@ -41,6 +41,9 @@
       .social-short-title {
         color: $secondary;
         margin-top: 11px;
+        &:hover {
+          color: $black;
+        }
       }
       .social-url {
         color: $white;
