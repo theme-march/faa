@@ -15,7 +15,7 @@ export default function JobCard({ props }) {
           )}
         </div>
         <div className="job-desp">
-          <p>One Bank Ltd</p>
+          <p>{props?.company}</p>
           <h5>{props?.job_title}</h5>
           <p>{props?.details}</p>
           <p>

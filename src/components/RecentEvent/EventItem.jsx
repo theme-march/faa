@@ -21,7 +21,7 @@ export default function EventItem({ props }) {
           <Link to={`/events-details/${props?.id}`} className="title">
             {props?.event_title}
           </Link>
-          <p className="short-title-two">Banani road 11</p>
+          <p className="short-title-two">{props?.event_venue}</p>
         </div>
         <div className="footer-btn">
           <ButtonReadMoreArrowIcon to={`/events-details/${props?.id}`}>
