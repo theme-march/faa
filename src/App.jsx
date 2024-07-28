@@ -31,6 +31,7 @@ import TermsCondition from "./pages/TermsCondition";
 import ProgramsDetails from "./pages/ProgramsDetails";
 import AllPrograms from "./pages/AllPrograms";
 import ErrorPages from "./pages/ErrorPages";
+import MemberPayment from "./pages/MemberPayment";
 
 function App() {
   return (
@@ -64,9 +65,18 @@ function App() {
             </PrivateRoute>
           }
         ></Route>
+
+        <Route
+          path="/members-payment"
+          element={
+            <PrivateRoute>
+              <MemberPayment />
+            </PrivateRoute>
+          }
+        ></Route>
+
         <Route path="/events" element={<Events />}></Route>
         <Route path="/events-details/:id" element={<EventDetails />}></Route>
-
         <Route
           path="/event-sponsor-registration/:id"
           element={<EventSponsorRegistration />}
@@ -80,7 +90,14 @@ function App() {
         <Route path="/publication" element={<Publication />}></Route>
         <Route path="/gallery" element={<Gallery />}></Route>
         <Route path="/notice-board" element={<NoticeBoard />}></Route>
-        <Route path="/donation" element={<Donation />}></Route>
+        <Route
+          path="/donation"
+          element={
+            <PrivateRoute>
+              <Donation />
+            </PrivateRoute>
+          }
+        ></Route>
         <Route path="/contact-us" element={<ContactUs />}></Route>
         <Route path="/program" element={<Program />}></Route>
         <Route path="/teams-use" element={<TeamsUse />}></Route>

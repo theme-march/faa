@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useGetMemberDetailsIdQuery } from "../features/member/memberApiIn";
 import ErrorShow from "../components/UI/ErrorShow";
 import DateFormat from "../components/DateFormat/DateFormat";
@@ -90,6 +90,9 @@ export default function MemberDetails() {
               label="Membership Category"
               value={membership_category_id}
             />
+            <Link to="/members-payment" className="button-primary mt-4">
+              Renewal
+            </Link>
           </div>
         </div>
         <div className="ak-height-80 ak-height-lg-30"></div>

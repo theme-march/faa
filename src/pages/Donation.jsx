@@ -1,21 +1,29 @@
-import React, { useState } from "react";
+/* import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useAddDonationRegisterMutation } from "../features/donation/donationApiInject";
 import { useNavigate } from "react-router-dom";
 import { useGetMemberDetailsIdQuery } from "../features/member/memberApiIn";
+import HomeLoading from "../components/UI/HomeLoading";
+import ErrorShow from "../components/UI/ErrorShow";
 
 export default function Donation() {
-  const navigate = useNavigate();
-  const [isChecked, setIsChecked] = useState(false);
   const loginUser = JSON.parse(localStorage.getItem("user"));
-  const { data: memberData } = useGetMemberDetailsIdQuery(loginUser?.id);
+  let content = null;
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
   } = useForm();
+
+  const navigate = useNavigate();
+
+  const {
+    data: memberData,
+    isLoading,
+    isError,
+  } = useGetMemberDetailsIdQuery(loginUser?.id);
 
   const toastOptions = {
     position: toast.POSITION.TOP_RIGHT,
@@ -25,63 +33,323 @@ export default function Donation() {
   const [AddDonationRegister] = useAddDonationRegisterMutation();
 
   const onSubmit = async (data) => {
-    if (isChecked) {
-      if (data) {
-        const postData = {
-          member_id: "",
-          ...data,
-        };
-        const resp = await AddDonationRegister(postData);
-        if (resp.data.success) {
-          toast.success("Donation Registration Completed", toastOptions);
-          reset();
-        } else {
-          toast.info("Donation Already Registration", {
-            position: toast.POSITION.TOP_RIGHT,
-            autoClose: 1200,
-          });
-        }
+    console.log(data);
+       if (data) {
+      const resp = await AddDonationRegister(data);
+      console.log(resp);
+      if (resp.data.success) {
+        toast.success("Donation Registration Completed", toastOptions);
+        reset();
       } else {
-        toast.info("User not found!", toastOptions);
+        toast.info("Donation not Send!", {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 1200,
+        });
       }
     } else {
-      if (loginUser) {
-        const { name, organization_name, email, phone_number, id } =
-          memberData.result;
-
-        const postData = {
-          member_id: id.toString(),
-          name,
-          organization_name,
-          email_address: email,
-          phone_number,
-          ...data,
-        };
-        if (postData) {
-          const resp = await AddDonationRegister(postData);
-
-          if (resp.data.success) {
-            toast.success("Donation Registration Completed", toastOptions);
-            reset();
-          } else {
-            toast.info("Donation Already Registration", {
-              position: toast.POSITION.TOP_RIGHT,
-              autoClose: 1200,
-            });
-          }
-        } else {
-          toast.info("User not found!", toastOptions);
-        }
-      } else {
-        navigate("/singin");
-      }
+      toast.info("Donation Data messing Send!", toastOptions);
     }
   };
 
-  const handleCheckboxClick = () => {
-    setIsChecked(!isChecked);
-    reset();
+  if (isLoading) {
+    content = <HomeLoading />;
+  }
+
+  if (!isLoading && isError) {
+    content = <ErrorShow message={"Item not found"} />;
+  }
+
+  if (!isLoading && !isError && memberData?.success === false) {
+    content = <ErrorShow message={"No data found"} />;
+  }
+
+  if (!isLoading && !isError && memberData?.success === true) {
+    const { name, organization_name, email, phone_number, id } =
+      memberData?.result;
+    content = (
+      <div className="container">
+        <div className="ak-height-100 ak-height-lg-60"></div>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          autoComplete="on"
+          className="row g-3"
+        >
+          <div className="col-md-6">
+            <label htmlFor="inputName" className="form-label">
+              Name*
+            </label>
+            <input
+              type="text"
+              className="text-input-filed type_2"
+              id="inputName"
+              name="name"
+              value={name}
+              {...register("name", { required: true })}
+            />
+            {errors.name && <p className="text-danger">Name is required.</p>}
+          </div>
+          <div className="col-md-6">
+            <label htmlFor="inputOrganization" className="form-label">
+              Organization Name*
+            </label>
+            <input
+              type="text"
+              className="text-input-filed type_2"
+              id="inputOrganization"
+              value={organization_name}
+              {...register("organization_name", { required: true })}
+            />
+            {errors.organization_name && (
+              <p className="text-danger">Organization Name is required.</p>
+            )}
+          </div>
+          <div className="col-md-6">
+            <label htmlFor="inputEmail" className="form-label">
+              Email Address*
+            </label>
+            <input
+              type="email"
+              className="text-input-filed type_2"
+              id="inputEmail"
+              value={email}
+              {...register("email_address", { required: true })}
+            />
+            {errors.email_address && (
+              <p className="text-danger">Email Address is required.</p>
+            )}
+          </div>
+          <div className="col-md-6">
+            <label htmlFor="inputPhone" className="form-label">
+              Phone Number*
+            </label>
+            <input
+              type="tel"
+              className="text-input-filed type_2"
+              id="inputPhone"
+              value={phone_number}
+              {...register("phone_number", { required: true })}
+            />
+            {errors.phone_number && (
+              <p className="text-danger">Phone Number is required.</p>
+            )}
+          </div>
+          <div className="col-12">
+            <label htmlFor="inputAmount" className="form-label">
+              Pay Amount*
+            </label>
+            <input
+              type="number"
+              className="text-input-filed type_2"
+              id="inputAmount"
+              {...register("pay_amount", { required: true })}
+            />
+            {errors.pay_amount && (
+              <p className="text-danger">Pay Amount is required.</p>
+            )}
+          </div>
+          <div className="col-12">
+            <div className="form-check form-check-inline">
+              <input
+                className="form-check-input custom-checkbox"
+                type="radio"
+                name="paymentMethod"
+                id="bkash"
+                value="bkash"
+                required
+                {...register("payment_type", { required: true })}
+              />
+              <label className="form-check-label" htmlFor="bkash">
+                Bkash Payment
+              </label>
+            </div>
+            <div className="form-check form-check-inline">
+              <input
+                className="form-check-input custom-checkbox"
+                type="radio"
+                name="paymentMethod"
+                id="ssl_commerz"
+                required
+                value="ssl_commerz"
+                {...register("payment_type", { required: true })}
+              />
+              <label className="form-check-label" htmlFor="ssl_commerz">
+                SSLCommerz
+              </label>
+            </div>
+            <div className="form-check form-check-inline">
+              <input
+                className="form-check-input custom-checkbox"
+                type="radio"
+                name="paymentMethod"
+                id="cash_payment"
+                required
+                value="cash_payment"
+                {...register("payment_type", { required: true })}
+              />
+              <label className="form-check-label" htmlFor="cash_payment">
+                Cash Payment
+              </label>
+            </div>
+            <div className="form-check form-check-inline">
+              <input
+                className="form-check-input custom-checkbox"
+                type="radio"
+                name="paymentMethod"
+                id="visa"
+                required
+                value="visa"
+                {...register("payment_type", { required: true })}
+              />
+              <label className="form-check-label" htmlFor="visa">
+                Visa
+              </label>
+            </div>
+            <div className="form-check form-check-inline">
+              <input
+                className="form-check-input custom-checkbox"
+                type="radio"
+                name="paymentMethod"
+                id="mastercard"
+                required
+                value="mastercard"
+                {...register("payment_type", { required: true })}
+              />
+              <label className="form-check-label" htmlFor="mastercard">
+                Master-card
+              </label>
+            </div>
+            <div className="form-check form-check-inline">
+              <input
+                className="form-check-input custom-checkbox"
+                type="radio"
+                name="paymentMethod"
+                id="americanexpress"
+                required
+                value="americanexpress"
+                {...register("payment_type", { required: true })}
+              />
+              <label className="form-check-label" htmlFor="americanexpress">
+                American-express
+              </label>
+            </div>
+          </div>
+          <div className="col-12">
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                id="termsCheckbox"
+                required
+              />
+              <label className="form-check-label" htmlFor="termsCheckbox">
+                I agree to the terms and conditions
+              </label>
+            </div>
+          </div>
+          <div className="col-12 mt-5">
+            <button type="submit" className="button-primary">
+              Pay Now
+            </button>
+          </div>
+        </form>
+        <div className="ak-height-100 ak-height-lg-60"></div>
+      </div>
+    );
+  }
+
+  return content;
+}
+ */
+import React, { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
+import { useAddDonationRegisterMutation } from "../features/donation/donationApiInject";
+import { useNavigate } from "react-router-dom";
+import { useGetMemberDetailsIdQuery } from "../features/member/memberApiIn";
+import HomeLoading from "../components/UI/HomeLoading";
+import ErrorShow from "../components/UI/ErrorShow";
+
+export default function Donation() {
+  const loginUser = JSON.parse(localStorage.getItem("user"));
+  const [formData, setFormData] = useState({
+    name: "",
+    organization_name: "",
+    email: "",
+    phone_number: "",
+    member_id: "",
+  });
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    formState: { errors },
+  } = useForm();
+
+  const navigate = useNavigate();
+  const {
+    data: memberData,
+    isLoading,
+    isError,
+  } = useGetMemberDetailsIdQuery(loginUser?.id);
+
+  const toastOptions = {
+    position: toast.POSITION.TOP_RIGHT,
+    autoClose: 1000,
   };
+
+  const [AddDonationRegister] = useAddDonationRegisterMutation();
+
+  useEffect(() => {
+    if (memberData?.success) {
+      setFormData({
+        name: memberData.result.name,
+        organization_name: memberData.result.organization_name,
+        email: memberData.result.email,
+        phone_number: memberData.result.phone_number,
+        member_id: memberData.result.id,
+      });
+
+      // Set the values for react-hook-form
+      setValue("name", memberData.result.name);
+      setValue("organization_name", memberData.result.organization_name);
+      setValue("email_address", memberData.result.email);
+      setValue("phone_number", memberData.result.phone_number);
+      setValue("member_id", memberData.result.id);
+    }
+  }, [memberData, setValue]);
+
+  const onSubmit = async (data) => {
+    if (data) {
+      const resp = await AddDonationRegister(data);
+
+      if (resp.data.success) {
+        toast.success("Donation Registration Completed", toastOptions);
+        reset();
+        navigate("/ssl/register");
+      } else {
+        toast.info("Donation not sent!", {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 1200,
+        });
+      }
+    } else {
+      toast.info("Donation data missing!", toastOptions);
+    }
+  };
+
+  if (isLoading) {
+    return <HomeLoading />;
+  }
+
+  if (!isLoading && isError) {
+    return <ErrorShow message={"Item not found"} />;
+  }
+
+  if (!isLoading && !isError && memberData?.success === false) {
+    return <ErrorShow message={"No data found"} />;
+  }
 
   return (
     <div className="container">
@@ -91,97 +359,78 @@ export default function Donation() {
         autoComplete="on"
         className="row g-3"
       >
-        <div className="col-12">
-          <div className="form-check form-check-inline">
-            <input
-              className="form-check-input custom-checkbox"
-              type="radio"
-              name="donationType"
-              id="memberRadio"
-              checked={!isChecked}
-              onChange={handleCheckboxClick}
-            />
-            <label className="form-check-label" htmlFor="memberRadio">
-              Donate as a member
-            </label>
-          </div>
-          {/*  <div className="form-check form-check-inline">
-            <input
-              className="form-check-input custom-checkbox"
-              type="radio"
-              name="donationType"
-              id="guestRadio"
-              checked={isChecked}
-              onChange={handleCheckboxClick}
-            />
-            <label className="form-check-label" htmlFor="guestRadio">
-              Donate as a guest
-            </label>
-          </div> */}
+        <div className="col-md-6">
+          <label htmlFor="inputName" className="form-label">
+            Name*
+          </label>
+          <input
+            type="text"
+            className="text-input-filed type_2"
+            id="inputName"
+            name="name"
+            value={formData.name}
+            {...register("name", { required: true })}
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+          />
+          {errors.name && <p className="text-danger">Name is required.</p>}
         </div>
-
-        {isChecked && (
-          <>
-            <div className="col-12">
-              <label htmlFor="inputName" className="form-label">
-                Name*
-              </label>
-              <input
-                type="text"
-                className="text-input-filed type_2"
-                id="inputName"
-                name="name"
-                {...register("name", { required: true })}
-              />
-              {errors.name && <p className="text-danger">Name is required.</p>}
-            </div>
-            <div className="col-12">
-              <label htmlFor="inputOrganization" className="form-label">
-                Organization Name*
-              </label>
-              <input
-                type="text"
-                className="text-input-filed type_2"
-                id="inputOrganization"
-                {...register("organization_name", { required: true })}
-              />
-              {errors.organization_name && (
-                <p className="text-danger">Organization Name is required.</p>
-              )}
-            </div>
-            <div className="col-12">
-              <label htmlFor="inputEmail" className="form-label">
-                Email Address*
-              </label>
-              <input
-                type="email"
-                className="text-input-filed type_2"
-                id="inputEmail"
-                {...register("email_address", { required: true })}
-              />
-              {errors.email_address && (
-                <p className="text-danger">Email Address is required.</p>
-              )}
-            </div>
-            <div className="col-12">
-              <label htmlFor="inputPhone" className="form-label">
-                Phone Number*
-              </label>
-              <input
-                type="tel"
-                className="text-input-filed type_2"
-                id="inputPhone"
-                {...register("phone_number", { required: true })}
-              />
-              {errors.phone_number && (
-                <p className="text-danger">Phone Number is required.</p>
-              )}
-            </div>
-          </>
-        )}
+        <div className="col-md-6">
+          <label htmlFor="inputOrganization" className="form-label">
+            Organization Name*
+          </label>
+          <input
+            type="text"
+            className="text-input-filed type_2"
+            id="inputOrganization"
+            value={formData.organization_name}
+            {...register("organization_name", { required: true })}
+            onChange={(e) =>
+              setFormData({ ...formData, organization_name: e.target.value })
+            }
+          />
+          {errors.organization_name && (
+            <p className="text-danger">Organization Name is required.</p>
+          )}
+        </div>
+        <div className="col-md-6">
+          <label htmlFor="inputEmail" className="form-label">
+            Email Address*
+          </label>
+          <input
+            type="email"
+            className="text-input-filed type_2"
+            id="inputEmail"
+            value={formData.email}
+            {...register("email_address", { required: true })}
+            onChange={(e) =>
+              setFormData({ ...formData, email: e.target.value })
+            }
+          />
+          {errors.email_address && (
+            <p className="text-danger">Email Address is required.</p>
+          )}
+        </div>
+        <div className="col-md-6">
+          <label htmlFor="inputPhone" className="form-label">
+            Phone Number*
+          </label>
+          <input
+            type="tel"
+            className="text-input-filed type_2"
+            id="inputPhone"
+            value={formData.phone_number}
+            {...register("phone_number", { required: true })}
+            onChange={(e) =>
+              setFormData({ ...formData, phone_number: e.target.value })
+            }
+          />
+          {errors.phone_number && (
+            <p className="text-danger">Phone Number is required.</p>
+          )}
+        </div>
         <div className="col-12">
           <label htmlFor="inputAmount" className="form-label">
-            Pay Amount*
+            Payment Amount*
           </label>
           <input
             type="number"
