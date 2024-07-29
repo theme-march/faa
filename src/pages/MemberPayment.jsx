@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useGetMemberDetailsIdQuery } from "../features/member/memberApiIn";
 import { useAddDonationRegisterMutation } from "../features/donation/donationApiInject";
 import HomeLoading from "../components/UI/HomeLoading";
@@ -62,7 +62,10 @@ const RadioGroup = ({ options, register, name, required = true }) => (
 );
 
 export default function MemberPayment() {
-  const loginUser = JSON.parse(localStorage.getItem("user"));
+  /*   const loginUser = JSON.parse(localStorage.getItem("user"));
+  console.log(loginUser); */
+  const { id: userId } = useParams();
+
   const [formData, setFormData] = useState({
     name: "",
     organization_name: "",
@@ -84,7 +87,7 @@ export default function MemberPayment() {
     data: memberData,
     isLoading,
     isError,
-  } = useGetMemberDetailsIdQuery(loginUser?.id);
+  } = useGetMemberDetailsIdQuery(userId);
   const [AddDonationRegister] = useAddDonationRegisterMutation();
 
   useEffect(() => {
@@ -111,7 +114,7 @@ export default function MemberPayment() {
     try {
       const resp = await AddDonationRegister(data);
       if (resp.data.success) {
-        toast.success("Payment completed", TOAST_OPTIONS);
+        toast.info("Payment completed", TOAST_OPTIONS);
         reset();
         navigate("/ssl/payment/register");
       } else {

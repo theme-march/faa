@@ -5,6 +5,7 @@ import ErrorShow from "../components/UI/ErrorShow";
 import DateFormat from "../components/DateFormat/DateFormat";
 
 import demoImgMember from "../assets/member/member_1.jpg";
+import MembershipCategorynNameFind from "../components/MemberCard/MembershipCategorynNameFind";
 
 export default function MemberDetails() {
   const { id } = useParams();
@@ -21,10 +22,10 @@ export default function MemberDetails() {
   if (!isLoading && !singalMember?.success) {
     return <ErrorShow message={"No data found"} />;
   }
-
+  /* 
   const loginUser = JSON.parse(localStorage.getItem("user"));
 
-  /* if (loginUser?.admin_approval !== 1) {
+  if (loginUser?.admin_approval !== 1) {
     return (
       <div className="container">
         <div className="ak-height-80 ak-height-lg-30"></div>
@@ -46,6 +47,7 @@ export default function MemberDetails() {
       session,
       membership_category_id,
       membership_number,
+      id,
     } = singalMember.result;
 
     return (
@@ -86,11 +88,11 @@ export default function MemberDetails() {
             <RenderDetailRow label="Occupation" value={occupation} />
             <RenderDetailRow label="Organization" value={organization_name} />
             <RenderDetailRow label="Phone Number" value={phone_number} />
-            <RenderDetailRow
+            <MembershipCategorynNameFind
               label="Membership Category"
-              value={membership_category_id}
+              id={membership_category_id}
             />
-            <Link to="/members-payment" className="button-primary mt-4">
+            <Link to={`/members-payment/${id}`} className="button-primary mt-4">
               Renewal
             </Link>
           </div>
@@ -107,16 +109,7 @@ function RenderDetailRow({ label, value }) {
     value && (
       <div className="d-flex gap-3 align-items-center  p-2">
         <h6>{label}:</h6>
-        <p> {label == "Membership Category" ? "" : value}</p>
-        <p className="member-title text-dark">
-          {parseInt(value) === 2
-            ? "Honorary Member"
-            : parseInt(value) === 3
-            ? "Life time Member"
-            : parseInt(value) === 4
-            ? "General Member"
-            : ""}
-        </p>
+        <p> {value}</p>
       </div>
     )
   );

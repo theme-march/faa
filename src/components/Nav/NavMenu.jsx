@@ -74,7 +74,9 @@ export default function NavMenu() {
                         Create a Member
                       </Dropdown.Item>
                       <Dropdown.Item
-                        onClick={() => navigate("/members-payment")}
+                        onClick={() =>
+                          navigate(`/members-payment/${loginUser?.id}`)
+                        }
                       >
                         <span className="text-primary">Renewal</span>
                       </Dropdown.Item>

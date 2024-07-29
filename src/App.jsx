@@ -67,7 +67,7 @@ function App() {
         ></Route>
 
         <Route
-          path="/members-payment"
+          path="/members-payment/:id"
           element={
             <PrivateRoute>
               <MemberPayment />
