@@ -12,7 +12,7 @@ import {
   useMemberRegisterMutation,
 } from "../../features/member/memberApiIn";
 import ImageUploadComponent from "../ImageUploadComponent/ImageCompression";
-// import ShowRegisterMessages from "../AddModal/showRegisterMessages";
+import ShowRegisterMessages from "../AddModal/showRegisterMessages";
 
 export default function RegistrationForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -76,12 +76,12 @@ export default function RegistrationForm() {
 
   return (
     <>
-      {/* {isSuccess && (
+      {isSuccess && (
         <ShowRegisterMessages
           isSuccess={isSuccess}
           respDataSuccess={respDataSuccess}
         />
-      )} */}
+      )}
       <form
         className="row g-3"
         onSubmit={handleSubmit(onSubmit)}
