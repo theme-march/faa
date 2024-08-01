@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useGetMemberDetailsIdQuery } from "../features/member/memberApiIn";
 import { useAddDonationRegisterMutation } from "../features/donation/donationApiInject";
 import HomeLoading from "../components/UI/HomeLoading";
@@ -208,9 +208,29 @@ export default function MemberPayment() {
                 required
               />
               <label className="form-check-label" htmlFor="termsCheckbox">
-                I have read and agree the "Terms & Conditions, Privacy Policy
-                and Refund Policy" of Finanace Alumni Association Website
-                https://faa-dubd.org/.
+                I have read and agree the "
+                <Link
+                  to="/terms-condition?id=termsconditions"
+                  className="ak-primary-color text-decoration-underline"
+                >
+                  Terms & Condition
+                </Link>
+                ,{" "}
+                <Link
+                  to="/terms-condition?id=privacypolicy"
+                  className="ak-primary-color text-decoration-underline"
+                >
+                  Privacy Policy{" "}
+                </Link>
+                and{" "}
+                <Link
+                  to="/terms-condition?id=refundpolicy"
+                  className="ak-primary-color text-decoration-underline"
+                >
+                  Refund Policy{" "}
+                </Link>
+                " of Finanace Alumni Association Website{" "}
+                <Link to={"https://faa-dubd.org"}>https://faa-dubd.org</Link>
               </label>
             </div>
           </div>
