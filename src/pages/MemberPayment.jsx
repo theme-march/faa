@@ -191,7 +191,6 @@ export default function MemberPayment() {
             options={[
               { label: "Bkash Payment", value: "bkash" },
               { label: "SSLCommerz", value: "ssl_commerz" },
-              { label: "Cash Payment", value: "cash_payment" },
               { label: "Visa", value: "visa" },
               { label: "Master-card", value: "mastercard" },
               { label: "American-express", value: "americanexpress" },

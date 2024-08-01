@@ -149,3 +149,8 @@
     gap: 50px;
   }
 }
+@media screen and (max-width: 767px) {
+  .about-pages-section-one {
+    flex-direction: column;
+  }
+}
