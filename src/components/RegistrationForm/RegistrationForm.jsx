@@ -12,11 +12,15 @@ import {
   useMemberRegisterMutation,
 } from "../../features/member/memberApiIn";
 import ImageUploadComponent from "../ImageUploadComponent/ImageCompression";
-import ShowRegisterMessages from "../AddModal/showRegisterMessages";
+import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
+import { Link } from "react-router-dom";
 
 export default function RegistrationForm() {
   const [showPassword, setShowPassword] = useState(false);
-  const [respDataSuccess, setRespDataSuccess] = useState({});
+  const [isModalOpen, setIsModalOpen] = useState(false); // Modal state
+  const [userId, setUserId] = useState(null);
+
   const {
     register,
     handleSubmit,
@@ -34,7 +38,7 @@ export default function RegistrationForm() {
 
   const { data: membership_category_id } = useGetMembersCategoryListQuery();
 
-  const [memberRegister, { isSuccess }] = useMemberRegisterMutation();
+  const [memberRegister] = useMemberRegisterMutation();
 
   const toastOptions = {
     position: toast.POSITION.TOP_RIGHT,
@@ -57,31 +61,23 @@ export default function RegistrationForm() {
 
     try {
       const resp = await memberRegister(formData);
+      setIsModalOpen(true);
 
       if (resp.data?.success) {
-        // toast.success("Register Successfully!", toastOptions);
-        setRespDataSuccess(resp);
+        toast.success("SignIn Successfully!", toastOptions);
+        setUserId(resp?.data?.result?.id);
         reset();
       } else {
-        setRespDataSuccess(resp);
-        /* toast.info(
-          resp?.data?.message || "Register Not Successfully",
-          toastOptions
-        ); */
+        setUserId(null);
+        toast.info(resp?.data?.message || "An error occurred", toastOptions);
       }
     } catch (error) {
-      toast.error("Register Data Not Submitted!", toastOptions);
+      toast.error("SignIn Data Not Submitted!", toastOptions);
     }
   };
 
   return (
     <>
-      {isSuccess && (
-        <ShowRegisterMessages
-          isSuccess={isSuccess}
-          respDataSuccess={respDataSuccess}
-        />
-      )}
       <form
         className="row g-3"
         onSubmit={handleSubmit(onSubmit)}
@@ -454,6 +450,54 @@ export default function RegistrationForm() {
           </button>
         </div>
       </form>
+
+      {/* Modal */}
+      <Modal
+        show={isModalOpen}
+        onRequestClose={() => setIsModalOpen(false)}
+        onHide={() => setIsModalOpen(false)}
+        ariaHideApp={false}
+        className="m-0 p-0"
+        centered
+      >
+        <Modal.Header closeButton>
+          {userId && isModalOpen ? (
+            <Modal.Title>Register Successfully!</Modal.Title>
+          ) : (
+            <Modal.Title>Member Email Already Registered!</Modal.Title>
+          )}
+        </Modal.Header>
+        <Modal.Body>
+          <div>
+            {userId && isModalOpen ? (
+              <>
+                <p>Register Successfully!. Please Pay Your fees</p>
+                <Link
+                  to={`/members-payment/${userId}`}
+                  className="button-primary mt-4"
+                >
+                  Pay Your Fees
+                </Link>
+              </>
+            ) : (
+              <>
+                <p>
+                  Member Email Already Registered!. Please Add Your New Email Or
+                  Sign In
+                </p>
+                <Link to={`/singin`} className="button-primary mt-4">
+                  Sign In
+                </Link>
+              </>
+            )}
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button className="btn btn-sm" onClick={() => setIsModalOpen(false)}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 }
