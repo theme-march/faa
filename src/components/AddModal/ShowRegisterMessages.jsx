@@ -11,7 +11,7 @@ export default function ShowRegisterMessages({ isSuccess, respDataSuccess }) {
     if (isSuccess) {
       setShowModal(true);
     }
-  }, [isSuccess]);
+  }, []);
 
   const handleCloseModal = () => {
     setShowModal(false);
