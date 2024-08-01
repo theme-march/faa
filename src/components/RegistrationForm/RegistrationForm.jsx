@@ -64,12 +64,10 @@ export default function RegistrationForm() {
       setIsModalOpen(true);
 
       if (resp.data?.success) {
-        toast.success("SignIn Successfully!", toastOptions);
         setUserId(resp?.data?.result?.id);
         reset();
       } else {
         setUserId(null);
-        toast.info(resp?.data?.message || "An error occurred", toastOptions);
       }
     } catch (error) {
       toast.error("SignIn Data Not Submitted!", toastOptions);
@@ -439,10 +437,39 @@ export default function RegistrationForm() {
           />
         </div>
         <div className="col-12">
-          <p className="mt-4">
-            By creating an account, you agree to the Terms of Use and
-            acknowledge our Privacy Policy.
-          </p>
+          <div className="form-check">
+            <input
+              className="form-check-input"
+              type="checkbox"
+              id="termsCheckbox"
+              required
+            />
+            <label className="form-check-label" htmlFor="termsCheckbox">
+              I have read and agree the "
+              <Link
+                to="/terms-condition?id=termsconditions"
+                className="ak-primary-color text-decoration-underline"
+              >
+                Terms & Conditions
+              </Link>
+              ,{" "}
+              <Link
+                to="/terms-condition?id=privacypolicy"
+                className="ak-primary-color text-decoration-underline"
+              >
+                Privacy Policy{" "}
+              </Link>
+              and{" "}
+              <Link
+                to="/terms-condition?id=refundpolicy"
+                className="ak-primary-color text-decoration-underline"
+              >
+                Refund Policy{" "}
+              </Link>
+              " of Finanace Alumni Association Website{" "}
+              <Link to={"https://faa-dubd.org"}>https://faa-dubd.org</Link>
+            </label>
+          </div>
         </div>
         <div className="col-12">
           <button type="submit" className="button-primary">

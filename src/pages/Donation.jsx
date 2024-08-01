@@ -266,7 +266,7 @@ export default function Donation() {
                 to="/terms-condition?id=termsconditions"
                 className="ak-primary-color text-decoration-underline"
               >
-                Terms & Condition
+                Terms & Conditions
               </Link>
               ,{" "}
               <Link

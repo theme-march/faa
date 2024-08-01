@@ -29,7 +29,7 @@ export default function Footer() {
           <div className="menu-section">
             <Link to="/">Home</Link>
             <Link to="/terms-condition?id=termsconditions">
-              Terms & Condition
+              Terms & Conditions
             </Link>
             <Link to="/terms-condition?id=privacypolicy">Privacy Policy</Link>
             <Link to="/terms-condition?id=refundpolicy">Refund Policy</Link>
