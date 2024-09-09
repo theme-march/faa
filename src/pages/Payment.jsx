@@ -1,8 +1,6 @@
-import React from "react";
+/* import React from "react";
 import { Link } from "react-router-dom";
-import success from "../assets/payment-success.svg";
-import close from "../assets/close-icon.svg";
-import warning from "../assets/warning-icon.svg";
+
 
 export function PaymentSuccess() {
   return (
@@ -44,6 +42,41 @@ export function PaymentCencle() {
           <img src={close} alt=".." className="payment-success" />
           <h2 className="payment-title">Payment Failed !</h2>
           <h4 className="text-danger">Problem In Progressing Payment</h4>
+        </div>
+        <Link className="gray-round-btn" to={"/"}>
+          Go To Home
+        </Link>
+      </div>
+    </div>
+  );
+}
+ */
+
+import React, { useEffect } from "react";
+import { useParams, Link } from "react-router-dom";
+import close from "../assets/close-icon.svg";
+import { usePaymentStatusQuery } from "../features/payment/sslPaymentApiIn";
+
+export default function PaymentCancel() {
+  const { tr_id } = useParams();
+
+  const {
+    data: paymentStatus,
+    isLoading,
+    isError,
+  } = usePaymentStatusQuery(tr_id);
+
+  console.log(paymentStatus);
+
+  return (
+    <div className="container">
+      <div className="payment">
+        <div className="text-center">
+          <img src={close} alt=".." className="payment-success" />
+          <h2 className="payment-title">Payment Failed !</h2>
+          <h4 className="text-danger">
+            {` Problem In Progressing Payment ${paymentStatus}`}
+          </h4>
         </div>
         <Link className="gray-round-btn" to={"/"}>
           Go To Home

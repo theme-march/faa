@@ -10,6 +10,7 @@ const memberApi = apiSlice.injectEndpoints({
       }),
       //   invalidatesTags: ["member"],
     }),
+
     memberSingIn: bulider.mutation({
       query: (data) => ({
         url: "/member_login",
@@ -56,12 +57,14 @@ const memberApi = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
+
     getMembersSessionList: bulider.query({
       query: () => ({
         url: `/batch_session_list`,
         method: "GET",
       }),
     }),
+
     getMembersOccupationList: bulider.query({
       query: () => ({
         url: `/occupation_list`,

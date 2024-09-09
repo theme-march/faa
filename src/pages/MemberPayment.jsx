@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { redirect } from "react-router-dom";
 import { useGetMemberDetailsIdQuery } from "../features/member/memberApiIn";
-import { useAddDonationRegisterMutation } from "../features/donation/donationApiInject";
+// import { useAddDonationRegisterMutation } from "../features/donation/donationApiInject";
 import HomeLoading from "../components/UI/HomeLoading";
 import ErrorShow from "../components/UI/ErrorShow";
+import { useMemberPaymentMutation } from "../features/payment/sslPaymentApiIn";
 
 // Constants
 const TOAST_OPTIONS = {
@@ -62,6 +64,7 @@ const RadioGroup = ({ options, register, name, required = true }) => (
 );
 
 export default function MemberPayment() {
+  const navigate = useNavigate();
   /*   const loginUser = JSON.parse(localStorage.getItem("user"));
   console.log(loginUser); */
   const { id: userId } = useParams();
@@ -82,13 +85,15 @@ export default function MemberPayment() {
     formState: { errors },
   } = useForm();
 
-  const navigate = useNavigate();
   const {
     data: memberData,
     isLoading,
     isError,
   } = useGetMemberDetailsIdQuery(userId);
-  const [AddDonationRegister] = useAddDonationRegisterMutation();
+
+  // const [AddDonationRegister] = useAddDonationRegisterMutation();
+
+  const [memberPayment] = useMemberPaymentMutation();
 
   useEffect(() => {
     if (memberData?.success) {
@@ -112,7 +117,24 @@ export default function MemberPayment() {
 
   const onSubmit = async (data) => {
     try {
+      const resp = await memberPayment(data);
+      console.log(resp);
+
+      if (resp?.data?.success) {
+        const url = resp?.data?.url;
+        if (url) {
+          window.location.replace(url);
+        }
+      } else {
+        throw new Error("Payment not completed");
+      }
+    } catch (error) {
+      toast.info(error.message, TOAST_OPTIONS);
+    }
+
+    /*   try {
       const resp = await AddDonationRegister(data);
+
       if (resp.data.success) {
         toast.info("Payment completed", TOAST_OPTIONS);
         reset();
@@ -122,7 +144,7 @@ export default function MemberPayment() {
       }
     } catch (error) {
       toast.info(error.message, TOAST_OPTIONS);
-    }
+    } */
   };
 
   if (isLoading) return <HomeLoading />;

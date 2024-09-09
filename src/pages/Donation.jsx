@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { useAddDonationRegisterMutation } from "../features/donation/donationApiInject";
+// import { useAddDonationRegisterMutation } from "../features/donation/donationApiInject";
 import { Link, useNavigate } from "react-router-dom";
 import { useGetMemberDetailsIdQuery } from "../features/member/memberApiIn";
+import { useMemberPaymentMutation } from "../features/payment/sslPaymentApiIn";
 import HomeLoading from "../components/UI/HomeLoading";
 import ErrorShow from "../components/UI/ErrorShow";
 
 export default function Donation() {
   const loginUser = JSON.parse(localStorage.getItem("user"));
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     organization_name: "",
@@ -25,7 +27,6 @@ export default function Donation() {
     formState: { errors },
   } = useForm();
 
-  const navigate = useNavigate();
   const {
     data: memberData,
     isLoading,
@@ -37,7 +38,8 @@ export default function Donation() {
     autoClose: 1000,
   };
 
-  const [AddDonationRegister] = useAddDonationRegisterMutation();
+  // const [AddDonationRegister] = useAddDonationRegisterMutation();
+  const [memberPayment] = useMemberPaymentMutation();
 
   useEffect(() => {
     if (memberData?.success) {
@@ -55,25 +57,24 @@ export default function Donation() {
       setValue("email_address", memberData.result.email);
       setValue("phone_number", memberData.result.phone_number);
       setValue("member_id", memberData.result.id);
+      setValue("return_url", "https://faa-dubd.org");
     }
   }, [memberData, setValue]);
 
   const onSubmit = async (data) => {
-    if (data) {
-      const resp = await AddDonationRegister(data);
+    try {
+      const resp = await memberPayment(data);
 
-      if (resp.data.success) {
-        toast.success("Donation Registration Completed", toastOptions);
-        reset();
-        navigate("/ssl/register");
+      if (resp?.data?.success) {
+        const url = resp?.data?.url;
+        if (url) {
+          window.location.replace(url);
+        }
       } else {
-        toast.info("Donation not sent!", {
-          position: toast.POSITION.TOP_RIGHT,
-          autoClose: 1200,
-        });
+        throw new Error("Payment not completed");
       }
-    } else {
-      toast.info("Donation data missing!", toastOptions);
+    } catch (error) {
+      toast.info(error.message, toastOptions);
     }
   };
 

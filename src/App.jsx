@@ -25,7 +25,7 @@ import Career from "./pages/Career";
 // import MembersApprovedList from "./components/MembersApprovedList/MembersApprovedList";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import Donation from "./pages/Donation";
-import { PaymentCencle, PaymentError, PaymentSuccess } from "./pages/Payment";
+import PaymentCancel from "./pages/Payment";
 import MemberDetails from "./pages/MemberDetails";
 import TermsCondition from "./pages/TermsCondition";
 import ProgramsDetails from "./pages/ProgramsDetails";
@@ -104,9 +104,7 @@ function App() {
         <Route path="/career" element={<Career />}></Route>
         <Route path="/faq" element={<Faq />}></Route>
         <Route path="/terms-condition" element={<TermsCondition />}></Route>
-        <Route path="/payment/success" element={<PaymentSuccess />}></Route>
-        <Route path="/payment/error" element={<PaymentError />}></Route>
-        <Route path="/payment/cencle" element={<PaymentCencle />}></Route>
+        <Route path="/cancel/:tr_id" element={<PaymentCancel />} />
         <Route path="/singin" element={<SignIn />}></Route>
         <Route path="/*" element={<ErrorPages />}></Route>
       </Route>
