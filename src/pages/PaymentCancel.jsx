@@ -12,7 +12,7 @@ export default function PaymentCancel() {
     isError,
   } = usePaymentStatusQuery(tr_id);
 
-  console.log(paymentStatus);
+
 
   return (
     <div className="container">
@@ -21,7 +21,7 @@ export default function PaymentCancel() {
           <img src={close} alt=".." className="payment-success" />
           <h2 className="payment-title">Payment Failed !</h2>
           <h4 className="text-danger">
-            {` Problem In Progressing Payment ${paymentStatus}`}
+            {` Problem In Progressing Payment`}
           </h4>
         </div>
         <Link className="gray-round-btn" to={"/"}>

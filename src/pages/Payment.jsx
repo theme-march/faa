@@ -51,7 +51,7 @@ export function PaymentCencle() {
   );
 }
  */
-
+/* 
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import close from "../assets/close-icon.svg";
@@ -77,7 +77,6 @@ export default function PaymentCancel() {
         skip: !isQueryEnabled, // Skip query if tr_id is not ready
     });
 
-    console.log(paymentStatus);
 
     return (
         <div className="container">
@@ -97,3 +96,4 @@ export default function PaymentCancel() {
     );
 }
 
+ */

@@ -118,13 +118,9 @@ export default function MemberPayment() {
   const onSubmit = async (data) => {
     try {
       const resp = await memberPayment(data);
-      console.log(resp);
 
       if (resp?.data?.success) {
-        const url = resp?.data?.url;
-        if (url) {
-          window.location.replace(url);
-        }
+          window.location.replace(resp?.data?.url);
       } else {
         throw new Error("Payment not completed");
       }
@@ -132,19 +128,6 @@ export default function MemberPayment() {
       toast.info(error.message, TOAST_OPTIONS);
     }
 
-    /*   try {
-      const resp = await AddDonationRegister(data);
-
-      if (resp.data.success) {
-        toast.info("Payment completed", TOAST_OPTIONS);
-        reset();
-        navigate("/ssl/payment/register");
-      } else {
-        throw new Error("Payment not completed");
-      }
-    } catch (error) {
-      toast.info(error.message, TOAST_OPTIONS);
-    } */
   };
 
   if (isLoading) return <HomeLoading />;

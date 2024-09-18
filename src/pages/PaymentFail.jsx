@@ -12,7 +12,7 @@ export default function PaymentFail() {
     isError,
   } = usePaymentStatusQuery(tr_id);
 
-  console.log(paymentStatus);
+
 
   return (
     <div className="container">
