@@ -25,13 +25,15 @@ import Career from "./pages/Career";
 // import MembersApprovedList from "./components/MembersApprovedList/MembersApprovedList";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import Donation from "./pages/Donation";
-import PaymentCancel from "./pages/Payment";
+import PaymentCancel from "./pages/PaymentCancel";
 import MemberDetails from "./pages/MemberDetails";
 import TermsCondition from "./pages/TermsCondition";
 import ProgramsDetails from "./pages/ProgramsDetails";
 import AllPrograms from "./pages/AllPrograms";
 import ErrorPages from "./pages/ErrorPages";
 import MemberPayment from "./pages/MemberPayment";
+import PaymentFail from "./pages/PaymentFail";
+import PaymentSuccess from "./pages/PaymentSuccess";
 
 function App() {
   return (
@@ -104,7 +106,9 @@ function App() {
         <Route path="/career" element={<Career />}></Route>
         <Route path="/faq" element={<Faq />}></Route>
         <Route path="/terms-condition" element={<TermsCondition />}></Route>
-        <Route path="/cancel/:tr_id" element={<PaymentCancel />} />
+        <Route path="/success/:tr_id" element={<PaymentSuccess />}></Route>
+        <Route path="/fail/:tr_id" element={<PaymentFail />}></Route>
+        <Route path="/cancel/:tr_id" element={<PaymentCancel />}></Route>
         <Route path="/singin" element={<SignIn />}></Route>
         <Route path="/*" element={<ErrorPages />}></Route>
       </Route>

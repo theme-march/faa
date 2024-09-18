@@ -38,8 +38,8 @@ export default function Donation() {
       setValue("email_address", member.email);
       setValue("phone_number", member.phone_number);
       setValue("member_id", member.id);
-      setValue("return_url", "http://139.162.11.50:3000");
-      // setValue("return_url", "http://127.0.0.1:3000");
+      // setValue("return_url", "http://139.162.11.50:3000");
+      setValue("return_url", "http://localhost:3000");
     }
   }, [memberData, setValue]);
 
