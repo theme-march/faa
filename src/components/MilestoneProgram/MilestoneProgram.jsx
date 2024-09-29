@@ -4,6 +4,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { useGetMilestoneProgramQuery } from "../../features/home/homeApiIn";
 import HomeLoading from "../UI/HomeLoading";
 import ErrorShow from "../UI/ErrorShow";
+import SectionTitle from "../SectionTitle/SectionTitle";
 
 export default function MilestoneProgram() {
   const swipermilestoneProgramsRef = useRef();
@@ -27,6 +28,7 @@ export default function MilestoneProgram() {
   if (!isLoading && !isError && milestonePrograms?.success === true) {
     content = (
       <div className="container">
+        <SectionTitle>Milestone Program</SectionTitle>
         <Swiper
           loop={true}
           effect="fade"
@@ -39,7 +41,7 @@ export default function MilestoneProgram() {
           {milestonePrograms?.result?.map((item) => (
             <SwiperSlide key={item.id}>
               <div className="card border-1 cursor-pointer">
-                <div className="row g-0 align-items-center ">
+                <div className="row g-0">
                   <div className="col-md-6 col-12 h-00">
                     <div className="card-body">
                       <h4 className="card-title">{item.title}</h4>
