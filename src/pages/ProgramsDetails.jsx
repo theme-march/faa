@@ -1,6 +1,6 @@
 import React from "react";
 import { useGetMilestoneProgramIdQuery } from "../features/home/homeApiIn";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import HomeLoading from "../components/UI/HomeLoading";
 import ErrorShow from "../components/UI/ErrorShow";
 import CommonHero from "../components/CommonHero/CommonHero";
@@ -61,6 +61,9 @@ export default function ProgramsDetails() {
               __html: details,
             }}
           />
+          <Link className="button-primary mb-md-5 mb-2 mt-5" to={"/donation"}>
+            Donate
+          </Link>
         </div>
         <div className="ak-height-60 ak-height-lg-60"></div>
       </>

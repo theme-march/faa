@@ -1,27 +1,44 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useGetMemberDetailsIdQuery } from "../../features/member/memberApiIn";
-import HomeLoading from "../UI/HomeLoading";
-import ErrorShow from "../UI/ErrorShow";
-import { useAddEventSponsorRegisterMutation } from "../../features/events/eventsApiInject";
+import {
+  useAddEventSponsorRegisterMutation,
+  useGetEventDetailsIdQuery,
+} from "../../features/events/eventsApiInject";
 import { toast } from "react-toastify";
+import ErrorShow from "../UI/ErrorShow";
+import HomeLoading from "../UI/HomeLoading";
+import { useGetMemberDetailsIdQuery } from "../../features/member/memberApiIn";
+import { useMemberPaymentMutation } from "../../features/payment/sslPaymentApiIn";
+import { Link } from "react-router-dom";
 
-export default function EventSponsorRegistrationForm({ props }) {
+export default function EventSponsorRegistrationForm(props) {
   const loginUser = JSON.parse(localStorage.getItem("user"));
+  const eventId = props?.props;
 
   const {
-    data: loginUserData,
+    data: memberData,
     isLoading,
     isSuccess,
     isError,
-  } = useGetMemberDetailsIdQuery(loginUser?.id);
+  } = useGetMemberDetailsIdQuery(loginUser?.id, { skip: !loginUser });
+
+  const {
+    data: eventsDetailsData,
+    isLoading: eventsisLoading,
+    isError: eventsisError,
+    isSuccess: eventsisSuccess,
+  } = useGetEventDetailsIdQuery(eventId, { skip: !eventId });
+
   const [AddEventSponsorRegister, { data }] =
     useAddEventSponsorRegisterMutation();
+
+  const [memberPayment] = useMemberPaymentMutation();
 
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
   } = useForm();
 
@@ -30,317 +47,294 @@ export default function EventSponsorRegistrationForm({ props }) {
     autoClose: 1000,
   };
 
+  useEffect(() => {
+    if (
+      memberData?.success &&
+      eventsDetailsData?.success &&
+      isSuccess &&
+      eventsisSuccess
+    ) {
+      const member = memberData.result;
+      setValue("event_id", eventId);
+      setValue("member_id", member.id);
+      setValue("name", member.name);
+      setValue("organization_name", member.organization_name);
+      setValue("designation_name", member.designation_name);
+      setValue("email_address", member.email);
+      setValue("phone_number", member.phone_number);
+      setValue("pay_amount", " ");
+    } else if (!loginUser == true) {
+      // Clear all input fields if user is not logged in
+      reset({
+        event_id: eventId,
+        member_id: "",
+        name: "",
+        organization_name: "",
+        designation_name: "",
+        email_address: "",
+        phone_number: "",
+        pay_amount: "",
+      });
+    }
+  }, [memberData, setValue, eventsDetailsData, !loginUser]);
+
   const onSubmit = async (data) => {
     const postData = {
-      ...data,
-      event_id: props.toString(),
+      event_id: data.event_id,
+      member_id: data.member_id,
+      full_name: data.name,
+      organization_name: data.organization_name,
+      designation_name: data.designation_name,
+      email: data.email_address,
+      phone_number: data.phone_number,
+      address: "member user",
     };
-    try {
-      const resp = await AddEventSponsorRegister(postData);
 
-      if (resp.data.success) {
-        toast.success("EventSponsor Registration Completed", toastOptions);
-        reset();
+    try {
+      const respAddEvent = await AddEventSponsorRegister(postData);
+
+      console.log(respAddEvent);
+
+      if (
+        respAddEvent?.data?.success === true ||
+        (respAddEvent?.data?.success === false &&
+          respAddEvent?.data?.message === "Already event registered !")
+      ) {
+        const resp = await memberPayment(data);
+
+        if (resp?.data?.success) {
+          window.location.replace(resp?.data?.url);
+        } else {
+          throw new Error("Payment not completed");
+        }
       } else {
-        toast.info("EventSponsor Already Registration", {
-          position: toast.POSITION.TOP_RIGHT,
-          autoClose: 1200,
-        });
+        toast.info(respAddEvent?.data?.message, toastOptions);
       }
-    } catch (e) {
-      toast.error("Error EventSponsor Registration ", toastOptions);
+    } catch (error) {
+      toast.info(error.message, toastOptions);
     }
   };
 
-  if (!loginUser) {
-    return (
-      <form
-        className="row g-3"
-        onSubmit={handleSubmit(onSubmit)}
-        autoComplete="on"
-        method="POST"
-      >
-        <div className="col-md-6">
-          <label htmlFor="inputName" className="form-label">
-            {errors.name?.type === "required" ? (
-              <p role="alert " className="text-danger">
-                Organization Name* is required
-              </p>
-            ) : (
-              "Organization Name*"
-            )}
-          </label>
-          <input
-            type="text"
-            className="text-input-filed type_2"
-            id="inputName"
-            {...register("name", { required: true })}
-          />
-        </div>
-        <div className="col-md-6">
-          <label htmlFor="distributorName" className="form-label">
-            {errors.distributor_name?.type === "required" ? (
-              <p role="alert " className="text-danger">
-                Distributor Name is required
-              </p>
-            ) : (
-              "Distributor Name*"
-            )}
-          </label>
-          <input
-            type="text"
-            className="text-input-filed type_2"
-            id="distributorName"
-            {...register("distributor_name", { required: true })}
-          />
-        </div>
-        <div className="col-md-6">
-          <label htmlFor="inputEmail" className="form-label">
-            {errors.email?.type === "required" ? (
-              <p role="alert " className="text-danger">
-                Email Address is required
-              </p>
-            ) : (
-              "Email*"
-            )}
-          </label>
-
-          <input
-            type="email"
-            className="text-input-filed type_2"
-            id="inputEmail"
-            {...register("email", { required: true })}
-            aria-invalid={errors.email ? "true" : "false"}
-          />
-        </div>
-        <div className="col-md-6">
-          <label htmlFor="inputNumber" className="form-label">
-            {errors.phone_number && errors.phone_number?.type === "required" ? (
-              <p role="alert " className="text-danger">
-                Phone Number is required
-              </p>
-            ) : (
-              "Phone Number*"
-            )}
-          </label>
-          <input
-            className="text-input-filed type_2"
-            id="inputNumber"
-            type="number"
-            {...register("phone_number", { required: true })}
-          />
-        </div>
-        <div className="col-md-6">
-          <label htmlFor="inputAddress" className="form-label">
-            {errors.address?.type === "required" ? (
-              <p role="alert " className="text-danger">
-                Address is required
-              </p>
-            ) : (
-              "Address*"
-            )}
-          </label>
-          <input
-            type="text"
-            className="text-input-filed type_2"
-            id="inputAddress"
-            {...register("address", { required: true })}
-          />
-        </div>
-        <div className="col-md-6">
-          <label htmlFor="Amount" className="form-label">
-            {errors.amount?.type === "required" ? (
-              <p role="alert " className="text-danger">
-                Approximately Amount is required
-              </p>
-            ) : (
-              "Approximately Amount*"
-            )}
-          </label>
-          <input
-            type="number"
-            className="text-input-filed type_2"
-            id="Amount"
-            {...register("amount", { required: true })}
-          />
-        </div>
-        <div className="col-12 mt-5">
-          <button type="submit" className="button-primary">
-            Next To Pay
-          </button>
-        </div>
-      </form>
-    );
-  }
-
-  let content = null;
-
-  if (loginUser && isLoading) {
-    content = <HomeLoading />;
-  }
-
-  if (!isLoading && isError) {
-    content = <ErrorShow message={"Item not found"} />;
-  }
-
+  if (isLoading && eventsisLoading && loginUser && eventId)
+    return <HomeLoading />;
   if (
-    loginUser &&
-    !isLoading &&
-    !isError &&
-    isSuccess &&
-    loginUserData?.success === true
-  ) {
-    const { email, phone_number, organization_name, name, id } =
-      loginUserData.result;
-    content = (
-      <form
-        className="row g-3"
-        onSubmit={handleSubmit(onSubmit)}
-        autoComplete="on"
-        method="POST"
-      >
-        <div className="col-md-6">
-          <label htmlFor="inputName" className="form-label">
-            {errors.full_name?.type === "required" ? (
-              <p role="alert " className="text-danger">
-                Name* is required
-              </p>
-            ) : (
-              "Full Name*"
-            )}
-          </label>
-          <input
-            type="text"
-            value={name}
-            className="text-input-filed type_2"
-            id="inputName"
-            {...register("full_name", { required: true })}
-          />
-        </div>
-        <div className="col-md-6">
-          <label htmlFor="inputName" className="form-label">
-            {errors.organization_name?.type === "required" ? (
-              <p role="alert " className="text-danger">
-                Organization Name* is required
-              </p>
-            ) : (
-              "Organization Name*"
-            )}
-          </label>
-          <input
-            type="text"
-            value={organization_name}
-            className="text-input-filed type_2"
-            id="inputName"
-            {...register("organization_name", { required: true })}
-          />
-        </div>
-        <div className="col-md-6">
-          <label htmlFor="inputEmail" className="form-label">
-            {errors.email?.type === "required" ? (
-              <p role="alert " className="text-danger">
-                Email Address is required
-              </p>
-            ) : (
-              "Email*"
-            )}
-          </label>
-          <input
-            type="email"
-            value={email}
-            className="text-input-filed type_2"
-            id="inputEmail"
-            {...register("email", { required: true })}
-            aria-invalid={errors.email ? "true" : "false"}
-          />
-        </div>
-        <div className="col-md-6">
-          <label htmlFor="inputNumber" className="form-label">
-            {errors.phone_number && errors.phone_number?.type === "required" ? (
-              <p role="alert " className="text-danger">
-                Phone Number is required
-              </p>
-            ) : (
-              "Phone Number*"
-            )}
-          </label>
-          <input
-            className="text-input-filed type_2"
-            id="inputNumber"
-            type="number"
-            value={phone_number}
-            {...register("phone_number", { required: true })}
-          />
-        </div>
-        <div className="col-md-6">
-          <label htmlFor="distributorName" className="form-label">
-            {errors.distributor_name?.type === "required" ? (
-              <p role="alert " className="text-danger">
-                Distributor Name is required
-              </p>
-            ) : (
-              "Distributor Name*"
-            )}
-          </label>
-          <input
-            type="text"
-            className="text-input-filed type_2"
-            id="distributorName"
-            {...register("distributor_name", { required: true })}
-          />
-        </div>
+    (!isLoading && isError && eventsisError && loginUser && !isSuccess) ||
+    memberData?.success === false
+  )
+    return <ErrorShow message={"No data found"} />;
 
-        <div className="col-md-6">
-          <label htmlFor="Amount" className="form-label">
-            {errors.amount?.type === "required" ? (
-              <p role="alert " className="text-danger">
-                Approximately Amount is required
-              </p>
-            ) : (
-              "Approximately Amount*"
-            )}
-          </label>
-          <input
-            type="number"
-            className="text-input-filed type_2"
-            id="Amount"
-            {...register("amount", { required: true })}
-          />
-        </div>
-        <div className="col-md-12">
-          <label htmlFor="inputAddress" className="form-label">
-            {errors.address?.type === "required" ? (
-              <p role="alert " className="text-danger">
-                Address is required
-              </p>
-            ) : (
-              "Address*"
-            )}
-          </label>
-          <input
-            type="text"
-            className="text-input-filed type_2"
-            id="inputAddress"
-            {...register("address", { required: true })}
-          />
-        </div>
-        <input
-          type="number"
-          value={id}
-          disabled
-          hidden
-          className="text-input-filed type_2 "
-          {...register("member_id")}
+  return (
+    <div className="container">
+      <div className="ak-height-80 ak-height-lg-60"></div>
+      <h6 className="mb-3">
+        Event Title: {eventsDetailsData?.result[0]?.event_title}
+      </h6>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="row g-3"
+        autoComplete="on"
+      >
+        <InputField
+          label="Name"
+          id="inputName"
+          error={errors.name}
+          required
+          register={register}
+          field="name"
+          validation={{ required: true, minLength: 3, maxLength: 50 }}
+          errorMessage={{
+            required: "Name is required",
+            minLength: "Name must be at least 3 characters",
+            maxLength: "Name cannot exceed 50 characters",
+          }}
         />
 
-        <div className="col-12 mt-5">
+        <InputField
+          label="Organization Name"
+          id="inputOrganization"
+          error={errors.organization_name}
+          required
+          register={register}
+          field="organization_name"
+          validation={{ required: true, minLength: 3, maxLength: 100 }}
+          errorMessage={{
+            required: "Organization Name is required",
+            minLength: "Organization Name must be at least 3 characters",
+            maxLength: "Organization Name cannot exceed 100 characters",
+          }}
+        />
+
+        <InputField
+          label="Email Address"
+          id="inputEmail"
+          type="email"
+          error={errors.email_address}
+          required
+          register={register}
+          field="email_address"
+          validation={{
+            required: true,
+            pattern: {
+              value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+              message: "Invalid email address",
+            },
+          }}
+          errorMessage={{
+            required: "Email is required",
+            pattern: "Invalid email format",
+          }}
+        />
+
+        <InputField
+          label="Phone Number"
+          id="inputPhone"
+          type="tel"
+          error={errors.phone_number}
+          required
+          register={register}
+          field="phone_number"
+          validation={{
+            required: true,
+            minLength: {
+              value: 10,
+              message: "Phone number must be at least 10 digits",
+            },
+            maxLength: {
+              value: 15,
+              message: "Phone number must be less than 15 digits",
+            },
+          }}
+          errorMessage={{ required: "Phone number is required" }}
+        />
+
+        <InputField
+          label="Payment Amount"
+          id="inputAmount"
+          type="number"
+          error={errors.pay_amount}
+          required
+          register={register}
+          field="pay_amount"
+          validation={{
+            required: true,
+            min: { value: 1, message: "Amount must be at least 1" },
+          }}
+          errorMessage={{
+            required: "Payment amount is required",
+            min: "Amount must be greater than 0",
+          }}
+        />
+
+        <div className="col-12">
+          {renderPaymentMethods(register, errors.payment_type)}
+        </div>
+
+        <TermsAndConditions />
+
+        <div className="col-12 mt-4">
           <button type="submit" className="button-primary">
-            Next To Pay
+            Pay Now
           </button>
         </div>
       </form>
-    );
-  }
+      <div className="ak-height-100 ak-height-lg-60"></div>
+    </div>
+  );
+}
 
-  return content;
+function InputField({
+  label,
+  id,
+  type = "text",
+  register,
+  field,
+  validation,
+  error,
+  errorMessage,
+  disabled = false,
+}) {
+  return (
+    <div className="col-md-6">
+      <label htmlFor={id} className="form-label">
+        {label}*
+      </label>
+      <input
+        type={type}
+        className="text-input-filed type_2"
+        id={id}
+        {...register(field, validation)}
+        disabled={disabled}
+      />
+      {error && <p className="text-danger">{errorMessage[error.type]}</p>}
+    </div>
+  );
+}
+
+function renderPaymentMethods(register, error) {
+  const methods = [
+    "Bkash",
+    "SSLCommerz",
+    "Visa",
+    "Mastercard",
+    "American Express",
+  ];
+  return methods.map((method, idx) => (
+    <div key={idx} className="form-check form-check-inline">
+      <input
+        className="form-check-input custom-checkbox"
+        type="radio"
+        name="paymentMethod"
+        id={method.toLowerCase()}
+        value={method.toLowerCase()}
+        {...register("payment_type", { required: true })}
+      />
+      <label className="form-check-label" htmlFor={method.toLowerCase()}>
+        {method}
+      </label>
+      {error && idx === 0 && (
+        <p className="text-danger">Payment method is required.</p>
+      )}
+    </div>
+  ));
+}
+function TermsAndConditions() {
+  return (
+    <div className="col-12">
+      <div className="form-check">
+        <input
+          className="form-check-input"
+          type="checkbox"
+          id="termsCheckbox"
+          required
+        />
+        <label className="form-check-label" htmlFor="termsCheckbox">
+          I have read and agree to the
+          <Link
+            to="/terms-condition?id=termsconditions"
+            className="ak-primary-color text-decoration-underline"
+          >
+            {" "}
+            Terms & Conditions
+          </Link>
+          ,
+          <Link
+            to="/terms-condition?id=privacypolicy"
+            className="ak-primary-color text-decoration-underline"
+          >
+            {" "}
+            Privacy Policy
+          </Link>
+          , and
+          <Link
+            to="/terms-condition?id=refundpolicy"
+            className="ak-primary-color text-decoration-underline"
+          >
+            {" "}
+            Refund Policy
+          </Link>
+          .
+        </label>
+      </div>
+    </div>
+  );
 }

@@ -4,18 +4,41 @@ import {
   FaLinkedinIn,
   FaTwitter,
   FaYoutube,
+  FaPhone,
+  FaMailchimp,
 } from "react-icons/fa";
+import { IoMdMail } from "react-icons/io";
+import { FaMapLocationDot } from "react-icons/fa6";
 import { SocialIcon } from "../SocialIcon/SocialIcon";
+
 export default function ContactInfo() {
   return (
     <div className="contact-us-info">
       <h3>Finance Alumni Association</h3>
-      <p>+8801819214814 </p>
-      <p>faa.dubd@outlook.com</p>
-      <p className="contact-us-address">
-        Department of Finance, University of Dhaka (DU) Campus, Nilkhet Road,
-        <br /> Dhaka - 1000
-      </p>
+      <a
+        href="tel:+8801819214814"
+        className="mt-5 d-flex align-items-center gap-2"
+      >
+        <FaPhone />
+        <span>+8801819214814 </span>
+      </a>
+      <a
+        href="mailto:faa.dubd@outlook.com"
+        className="mt-1 d-flex align-items-center gap-2"
+      >
+        <IoMdMail />
+        <span>faa.dubd@outlook.com </span>
+      </a>
+      <div className="d-flex gap-2 contact-us-address">
+        <span>
+          {" "}
+          <FaMapLocationDot />
+        </span>
+        <span>
+          Department of Finance, University of Dhaka (DU) Campus, Nilkhet Road,
+          <br /> Dhaka - 1000
+        </span>
+      </div>
       <div className="ak-height-50 ak-height-lg-30"></div>
       <div className="d-flex gap-3">
         <SocialIcon link={"https://www.facebook.com/groups/135676929841458"}>

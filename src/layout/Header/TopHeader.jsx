@@ -27,13 +27,13 @@ export default function TopHeader() {
         <div className="d-flex align-items-center">
           <ul className="d-flex align-items-center gap-4 m-0">
             <li>
-              <Link to={"/career"}>Career Resources</Link>
+              <Link to={"/career"}>Career Resource</Link>
             </li>
             <li>
-              <Link to={"/donation"}>Donations</Link>
+              <Link to={"/donation"}>Donation</Link>
             </li>
             <li>
-              <Link to={"/faq"}>Helps & FAQ</Link>
+              <Link to={"/faq"}>Help & FAQ</Link>
             </li>
           </ul>
         </div>
