@@ -47,7 +47,9 @@ export default function MilestoneProgram() {
                       <h4 className="card-title">{item.title}</h4>
                       <p
                         className="card-text"
-                        dangerouslySetInnerHTML={{ __html: item.details }}
+                        dangerouslySetInnerHTML={{
+                          __html: item.details.slice(0, 300),
+                        }}
                       />
                       <div className="pt-3">
                         <ButtonMore to={`/programs-details/${item?.id}`}>
