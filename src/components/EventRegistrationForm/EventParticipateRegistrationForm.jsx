@@ -1,338 +1,397 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import {
-  useAddEventRegisterMutation,
-  useGetEventDetailsIdQuery,
-} from "../../features/events/eventsApiInject";
 import { toast } from "react-toastify";
-import ErrorShow from "../UI/ErrorShow";
-import HomeLoading from "../UI/HomeLoading";
-import { useGetMemberDetailsIdQuery } from "../../features/member/memberApiIn";
-import { useMemberPaymentMutation } from "../../features/payment/sslPaymentApiIn";
 import { Link } from "react-router-dom";
 
-export default function EventParticipateRegistrationForm(props) {
-  const loginUser = JSON.parse(localStorage.getItem("user"));
-  const eventId = props?.props;
+import {
+    useAddEventRegisterMutation,
+    useGetEventDetailsIdQuery,
+} from "../../features/events/eventsApiInject";
+import {
+    useGetMemberDetailsIdQuery,
+} from "../../features/member/memberApiIn";
 
-  const {
-    data: memberData,
-    isLoading,
-    isSuccess,
-    isError,
-  } = useGetMemberDetailsIdQuery(loginUser?.id, { skip: !loginUser });
+import ErrorShow from "../UI/ErrorShow";
+import HomeLoading from "../UI/HomeLoading";
 
-  const {
-    data: eventsDetailsData,
-    isLoading: eventsisLoading,
-    isError: eventsisError,
-    isSuccess: eventsisSuccess,
-  } = useGetEventDetailsIdQuery(eventId, { skip: !eventId });
+export default function EventParticipateRegistrationForm({ props: eventId }) {
+    const loginUser = JSON.parse(localStorage.getItem("user"));
 
-  const [AddEventRegister] = useAddEventRegisterMutation();
-  const [memberPayment] = useMemberPaymentMutation();
+    // API Queries and Mutations
+    const { data: memberData, isLoading: memberLoading } = useGetMemberDetailsIdQuery(loginUser?.id, { skip: !loginUser });
+    const { data: eventDetails, isLoading: eventLoading } = useGetEventDetailsIdQuery(eventId, { skip: !eventId });
+    const [addEventRegister] = useAddEventRegisterMutation();
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    setValue,
-    formState: { errors },
-  } = useForm();
+    // Form configuration
+    const {
+        register,
+        handleSubmit,
+        reset,
+        setValue,
+        formState: { errors },
+    } = useForm();
 
-  const toastOptions = {
-    position: toast.POSITION.TOP_RIGHT,
-    autoClose: 1000,
-  };
+    // State for breakdown
+    const [participationType, setParticipationType] = useState(""); // Single or Spouse
+    const [membershipRenewAmount, setMembershipRenewAmount] = useState(0); // Member Renew Amount
+    const [totalAmount, setTotalAmount] = useState(0);
 
-  useEffect(() => {
-    if (
-      memberData?.success &&
-      eventsDetailsData?.success &&
-      isSuccess &&
-      eventsisSuccess
-    ) {
-      const member = memberData.result;
-      setValue("event_id", eventId);
-      setValue("member_id", member.id);
-      setValue("name", member.name);
-      setValue("organization_name", member.organization_name);
-      setValue("designation_name", member.designation_name);
-      setValue("email_address", member.email);
-      setValue("phone_number", member.phone_number);
-      setValue("pay_amount", eventsDetailsData?.result[0]?.event_fees);
-    } else if (!loginUser == true) {
-      // Clear all input fields if user is not logged in
-      reset({
-        event_id: eventId,
-        member_id: "",
-        name: "",
-        organization_name: "",
-        designation_name: "",
-        email_address: "",
-        phone_number: "",
-        pay_amount: eventsDetailsData?.result[0]?.event_fees,
-      });
-    }
-  }, [memberData, setValue, eventsDetailsData, !loginUser]);
-
-  const onSubmit = async (data) => {
-    const postData = {
-      event_id: data.event_id,
-      member_id: data.member_id,
-      full_name: data.name,
-      organization_name: data.organization_name,
-      designation_name: data.designation_name,
-      email: data.email_address,
-      phone_number: data.phone_number,
-      address: "member user",
+    // Toast options
+    const toastOptions = {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 1000,
     };
 
-    try {
-      const respAddEvent = await AddEventRegister(postData);
+    // Update breakdown based on member data
+    useEffect(() => {
+        if (memberData?.success && eventDetails?.success) {
+            const member = memberData.result;
+            setValue("event_id", eventId);
+            setValue("member_id", member.id);
+            setValue("session", member.session);
+            setValue("full_name", member.name);
+            setValue("organization_name", member.organization_name);
+            setValue("designation_name", member.designation_name);
+            setValue("email_address", member.email);
+            setValue("phone_number", member.phone_number);
+            setValue("pay_amount", eventDetails?.result[0]?.event_fees);
 
-      if (
-        respAddEvent?.data?.success === true ||
-        (respAddEvent?.data?.success === false &&
-          respAddEvent?.data?.message === "Already event registered !")
-      ) {
-        const resp = await memberPayment(data);
-        console.log(resp);
-
-        if (resp?.data?.success) {
-          window.location.replace(resp?.data?.url);
+            // Set Member Renew Amount
+            if (member.membership_category_id === "3") {
+                setMembershipRenewAmount(0);
+            } else if (member.membership_category_id === "4") {
+                setMembershipRenewAmount(1000);
+            }
         } else {
-          throw new Error("Payment not completed");
+            // Fallback values when memberData is undefined
+            reset({
+                event_id: eventId,
+                member_id: "",
+                student_id: "",
+                session: "",
+                full_name: "",
+                organization_name: "",
+                designation_name: "",
+                email_address: "",
+                phone_number: "",
+                pay_amount: eventDetails?.result[0]?.event_fees,
+            });
+            setMembershipRenewAmount(0); // Default for undefined member data
         }
-      } else {
-        toast.info(respAddEvent?.data?.message, toastOptions);
-      }
-    } catch (error) {
-      toast.info(error.message, toastOptions);
-    }
-  };
+    }, [memberData, eventDetails, setValue, reset, loginUser, eventId]);
 
-  if (isLoading && eventsisLoading && loginUser && eventId)
-    return <HomeLoading />;
-  if (
-    (!isLoading && isError && eventsisError && loginUser && !isSuccess) ||
-    memberData?.success === false
-  )
-    return <ErrorShow message={"No data found"} />;
+    const handleParticipationChange = (value) => {
+        setParticipationType(value);
 
-  return (
-    <div className="container">
-      <div className="ak-height-80 ak-height-lg-60"></div>
-      <h6 className="mb-3">
-        Event Title: {eventsDetailsData?.result[0]?.event_title}
-      </h6>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="row g-3"
-        autoComplete="on"
-      >
-        <InputField
-          label="Name"
-          id="inputName"
-          error={errors.name}
-          required
-          register={register}
-          field="name"
-          validation={{ required: true, minLength: 3, maxLength: 50 }}
-          errorMessage={{
-            required: "Name is required",
-            minLength: "Name must be at least 3 characters",
-            maxLength: "Name cannot exceed 50 characters",
-          }}
-        />
+        let participationAmount = 0;
 
-        <InputField
-          label="Organization Name"
-          id="inputOrganization"
-          error={errors.organization_name}
-          required
-          register={register}
-          field="organization_name"
-          validation={{ required: true, minLength: 3, maxLength: 100 }}
-          errorMessage={{
-            required: "Organization Name is required",
-            minLength: "Organization Name must be at least 3 characters",
-            maxLength: "Organization Name cannot exceed 100 characters",
-          }}
-        />
+        if(memberData) {
+            if (value === "Single") {
+                participationAmount = 2000;
+            } else if (value === "Spouse") {
+                participationAmount = 4000;
+            }
+        }else{
+            if (value === "Single") {
+                participationAmount = 500;
+            } else if (value === "Spouse") {
+                participationAmount = 1000;
+            }
+        }
 
-        <InputField
-          label="Email Address"
-          id="inputEmail"
-          type="email"
-          error={errors.email_address}
-          required
-          register={register}
-          field="email_address"
-          validation={{
-            required: true,
-            pattern: {
-              value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-              message: "Invalid email address",
-            },
-          }}
-          errorMessage={{
-            required: "Email is required",
-            pattern: "Invalid email format",
-          }}
-        />
 
-        <InputField
-          label="Phone Number"
-          id="inputPhone"
-          type="tel"
-          error={errors.phone_number}
-          required
-          register={register}
-          field="phone_number"
-          validation={{
-            required: true,
-            minLength: {
-              value: 10,
-              message: "Phone number must be at least 10 digits",
-            },
-            maxLength: {
-              value: 15,
-              message: "Phone number must be less than 15 digits",
-            },
-          }}
-          errorMessage={{ required: "Phone number is required" }}
-        />
+        const total = membershipRenewAmount + participationAmount;
+        setTotalAmount(total);
+    };
 
-        <InputField
-          label="Payment Amount"
-          id="inputAmount"
-          type="number"
-          error={errors.pay_amount}
-          required
-          register={register}
-          field="pay_amount"
-          disabled={loginUser}
-          validation={{
-            required: true,
-            min: { value: 1, message: "Amount must be at least 1" },
-          }}
-          errorMessage={{
-            required: "Payment amount is required",
-            min: "Amount must be greater than 0",
-          }}
-        />
+    const onSubmit = async (data) => {
+        try {
+            if (memberData?.success) {
+                const member = memberData.result;
+                data.session = member.session;
+                if (member.membership_category_id === "3") {
+                    data.member_type = "Life Time Member";
+                } else if (member.membership_category_id === "4") {
+                    data.member_type = "General Member";
+                }
+            } else {
+                data.member_type = "Undefined";
+            }
 
-        <div className="col-12">
-          {renderPaymentMethods(register, errors.payment_type)}
+            data.pay_amount = totalAmount;
+            const registerResponse = await addEventRegister(data);
+
+            if (registerResponse?.data?.success || registerResponse?.data?.message === "Already event registered!") {
+                window.location.replace(registerResponse.data.url);
+            } else {
+                toast.info(registerResponse?.data?.message, toastOptions);
+            }
+        } catch (error) {
+            toast.error(error.message, toastOptions);
+        }
+    };
+
+    if (memberLoading || eventLoading) return <HomeLoading />;
+    if (!eventDetails?.success) return <ErrorShow message="No event details found" />;
+
+    const formatAmount = (amount) => {
+        return new Intl.NumberFormat("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+        }).format(amount);
+    };
+
+    return (
+        <div className="container">
+            <div className="ak-height-80 ak-height-lg-60"></div>
+            <h6 className="mb-3">Event Title: {eventDetails?.result[0]?.event_title}</h6>
+            <form onSubmit={handleSubmit(onSubmit)} className="row g-3" autoComplete="on">
+                {/* Input Fields */}
+                {
+                    !memberData ?
+                    <>
+                        <InputField
+                            label="Student ID"
+                            id="inputName"
+                            required
+                            register={register}
+                            field="student_id"
+                            validation={{required: true}}
+                            errorMessage={{
+                                required: "Student ID is required",
+                            }}
+                            error={errors.student_id}
+                        />
+                        <InputField
+                            label="Batch number/ Session"
+                            id="inputName"
+                            required
+                            register={register}
+                            field="session"
+                            validation={{required: true}}
+                            errorMessage={{
+                                required: "Batch number/ Session is required",
+                            }}
+                            error={errors.session}
+                        />
+                    </>
+                    :null
+                }
+                <InputField
+                    label="Name"
+                    id="inputName"
+                    required
+                    register={register}
+                    field="full_name"
+                    validation={{required: true, minLength: 3, maxLength: 50}}
+                    errorMessage={{
+                        required: "Name is required",
+                        minLength: "Name must be at least 3 characters",
+                        maxLength: "Name cannot exceed 50 characters",
+                    }}
+                    error={errors.full_name}
+                />
+
+                <InputField
+                    label="Organization Name"
+                    id="inputOrganization"
+                    required
+                    register={register}
+                    field="organization_name"
+                    validation={{required: true, minLength: 3, maxLength: 100}}
+                    errorMessage={{
+                        required: "Organization Name is required",
+                        minLength: "Organization Name must be at least 3 characters",
+                        maxLength: "Organization Name cannot exceed 100 characters",
+                    }}
+                    error={errors.organization_name}
+                />
+
+                <InputField
+                    label="Email Address"
+                    id="inputEmail"
+                    type="email"
+                    required
+                    register={register}
+                    field="email_address"
+                    validation={{
+                        required: true,
+                        pattern: {
+                            value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                            message: "Invalid email format",
+                        },
+                    }}
+                    errorMessage={{
+                        required: "Email is required",
+                        pattern: "Invalid email format",
+                    }}
+                    error={errors.email_address}
+                />
+
+                <InputField
+                    label="Phone Number"
+                    id="inputPhone"
+                    type="tel"
+                    required
+                    register={register}
+                    field="phone_number"
+                    validation={{
+                        required: true,
+                        minLength: {value: 10, message: "Phone number must be at least 10 digits"},
+                        maxLength: {value: 15, message: "Phone number cannot exceed 15 digits"},
+                    }}
+                    errorMessage={{required: "Phone number is required"}}
+                    error={errors.phone_number}
+                />
+
+                {
+                    memberData ?
+                        <InputField
+                            label="Participation Type"
+                            id="participationType"
+                            type="select"
+                            register={register}
+                            field="participation_type"
+                            validation={{required: true}}
+                            options={[
+                                {value: "Single", label: "Single (2,000 Taka)"},
+                                {value: "Spouse", label: "Spouse (4,000 Taka)"},
+                            ]}
+                            onChange={(e) => handleParticipationChange(e.target.value)}
+                            errorMessage={{required: "Please select a participation type"}}
+                            error={errors.participation_type}
+                        />
+                    :
+                        <InputField
+                            label="Participation Type"
+                            id="participationType"
+                            type="select"
+                            register={register}
+                            field="participation_type"
+                            validation={{required: true}}
+                            options={[
+                                {value: "Single", label: "Single (500 Taka)"},
+                                {value: "Spouse", label: "Spouse (1,000 Taka)"},
+                            ]}
+                            onChange={(e) => handleParticipationChange(e.target.value)}
+                            errorMessage={{required: "Please select a participation type"}}
+                            error={errors.participation_type}
+                        />
+                }
+
+                {/* Membership Amount Breakdown */}
+                <div className="col-12 mt-4">
+                    <h5 className="text-primary">Payment Details</h5>
+                    <div className="amount-breakdown p-3 border rounded bg-light">
+                        {
+                            memberData ?
+                                <p className="d-flex justify-content-between">
+                                    <span><strong>Annual Membership:</strong></span>
+                                    <span>{membershipRenewAmount.toFixed(2)} Taka</span>
+                                </p>
+                            :null
+                        }
+
+                        {participationType === "Single" && memberData &&(
+                            <p className="d-flex justify-content-between">
+                                <span><strong>Subscription fee:</strong></span>
+                                <span>+ 2,000.00 Taka</span>
+                            </p>
+                        )}
+                        {participationType === "Single" && !memberData && (
+                            <p className="d-flex justify-content-between">
+                                <span><strong>Student Subscription fee:</strong></span>
+                                <span>+ 500.00 Taka</span>
+                            </p>
+                        )}
+                        {participationType === "Spouse" && memberData &&(
+                            <>
+                                <p className="d-flex justify-content-between">
+                                    <span><strong>Subscription fee:</strong></span>
+                                    <span>+ 2,000.00 Taka</span>
+                                </p>
+                                <p className="d-flex justify-content-between">
+                                    <span><strong>With Spouse:</strong></span>
+                                    <span>+ 2,000.00 Taka</span>
+                                </p>
+                            </>
+                        )}
+                        {participationType === "Spouse" && !memberData && (
+                            <>
+                                <p className="d-flex justify-content-between">
+                                    <span><strong>Student Subscription fee:</strong></span>
+                                    <span>+ 500.00 Taka</span>
+                                </p>
+                                <p className="d-flex justify-content-between">
+                                    <span><strong>With Spouse:</strong></span>
+                                    <span>+ 500.00 Taka</span>
+                                </p>
+                            </>
+                        )}
+                        <hr/>
+                        <p className="d-flex justify-content-between text-success fw-bold">
+                            <span>Total:</span>
+                            <span>{formatAmount(totalAmount)} Taka</span>
+                        </p>
+                    </div>
+                </div>
+
+                <TermsAndConditions/>
+
+                {/* Submit Button */}
+                <div className="col-12 mt-4">
+                    <button type="submit" className="button-primary">Pay Now</button>
+                </div>
+            </form>
         </div>
+    );
+}
 
-        <TermsAndConditions />
-
-        <div className="col-12 mt-4">
-          <button type="submit" className="button-primary">
-            Pay Now
-          </button>
+// InputField Component
+function InputField({label, id, type = "text", register, field, validation, error, errorMessage, options, onChange}) {
+    return (
+        <div className="col-md-6">
+            <label htmlFor={id} className="form-label">{label}*</label>
+            {type === "select" ? (
+                <select
+                    className="text-input-filed type_2"
+                    id={id}
+                    {...register(field, validation)}
+                    onChange={onChange}
+                >
+                    <option value="">Select...</option>
+                    {options.map((opt) => (
+                        <option key={opt.value} value={opt.value}>{opt.label}</option>
+                    ))}
+                </select>
+            ) : (
+                <input
+                    type={type}
+                    className="text-input-filed type_2"
+                    id={id}
+                    {...register(field, validation)}
+                />
+            )}
+            {error && <p className="text-danger">{errorMessage[error.type]}</p>}
         </div>
-      </form>
-      <div className="ak-height-100 ak-height-lg-60"></div>
-    </div>
-  );
+    );
 }
 
-function InputField({
-  label,
-  id,
-  type = "text",
-  register,
-  field,
-  validation,
-  error,
-  errorMessage,
-  disabled = false,
-}) {
-  return (
-    <div className="col-md-6">
-      <label htmlFor={id} className="form-label">
-        {label}*
-      </label>
-      <input
-        type={type}
-        className="text-input-filed type_2"
-        id={id}
-        {...register(field, validation)}
-        disabled={disabled}
-      />
-      {error && <p className="text-danger">{errorMessage[error.type]}</p>}
-    </div>
-  );
-}
-
-function renderPaymentMethods(register, error) {
-  const methods = [
-    "Bkash",
-    "SSLCommerz",
-    "Visa",
-    "Mastercard",
-    "American Express",
-  ];
-  return methods.map((method, idx) => (
-    <div key={idx} className="form-check form-check-inline">
-      <input
-        className="form-check-input custom-checkbox"
-        type="radio"
-        name="paymentMethod"
-        id={method.toLowerCase()}
-        value={method.toLowerCase()}
-        {...register("payment_type", { required: true })}
-      />
-      <label className="form-check-label" htmlFor={method.toLowerCase()}>
-        {method}
-      </label>
-      {error && idx === 0 && (
-        <p className="text-danger">Payment method is required.</p>
-      )}
-    </div>
-  ));
-}
+// Terms and Conditions Component
 function TermsAndConditions() {
-  return (
-    <div className="col-12">
-      <div className="form-check">
-        <input
-          className="form-check-input"
-          type="checkbox"
-          id="termsCheckbox"
-          required
-        />
-        <label className="form-check-label" htmlFor="termsCheckbox">
-          I have read and agree to the
-          <Link
-            to="/terms-condition?id=termsconditions"
-            className="ak-primary-color text-decoration-underline"
-          >
-            {" "}
-            Terms & Conditions
-          </Link>
-          ,
-          <Link
-            to="/terms-condition?id=privacypolicy"
-            className="ak-primary-color text-decoration-underline"
-          >
-            {" "}
-            Privacy Policy
-          </Link>
-          , and
-          <Link
-            to="/terms-condition?id=refundpolicy"
-            className="ak-primary-color text-decoration-underline"
-          >
-            {" "}
-            Refund Policy
-          </Link>
-          .
-        </label>
-      </div>
-    </div>
-  );
+    return (
+        <div className="col-12">
+            <div className="form-check">
+                <input
+                    className="form-check-input"
+                    type="checkbox"
+                    id="termsConditions"
+                    required
+                />
+                <label className="form-check-label" htmlFor="termsConditions">
+                    I agree to the terms and conditions.
+                </label>
+            </div>
+        </div>
+    );
 }

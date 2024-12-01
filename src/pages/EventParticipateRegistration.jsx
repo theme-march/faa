@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 import React from "react";
 import { ButtonReadMoreArrowIcon } from "../components/Button/Button";
 import EventParticipateRegistrationForm from "../components/EventRegistrationForm/EventParticipateRegistrationForm";
@@ -17,9 +18,7 @@ export default function EventParticipateRegistration() {
           <p className="mt-2">
             Book as a member Book as a member{" "}
             <span className="ms-5">
-              <ButtonReadMoreArrowIcon
-                to={`/event-sponsor-registration/${eventId}`}
-              >
+              <ButtonReadMoreArrowIcon to={`/event-sponsor-registration/${eventId}`}>
                 Event Sponsor Book
               </ButtonReadMoreArrowIcon>
             </span>
