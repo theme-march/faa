@@ -33,6 +33,9 @@ export default function EventParticipateRegistrationForm({ props: eventId }) {
 
     // State for breakdown
     const [participationType, setParticipationType] = useState(""); // Single or Spouse
+    const [tshirtSize, setTShirtSize] = useState(null);
+    const [deliveryOption, setDeliveryOption] = useState('from_event');
+    const [deliveryCharge, setDeliveryCharge] = useState(0);
     const [membershipRenewAmount, setMembershipRenewAmount] = useState(0); // Member Renew Amount
     const [totalAmount, setTotalAmount] = useState(0);
 
@@ -80,27 +83,86 @@ export default function EventParticipateRegistrationForm({ props: eventId }) {
         }
     }, [memberData, eventDetails, setValue, reset, loginUser, eventId]);
 
-    const handleParticipationChange = (value) => {
-        setParticipationType(value);
+    const handleTShirtSizeChange = (value) => {
+        setTShirtSize(value);
+    };
 
+    // Helper function for calculation
+    const calculateTotalAmount = (participationType, membershipRenewAmount, memberData, deliveryCharge = 0) => {
         let participationAmount = 0;
 
-        if(memberData) {
-            if (value === "Single") {
+        if (memberData) {
+            if (participationType === "Single") {
                 participationAmount = 2000;
-            } else if (value === "Spouse") {
+            } else if (participationType === "Spouse") {
                 participationAmount = 4000;
             }
-        }else{
-            if (value === "Single") {
+        } else {
+            if (participationType === "Single") {
                 participationAmount = 500;
-            } else if (value === "Spouse") {
+            } else if (participationType === "Spouse") {
                 participationAmount = 1000;
             }
         }
 
+        return membershipRenewAmount + participationAmount + deliveryCharge;
+    };
 
-        const total = membershipRenewAmount + participationAmount;
+    const handleReset = () => {
+        reset({
+            t_shirt_size: "",       // Reset T-Shirt size
+            delivery_address: "",   // Reset Delivery Address
+            delivery_charge: "",    // Reset Delivery Charge
+            delivery_option: "",    // Reset Delivery Option
+        });
+
+        // Reset additional states if needed
+        setTShirtSize(null)
+        setDeliveryOption("from_event")
+        setDeliveryCharge(0);
+        setTotalAmount(0);
+    };
+
+    // Event Handlers
+    const handleParticipationChange = (value) => {
+        if(!value){
+            handleReset();
+            setParticipationType(value);
+        }else{
+            setParticipationType(value);
+
+            // Recalculate total with the updated participation type and existing delivery charge
+            const total = calculateTotalAmount(value, membershipRenewAmount, memberData, deliveryCharge);
+            setTotalAmount(total);
+        }
+
+
+
+
+    };
+
+    const handleDeliveryOptionChange = (value) => {
+        if(!value || value === "from_event"){
+            reset({
+                delivery_charge: "",    // Reset Delivery Charge
+            });
+        }
+        setDeliveryOption(value);
+
+        // Reset delivery charge to ensure consistency
+        setDeliveryCharge(0);
+
+        // Recalculate total amount without delivery charge
+        const total = calculateTotalAmount(participationType, membershipRenewAmount, memberData, 0);
+        setTotalAmount(total);
+    };
+
+    const handleDeliveryChargeChange = (value) => {
+        const charge = Number(value);
+        setDeliveryCharge(charge);
+
+        // Recalculate total with the updated delivery charge
+        const total = calculateTotalAmount(participationType, membershipRenewAmount, memberData, charge);
         setTotalAmount(total);
     };
 
@@ -279,6 +341,85 @@ export default function EventParticipateRegistrationForm({ props: eventId }) {
                         />
                 }
 
+                {/* Gift details */}
+                {
+                    participationType ?
+                        <>
+                            <InputField
+                                label="T-Shirt Size"
+                                id="tShirtSize"
+                                type="select"
+                                register={register}
+                                field="t_shirt_size"
+                                validation={{required: true}}
+                                options={[
+                                    {value: "M", label: "T- Shirt: M - Length 27\" chest 38\"."},
+                                    {value: "L", label: "T- Shirt: L - Length 28\" chest: 40\"."},
+                                    {value: "XL", label: "T- Shirt: XL - Length 29\" chest 42\""},
+                                ]}
+                                onChange={(e) => handleTShirtSizeChange(e.target.value)}
+                                errorMessage={{required: "Please select a T-Shirt size"}}
+                                error={errors.t_shirt_size}
+                            />
+                            {
+                                tshirtSize ?
+                                    <>
+                                        <InputField
+                                            label="Do you want to receive your gift at home?"
+                                            id="deliveryOption"
+                                            type="select"
+                                            register={register}
+                                            field="delivery_option"
+                                            validation={{required: true}}
+                                            options={[
+                                                {value: "from_event", label: "No"},
+                                                {value: "from_home", label: "Yes"},
+                                            ]}
+                                            errorMessage={{required: "Please select delivery option"}}
+                                            onChange={(e) => handleDeliveryOptionChange(e.target.value)}
+                                            error={errors.delivery_option}
+                                        />
+                                        {
+                                            deliveryOption === "from_home" ?
+                                                <>
+                                                    <InputField
+                                                        label="Delivery Charge"
+                                                        id="deliveryCharge"
+                                                        type="select"
+                                                        register={register}
+                                                        field="delivery_charge"
+                                                        validation={{required: true}}
+                                                        options={[
+                                                            {value: "60", label: "For Dhaka (60 TK)"},
+                                                            {value: "110", label: "Outside Dhaka (110 TK)"},
+                                                        ]}
+                                                        onChange={(e) => handleDeliveryChargeChange(e.target.value)}
+                                                        errorMessage={{required: "Please select a delivery charge"}}
+                                                        error={errors.delivery_charge}
+                                                    />
+                                                    <InputField
+                                                        label="Delivery Address"
+                                                        id="deliveryAddress"
+                                                        required
+                                                        register={register}
+                                                        field="delivery_address"
+                                                        validation={{required: true}}
+                                                        errorMessage={{
+                                                            required: "Delivery address is required",
+                                                        }}
+                                                        error={errors.delivery_address}
+                                                    />
+                                                    <div style={{color: '#a55252'}}>Please note you can't edit the address after pay</div>
+                                                </>
+                                                :null
+                                        }
+                                    </>
+                                    :null
+                            }
+                        </>
+                        :null
+                }
+
                 {/* Membership Amount Breakdown */}
                 <div className="col-12 mt-4">
                     <h5 className="text-primary">Payment Details</h5>
@@ -328,6 +469,14 @@ export default function EventParticipateRegistrationForm({ props: eventId }) {
                                 </p>
                             </>
                         )}
+
+                        {deliveryCharge > 0 && (
+                            <p className="d-flex justify-content-between">
+                                <span><strong>Delivery Charge:</strong></span>
+                                <span>+ {deliveryCharge.toFixed(2)} Taka</span>
+                            </p>
+                        )}
+
                         <hr/>
                         <p className="d-flex justify-content-between text-success fw-bold">
                             <span>Total:</span>
