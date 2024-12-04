@@ -382,21 +382,21 @@ export default function EventParticipateRegistrationForm({ props: eventId }) {
                                         {
                                             deliveryOption === "from_home" ?
                                                 <>
-                                                    <InputField
-                                                        label="Delivery Charge"
-                                                        id="deliveryCharge"
-                                                        type="select"
-                                                        register={register}
-                                                        field="delivery_charge"
-                                                        validation={{required: true}}
-                                                        options={[
-                                                            {value: "60", label: "For Dhaka (60 TK)"},
-                                                            {value: "110", label: "Outside Dhaka (110 TK)"},
-                                                        ]}
-                                                        onChange={(e) => handleDeliveryChargeChange(e.target.value)}
-                                                        errorMessage={{required: "Please select a delivery charge"}}
-                                                        error={errors.delivery_charge}
-                                                    />
+                                                    {/*<InputField*/}
+                                                    {/*    label="Delivery Charge"*/}
+                                                    {/*    id="deliveryCharge"*/}
+                                                    {/*    type="select"*/}
+                                                    {/*    register={register}*/}
+                                                    {/*    field="delivery_charge"*/}
+                                                    {/*    validation={{required: true}}*/}
+                                                    {/*    options={[*/}
+                                                    {/*        {value: "60", label: "For Dhaka (60 TK)"},*/}
+                                                    {/*        {value: "110", label: "Outside Dhaka (110 TK)"},*/}
+                                                    {/*    ]}*/}
+                                                    {/*    onChange={(e) => handleDeliveryChargeChange(e.target.value)}*/}
+                                                    {/*    errorMessage={{required: "Please select a delivery charge"}}*/}
+                                                    {/*    error={errors.delivery_charge}*/}
+                                                    {/*/>*/}
                                                     <InputField
                                                         label="Delivery Address"
                                                         id="deliveryAddress"
