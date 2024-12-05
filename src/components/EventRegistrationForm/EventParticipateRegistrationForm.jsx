@@ -63,7 +63,7 @@ export default function EventParticipateRegistrationForm({ props: eventId }) {
             if (member.membership_category_id === "3") {
                 setMembershipRenewAmount(0);
             } else if (member.membership_category_id === "4") {
-                setMembershipRenewAmount(1000);
+                setMembershipRenewAmount(Number(eventDetails?.result[0]?.membership_renew_fees));
             }
         } else {
             // Fallback values when memberData is undefined
@@ -93,15 +93,15 @@ export default function EventParticipateRegistrationForm({ props: eventId }) {
 
         if (memberData) {
             if (participationType === "Single") {
-                participationAmount = 2000;
+                participationAmount = Number(eventDetails?.result[0]?.member_single_fees);
             } else if (participationType === "Spouse") {
-                participationAmount = 4000;
+                participationAmount = Number(Number(eventDetails?.result[0]?.member_single_fees) + Number(eventDetails?.result[0]?.member_spouse_fees));
             }
         } else {
             if (participationType === "Single") {
-                participationAmount = 500;
+                participationAmount = Number(eventDetails?.result[0]?.student_single_fees);
             } else if (participationType === "Spouse") {
-                participationAmount = 1000;
+                participationAmount = Number(Number(eventDetails?.result[0]?.student_single_fees) + Number(eventDetails?.result[0]?.student_spouse_fees));
             }
         }
 
@@ -173,8 +173,13 @@ export default function EventParticipateRegistrationForm({ props: eventId }) {
                 data.session = member.session;
                 if (member.membership_category_id === "3") {
                     data.member_type = "Life Time Member";
+                    data.member_category_id = member.membership_category_id;
                 } else if (member.membership_category_id === "4") {
                     data.member_type = "General Member";
+                    data.member_category_id = member.membership_category_id;
+                }else{
+                    data.member_type = "Student/Guest";
+                    data.member_category_id = "6";
                 }
             } else {
                 data.member_type = "Undefined";
@@ -213,7 +218,7 @@ export default function EventParticipateRegistrationForm({ props: eventId }) {
                     !memberData ?
                     <>
                         <InputField
-                            label="Student ID"
+                            label="Student ID/Guest ID"
                             id="inputName"
                             required
                             register={register}
@@ -316,8 +321,8 @@ export default function EventParticipateRegistrationForm({ props: eventId }) {
                             field="participation_type"
                             validation={{required: true}}
                             options={[
-                                {value: "Single", label: "Single (2,000 Taka)"},
-                                {value: "Spouse", label: "Spouse (4,000 Taka)"},
+                                {value: "Single", label: `Single (${eventDetails?.result[0]?.member_single_fees} Taka)`},
+                                {value: "Spouse", label: `Spouse (Single ${eventDetails?.result[0]?.member_single_fees} + Spouse ${eventDetails?.result[0]?.member_spouse_fees} Taka)`},
                             ]}
                             onChange={(e) => handleParticipationChange(e.target.value)}
                             errorMessage={{required: "Please select a participation type"}}
@@ -332,8 +337,8 @@ export default function EventParticipateRegistrationForm({ props: eventId }) {
                             field="participation_type"
                             validation={{required: true}}
                             options={[
-                                {value: "Single", label: "Single (500 Taka)"},
-                                {value: "Spouse", label: "Spouse (1,000 Taka)"},
+                                {value: "Single", label: `Single (${eventDetails?.result[0]?.student_single_fees} Taka)`},
+                                {value: "Spouse", label: `Spouse (Single ${eventDetails?.result[0]?.student_single_fees} + Spouse ${eventDetails?.result[0]?.student_spouse_fees} Taka)`}
                             ]}
                             onChange={(e) => handleParticipationChange(e.target.value)}
                             errorMessage={{required: "Please select a participation type"}}
@@ -397,6 +402,11 @@ export default function EventParticipateRegistrationForm({ props: eventId }) {
                                                     {/*    errorMessage={{required: "Please select a delivery charge"}}*/}
                                                     {/*    error={errors.delivery_charge}*/}
                                                     {/*/>*/}
+                                                    <div style={{fontSize: 12}}>
+                                                        <div style={{fontWeight:'bold'}}>Delivery Address</div>
+                                                        <div>1. Pay Delivery Charge in cash on delivery: Dhaka - 60 TK</div>
+                                                        <div>2. Pay Delivery Charge in cash on delivery: Outside Dhaka - 110 TK</div>
+                                                    </div>
                                                     <InputField
                                                         label="Delivery Address"
                                                         id="deliveryAddress"
@@ -436,24 +446,24 @@ export default function EventParticipateRegistrationForm({ props: eventId }) {
                         {participationType === "Single" && memberData &&(
                             <p className="d-flex justify-content-between">
                                 <span><strong>Subscription fee:</strong></span>
-                                <span>+ 2,000.00 Taka</span>
+                                <span>+ {eventDetails?.result[0]?.member_single_fees} Taka</span>
                             </p>
                         )}
                         {participationType === "Single" && !memberData && (
                             <p className="d-flex justify-content-between">
                                 <span><strong>Student Subscription fee:</strong></span>
-                                <span>+ 500.00 Taka</span>
+                                <span>+ {eventDetails?.result[0]?.student_single_fees} Taka</span>
                             </p>
                         )}
                         {participationType === "Spouse" && memberData &&(
                             <>
                                 <p className="d-flex justify-content-between">
                                     <span><strong>Subscription fee:</strong></span>
-                                    <span>+ 2,000.00 Taka</span>
+                                    <span>+ {eventDetails?.result[0]?.member_single_fees} Taka</span>
                                 </p>
                                 <p className="d-flex justify-content-between">
                                     <span><strong>With Spouse:</strong></span>
-                                    <span>+ 2,000.00 Taka</span>
+                                    <span>+ {eventDetails?.result[0]?.member_spouse_fees} Taka</span>
                                 </p>
                             </>
                         )}
@@ -461,11 +471,11 @@ export default function EventParticipateRegistrationForm({ props: eventId }) {
                             <>
                                 <p className="d-flex justify-content-between">
                                     <span><strong>Student Subscription fee:</strong></span>
-                                    <span>+ 500.00 Taka</span>
+                                    <span>+ {eventDetails?.result[0]?.student_single_fees} Taka</span>
                                 </p>
                                 <p className="d-flex justify-content-between">
                                     <span><strong>With Spouse:</strong></span>
-                                    <span>+ 500.00 Taka</span>
+                                    <span>+ {eventDetails?.result[0]?.student_spouse_fees} Taka</span>
                                 </p>
                             </>
                         )}
