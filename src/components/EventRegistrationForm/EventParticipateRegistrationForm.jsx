@@ -164,19 +164,22 @@ export default function EventParticipateRegistrationForm({ props: eventId }) {
 
     const onSubmit = async (data) => {
         try {
+            console.log(eventDetails?.result[0]?.id)
+            data.event_id = eventDetails?.result[0]?.id;
             if (memberData?.success) {
                 const member = memberData.result;
                 data.session = member.session;
                 if (participationType === "Single") {
                     data.member_single_fees = eventDetails?.result[0]?.member_single_fees;
                 } else if (participationType === "Spouse") {
+                    data.member_single_fees = eventDetails?.result[0]?.member_single_fees;
                     data.member_spouse_fees = eventDetails?.result[0]?.member_spouse_fees;
                 }
                 if (member.membership_category_id === "3") {
-                    data.membership_renew_fees = eventDetails?.result[0]?.membership_renew_fees;
                     data.member_type = "Life Time Member";
                     data.member_category_id = member.membership_category_id;
                 } else if (member.membership_category_id === "4") {
+                    data.membership_renew_fees = eventDetails?.result[0]?.membership_renew_fees;
                     data.member_type = "General Member";
                     data.member_category_id = member.membership_category_id;
                 }else{
@@ -187,6 +190,7 @@ export default function EventParticipateRegistrationForm({ props: eventId }) {
                 if (participationType === "Single") {
                     data.student_single_fees = eventDetails?.result[0]?.student_single_fees;
                 } else if (participationType === "Spouse") {
+                    data.student_single_fees = eventDetails?.result[0]?.student_single_fees;
                     data.student_spouse_fees = eventDetails?.result[0]?.student_spouse_fees;
                 }
                 data.member_type = "Student/Guest";
