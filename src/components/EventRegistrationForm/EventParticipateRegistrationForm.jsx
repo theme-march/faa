@@ -135,10 +135,6 @@ export default function EventParticipateRegistrationForm({ props: eventId }) {
             const total = calculateTotalAmount(value, membershipRenewAmount, memberData, deliveryCharge);
             setTotalAmount(total);
         }
-
-
-
-
     };
 
     const handleDeliveryOptionChange = (value) => {
@@ -182,7 +178,8 @@ export default function EventParticipateRegistrationForm({ props: eventId }) {
                     data.member_category_id = "6";
                 }
             } else {
-                data.member_type = "Undefined";
+                data.member_type = "Student/Guest";
+                data.member_category_id = "6";
             }
 
             data.pay_amount = totalAmount;
