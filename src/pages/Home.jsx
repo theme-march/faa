@@ -33,22 +33,22 @@ export default function Home() {
       <>
         <AboutUs />
 
-        <div className="ak-height-80 ak-height-lg-30"></div>
+        <div className="ak-height-50 ak-height-lg-30"></div>
         <MilestoneProgram />
 
-        <div className="ak-height-80 ak-height-lg-30"></div>
-        {section_2.length !== 0 ? <DonationCareer props={section_2} /> : " "}
-
-        <div className="ak-height-80 ak-height-lg-30"></div>
-        {section_3.length !== 0 ? <RecentEvent props={section_3} /> : " "}
-
-        <div className="ak-height-80 ak-height-lg-30"></div>
-        {section_4.length !== 0 ? <MovingImg props={section_4} /> : " "}
-
-        <div className="ak-height-80 ak-height-lg-30"></div>
+        <div className="ak-height-50 ak-height-lg-30"></div>
         {section_5.length !== 0 ? <UncommingEvents props={section_5} /> : " "}
 
-        <div className="ak-height-80 ak-height-lg-30"></div>
+        <div className="ak-height-50 ak-height-lg-30"></div>
+        {section_3.length !== 0 ? <RecentEvent props={section_3} /> : " "}
+
+        <div className="ak-height-50 ak-height-lg-30"></div>
+        {section_2.length !== 0 ? <DonationCareer props={section_2} /> : " "}
+
+        <div className="ak-height-50 ak-height-lg-30"></div>
+        {section_4.length !== 0 ? <MovingImg props={section_4} /> : " "}
+
+        <div className="ak-height-50 ak-height-lg-30"></div>
         {section_6.length !== 0 ? <NewsGrid props={section_6} /> : " "}
 
         <div className="ak-height-80 ak-height-lg-30"></div>

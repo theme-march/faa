@@ -1,19 +1,65 @@
-import React from "react";
+
+import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useGetMemberDetailsIdQuery } from "../features/member/memberApiIn";
 import ErrorShow from "../components/UI/ErrorShow";
 import DateFormat from "../components/DateFormat/DateFormat";
-
+import { toast } from "react-toastify";
 import demoImgMember from "../assets/member/member_1.jpg";
 import MembershipCategorynNameFind from "../components/MemberCard/MembershipCategorynNameFind";
 
 export default function MemberDetails() {
   const { id } = useParams();
-  const {
-    data: singalMember,
-    isLoading,
-    isError,
-  } = useGetMemberDetailsIdQuery(id);
+  const loginUser = JSON.parse(localStorage.getItem("user"));
+  const { data: singalMember, isLoading, isError } = useGetMemberDetailsIdQuery(id);
+
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState({
+    old: false,
+    new: false,
+    confirm: false,
+  });
+
+
+  const toastOptions = {
+    position: toast.POSITION.TOP_RIGHT,
+    autoClose: 1000,
+  };
+
+
+  const togglePasswordVisibility = (field) => {
+    setShowPassword((prev) => ({
+      ...prev,
+      [field]: !prev[field],
+    }));
+  };
+
+
+  const handlePasswordUpdate = async () => {
+    if (newPassword !== confirmPassword) {
+      toast.info("New And Confirm passwords do not match.", toastOptions);
+      return;
+    }
+
+    try {
+      // Assume a function `updatePassword` exists in your API utility
+      const response = await updatePassword({
+        memberId: id,
+        oldPassword,
+        newPassword,
+      });
+
+      if (response.success) {
+        toast.success("Password updated successfully!", toastOptions);
+      } else {
+        toast.info("Old password is incorrect.", toastOptions);
+      }
+    } catch (error) {
+      toast.error("An error occurred. Please try again.", toastOptions);
+    }
+  };
 
   if (isError) {
     return <ErrorShow message={"There was an error"} />;
@@ -22,17 +68,6 @@ export default function MemberDetails() {
   if (!isLoading && !singalMember?.success) {
     return <ErrorShow message={"No data found"} />;
   }
-  /* 
-  const loginUser = JSON.parse(localStorage.getItem("user"));
-
-  if (loginUser?.admin_approval !== 1) {
-    return (
-      <div className="container">
-        <div className="ak-height-80 ak-height-lg-30"></div>
-        <h2 className="text-center">You are not an approved member </h2>
-      </div>
-    );
-  } */
 
   if (!isLoading && singalMember?.success) {
     const {
@@ -47,7 +82,6 @@ export default function MemberDetails() {
       session,
       membership_category_id,
       membership_number,
-      id,
     } = singalMember.result;
 
     return (
@@ -66,12 +100,11 @@ export default function MemberDetails() {
             )}
           </div>
           <div className="col-md-7">
-            <div className="ak-height-lg-30"></div>
-            <RenderDetailRow label="Address" value={address} />
             <RenderDetailRow label="Name" value={name} />
+            <RenderDetailRow label="Address" value={address} />
             <RenderDetailRow label="Email" value={email} />
             <RenderDetailRow
-              label="Membership number"
+              label="Membership Number"
               value={membership_number}
             />
             <RenderDetailRow
@@ -97,6 +130,81 @@ export default function MemberDetails() {
             </Link>
           </div>
         </div>
+
+        {/* Password Update Section */}
+        {loginUser.email === email  && parseInt(loginUser.id) === parseInt(id) && 
+        <div className="password-update mt-5">
+          <h5 className="mb-4 text-uppercase">Update Password</h5>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handlePasswordUpdate();
+            }}
+          >
+            <div className="form-group mb-3">
+              <label>Old Password</label>
+              <div className="input-group flex-nowrap">
+                <input
+                  type={showPassword.old ? "text" : "password"}
+                  value={oldPassword}
+                  onChange={(e) => setOldPassword(e.target.value)}
+                  className="text-input-filed type_2"
+                  required
+                />
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary"
+                  onClick={() => togglePasswordVisibility("old")}
+                >
+                  {showPassword.old ? "Hide" : "Show"}
+                </button>
+              </div>
+            </div>
+            <div className="form-group  mb-3">
+              <label>New Password</label>
+              <div className="input-group flex-nowrap">
+                <input
+                  type={showPassword.new ? "text" : "password"}
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  className="form-control text-input-filed type_2"
+                  required
+                />
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary"
+                  onClick={() => togglePasswordVisibility("new")}
+                >
+                  {showPassword.new ? "Hide" : "Show"}
+                </button>
+              </div>
+            </div>
+            <div className="form-group mb-3">
+              <label>Confirm New Password</label>
+              <div className="input-group flex-nowrap">
+                <input
+                  type={showPassword.confirm ? "text" : "password"}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="text-input-filed type_2"
+                  required
+                />
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary"
+                  onClick={() => togglePasswordVisibility("confirm")}
+                >
+                  {showPassword.confirm ? "Hide" : "Show"}
+                </button>
+              </div>
+            </div>
+            <button type="submit" className="button-primary mt-3">
+              Update Password
+            </button>
+          </form>
+         
+        </div>
+         }
         <div className="ak-height-80 ak-height-lg-30"></div>
       </div>
     );
@@ -107,9 +215,9 @@ function RenderDetailRow({ label, value }) {
   return (
     label &&
     value && (
-      <div className="d-flex gap-3 align-items-center  p-2">
+      <div className="d-flex gap-3 align-items-center p-2">
         <h6>{label}:</h6>
-        <p> {value}</p>
+        <p>{value}</p>
       </div>
     )
   );
