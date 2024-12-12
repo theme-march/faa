@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { useGetMemberDetailsIdQuery } from "../features/member/memberApiIn";
+import { useGetMemberDetailsIdQuery, useMemberUpdatePasswordMutation } from "../features/member/memberApiIn";
 import ErrorShow from "../components/UI/ErrorShow";
 import DateFormat from "../components/DateFormat/DateFormat";
 import { toast } from "react-toastify";
@@ -12,6 +12,8 @@ export default function MemberDetails() {
   const { id } = useParams();
   const loginUser = JSON.parse(localStorage.getItem("user"));
   const { data: singalMember, isLoading, isError } = useGetMemberDetailsIdQuery(id);
+  
+  const [memberUpdatePassword] = useMemberUpdatePasswordMutation();
 
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -45,16 +47,19 @@ export default function MemberDetails() {
 
     try {
       // Assume a function `updatePassword` exists in your API utility
-      const response = await updatePassword({
-        memberId: id,
-        oldPassword,
-        newPassword,
-      });
+      const fromData={
+        member_id: id,
+        current_password: oldPassword,
+        new_password: newPassword,
+        confirm_password:confirmPassword
+      }
+    
+      const response = await memberUpdatePassword(fromData);
 
-      if (response.success) {
-        toast.success("Password updated successfully!", toastOptions);
+      if (response.message === "Password update successfully! ") {
+        toast.success(response.message, toastOptions);
       } else {
-        toast.info("Old password is incorrect.", toastOptions);
+        toast.info(response.message, toastOptions);
       }
     } catch (error) {
       toast.error("An error occurred. Please try again.", toastOptions);

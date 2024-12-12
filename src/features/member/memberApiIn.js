@@ -21,6 +21,15 @@ const memberApi = apiSlice.injectEndpoints({
       //   invalidatesTags: ["member"],
     }),
 
+    memberUpdatePassword: bulider.mutation({
+      query: (data) => ({
+        url: "/change_password",
+        method: "POST",
+        body: data,
+      }),
+      //   invalidatesTags: ["member"],
+    }),
+
     memberListApproved: bulider.mutation({
       query: (data) => ({
         url: "/member_list_for_approved",
@@ -84,4 +93,5 @@ export const {
   useGetMembersCategoryListQuery,
   useGetMembersOccupationListQuery,
   useGetMembersSessionListQuery,
+  useMemberUpdatePasswordMutation,
 } = memberApi;
