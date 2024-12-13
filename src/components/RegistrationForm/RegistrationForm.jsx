@@ -15,6 +15,7 @@ import ImageUploadComponent from "../ImageUploadComponent/ImageCompression";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { Link } from "react-router-dom";
+import batchPdf from "../../assets/Batchnumber.pdf";
 
 export default function RegistrationForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -193,6 +194,17 @@ export default function RegistrationForm() {
               <p>
                 Select Batch number/ Session{" "}
                 <span className="text-danger">*</span>
+                <Link
+                  to={batchPdf}
+                  className="text-danger d-inline me-3"
+                  target="_blank"
+                >
+                  Click{" "}
+                  <span className="text-decoration-underline text-primary">
+                    here
+                  </span>{" "}
+                  to know your Batch Number
+                </Link>
               </p>
             )}
           </label>
@@ -336,7 +348,6 @@ export default function RegistrationForm() {
             clearErrors={clearErrors}
             setError={setError}
           />
-
         </div>
         <div className="col-md-6">
           <Controller

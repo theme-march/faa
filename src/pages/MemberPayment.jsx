@@ -3,7 +3,10 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { redirect } from "react-router-dom";
-import { useGetMemberDetailsIdQuery } from "../features/member/memberApiIn";
+import {
+  useGetMemberDetailsIdQuery,
+  useGetMembersCategoryListQuery,
+} from "../features/member/memberApiIn";
 // import { useAddDonationRegisterMutation } from "../features/donation/donationApiInject";
 import HomeLoading from "../components/UI/HomeLoading";
 import ErrorShow from "../components/UI/ErrorShow";
@@ -15,7 +18,6 @@ const TOAST_OPTIONS = {
   autoClose: 1000,
 };
 
-// Form Field Component
 const FormField = ({
   label,
   id,
@@ -25,6 +27,7 @@ const FormField = ({
   register,
   errors,
   required = true,
+  readOnly = false, // New prop to make the field read-only
 }) => (
   <div className="col-12 mb-3">
     <label htmlFor={id} className="form-label">
@@ -37,6 +40,8 @@ const FormField = ({
       value={value}
       {...register(id, { required })}
       onChange={onChange}
+      readOnly={readOnly} // Use the readOnly prop here
+      disabled={readOnly} // Use the readOnly prop here
     />
     {errors[id] && <p className="text-danger">{`${label} is required.`}</p>}
   </div>
@@ -75,6 +80,7 @@ export default function MemberPayment() {
     email: "",
     phone_number: "",
     member_id: "",
+    pay_amount: "",
   });
 
   const {
@@ -91,14 +97,24 @@ export default function MemberPayment() {
     isError,
   } = useGetMemberDetailsIdQuery(userId);
 
-  // const [AddDonationRegister] = useAddDonationRegisterMutation();
+  const { data: membership_category } = useGetMembersCategoryListQuery();
 
   const [memberPayment] = useMemberPaymentMutation();
 
   useEffect(() => {
     if (memberData?.success) {
-      const { name, organization_name, email, phone_number, id } =
-        memberData.result;
+      const {
+        name,
+        organization_name,
+        email,
+        phone_number,
+        id,
+        membership_category_id,
+      } = memberData.result;
+
+      const membership_category_p = membership_category.result.find(
+        (category) => category.id == membership_category_id
+      );
 
       setFormData({
         name,
@@ -112,22 +128,22 @@ export default function MemberPayment() {
       setValue("email_address", email);
       setValue("phone_number", phone_number);
       setValue("member_id", id);
+      setValue("pay_amount", membership_category_p.category_price);
     }
-  }, [memberData, setValue]);
+  }, [memberData, setValue, membership_category]);
 
   const onSubmit = async (data) => {
     try {
       const resp = await memberPayment(data);
 
       if (resp?.data?.success) {
-          window.location.replace(resp?.data?.url);
+        window.location.replace(resp?.data?.url);
       } else {
         throw new Error("Payment not completed");
       }
     } catch (error) {
       toast.info(error.message, TOAST_OPTIONS);
     }
-
   };
 
   if (isLoading) return <HomeLoading />;
@@ -189,16 +205,22 @@ export default function MemberPayment() {
             label="Payment Amount"
             id="pay_amount"
             type="number"
+            value={formData.pay_amount}
             register={register}
             errors={errors}
+            readOnly={true}
+            onChange={(e) =>
+              setFormData({ ...formData, pay_amount: e.target.value })
+            }
           />
+
           <RadioGroup
             options={[
-              { label: "Bkash Payment", value: "bkash" },
+              // { label: "Bkash Payment", value: "bkash" },
               { label: "SSLCommerz", value: "ssl_commerz" },
-              { label: "Visa", value: "visa" },
-              { label: "Master-card", value: "mastercard" },
-              { label: "American-express", value: "americanexpress" },
+              // { label: "Visa", value: "visa" },
+              // { label: "Master-card", value: "mastercard" },
+              // { label: "American-express", value: "americanexpress" },
             ]}
             register={register}
             name="payment_type"
