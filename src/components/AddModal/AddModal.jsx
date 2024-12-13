@@ -16,6 +16,8 @@ export default function AddModal() {
     }
   }, [showModal, data]);
 
+  console.log(data);
+
   const handleCloseModal = () => {
     setShowModal(false);
   };
@@ -35,6 +37,7 @@ export default function AddModal() {
           src={`/images/home_popup_image/${data?.result[0]?.image}`}
           className="add-images-home"
         />
+        <p>{data?.result[0]?.details}</p>
       </Modal.Body>
       <Modal.Footer>
         <Button className="button-primary" onClick={handleCloseModal}>
