@@ -10,13 +10,13 @@ const paymentApi = apiSlice.injectEndpoints({
       }),
     }),
 
-    /* memberPayment: bulider.mutation({
+    donationPayment: bulider.mutation({
       query: (data) => ({
         url: "/payment",
         method: "POST",
         body: data,
       }),
-    }), */
+    }),
 
     paymentStatus: bulider.query({
       query: (tr_id) => ({
@@ -26,4 +26,8 @@ const paymentApi = apiSlice.injectEndpoints({
     }),
   }),
 });
-export const { useMemberPaymentMutation, usePaymentStatusQuery } = paymentApi;
+export const {
+  useDonationPaymentMutation,
+  useMemberPaymentMutation,
+  usePaymentStatusQuery,
+} = paymentApi;

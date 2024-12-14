@@ -3,13 +3,12 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 import { useGetMemberDetailsIdQuery } from "../features/member/memberApiIn";
-import { useMemberPaymentMutation } from "../features/payment/sslPaymentApiIn";
+import { useDonationPaymentMutation } from "../features/payment/sslPaymentApiIn";
 import HomeLoading from "../components/UI/HomeLoading";
 import ErrorShow from "../components/UI/ErrorShow";
 
 export default function Donation() {
   const loginUser = JSON.parse(localStorage.getItem("user"));
-
 
   const {
     register,
@@ -23,7 +22,7 @@ export default function Donation() {
     isLoading,
     isError,
   } = useGetMemberDetailsIdQuery(loginUser?.id);
-  const [memberPayment] = useMemberPaymentMutation();
+  const [donationPayment] = useDonationPaymentMutation();
 
   const toastOptions = {
     position: toast.POSITION.TOP_RIGHT,
@@ -43,7 +42,7 @@ export default function Donation() {
 
   const onSubmit = async (data) => {
     try {
-      const resp = await memberPayment(data);
+      const resp = await donationPayment(data);
       if (resp?.data?.success) {
         window.location.replace(resp?.data?.url);
       } else {
