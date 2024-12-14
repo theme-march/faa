@@ -1,7 +1,9 @@
-
 import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { useGetMemberDetailsIdQuery, useMemberUpdatePasswordMutation } from "../features/member/memberApiIn";
+import {
+  useGetMemberDetailsIdQuery,
+  useMemberUpdatePasswordMutation,
+} from "../features/member/memberApiIn";
 import ErrorShow from "../components/UI/ErrorShow";
 import DateFormat from "../components/DateFormat/DateFormat";
 import { toast } from "react-toastify";
@@ -11,8 +13,12 @@ import MembershipCategorynNameFind from "../components/MemberCard/MembershipCate
 export default function MemberDetails() {
   const { id } = useParams();
   const loginUser = JSON.parse(localStorage.getItem("user"));
-  const { data: singalMember, isLoading, isError } = useGetMemberDetailsIdQuery(id);
-  
+  const {
+    data: singalMember,
+    isLoading,
+    isError,
+  } = useGetMemberDetailsIdQuery(id);
+
   const [memberUpdatePassword] = useMemberUpdatePasswordMutation();
 
   const [oldPassword, setOldPassword] = useState("");
@@ -24,12 +30,10 @@ export default function MemberDetails() {
     confirm: false,
   });
 
-
   const toastOptions = {
     position: toast.POSITION.TOP_RIGHT,
     autoClose: 1000,
   };
-
 
   const togglePasswordVisibility = (field) => {
     setShowPassword((prev) => ({
@@ -37,7 +41,6 @@ export default function MemberDetails() {
       [field]: !prev[field],
     }));
   };
-
 
   const handlePasswordUpdate = async () => {
     if (newPassword !== confirmPassword) {
@@ -47,13 +50,13 @@ export default function MemberDetails() {
 
     try {
       // Assume a function `updatePassword` exists in your API utility
-      const fromData={
+      const fromData = {
         member_id: id,
         current_password: oldPassword,
         new_password: newPassword,
-        confirm_password:confirmPassword
-      }
-    
+        confirm_password: confirmPassword,
+      };
+
       const response = await memberUpdatePassword(fromData);
 
       if (response.message === "Password update successfully! ") {
@@ -87,8 +90,11 @@ export default function MemberDetails() {
       session,
       membership_category_id,
       membership_number,
+      is_pay,
+      admin_approval,
+      amount,
     } = singalMember.result;
-
+    console.log(singalMember);
     return (
       <div className="container">
         <div className="ak-height-80 ak-height-lg-30"></div>
@@ -130,86 +136,112 @@ export default function MemberDetails() {
               label="Membership Category"
               id={membership_category_id}
             />
-            <Link to={`/members-payment/${id}`} className="button-primary mt-4">
-              Renewal
-            </Link>
+
+            <div className="d-flex gap-3 align-items-center p-2">
+              <h6>Approval Status: </h6>
+              <p>
+                {admin_approval === 1
+                  ? "Approval Member"
+                  : "Not Approval Member"}
+              </p>
+            </div>
+
+            <div className="d-flex gap-3 align-items-center p-2">
+              <h6>Payment Status: </h6>
+              <p>
+                {is_pay === 1 ? (
+                  <span className="text-success">Paid</span>
+                ) : (
+                  <span className="text-danger">Unpaid</span>
+                )}
+              </p>
+            </div>
+
+            {is_pay === 0 && (
+              <Link
+                to={`/members-payment/${id}`}
+                className="button-primary mt-4"
+              >
+                Renewal
+              </Link>
+            )}
           </div>
         </div>
 
         {/* Password Update Section */}
-        {loginUser.email === email  && parseInt(loginUser.id) === parseInt(id) && 
-        <div className="password-update mt-5">
-          <h5 className="mb-4 text-uppercase">Update Password</h5>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              handlePasswordUpdate();
-            }}
-          >
-            <div className="form-group mb-3">
-              <label>Old Password</label>
-              <div className="input-group flex-nowrap">
-                <input
-                  type={showPassword.old ? "text" : "password"}
-                  value={oldPassword}
-                  onChange={(e) => setOldPassword(e.target.value)}
-                  className="text-input-filed type_2"
-                  required
-                />
-                <button
-                  type="button"
-                  className="btn btn-outline-secondary"
-                  onClick={() => togglePasswordVisibility("old")}
-                >
-                  {showPassword.old ? "Hide" : "Show"}
+        {loginUser.email === email &&
+          parseInt(loginUser.id) === parseInt(id) && (
+            <div className="password-update mt-5">
+              <h5 className="mb-4 text-uppercase">Update Password</h5>
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handlePasswordUpdate();
+                }}
+              >
+                <div className="form-group mb-3">
+                  <label>Old Password</label>
+                  <div className="input-group flex-nowrap">
+                    <input
+                      type={showPassword.old ? "text" : "password"}
+                      value={oldPassword}
+                      onChange={(e) => setOldPassword(e.target.value)}
+                      className="text-input-filed type_2"
+                      required
+                    />
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary"
+                      onClick={() => togglePasswordVisibility("old")}
+                    >
+                      {showPassword.old ? "Hide" : "Show"}
+                    </button>
+                  </div>
+                </div>
+                <div className="form-group  mb-3">
+                  <label>New Password</label>
+                  <div className="input-group flex-nowrap">
+                    <input
+                      type={showPassword.new ? "text" : "password"}
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      className="form-control text-input-filed type_2"
+                      required
+                    />
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary"
+                      onClick={() => togglePasswordVisibility("new")}
+                    >
+                      {showPassword.new ? "Hide" : "Show"}
+                    </button>
+                  </div>
+                </div>
+                <div className="form-group mb-3">
+                  <label>Confirm New Password</label>
+                  <div className="input-group flex-nowrap">
+                    <input
+                      type={showPassword.confirm ? "text" : "password"}
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      className="text-input-filed type_2"
+                      required
+                    />
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary"
+                      onClick={() => togglePasswordVisibility("confirm")}
+                    >
+                      {showPassword.confirm ? "Hide" : "Show"}
+                    </button>
+                  </div>
+                </div>
+                <button type="submit" className="button-primary mt-3">
+                  Update Password
                 </button>
-              </div>
+              </form>
             </div>
-            <div className="form-group  mb-3">
-              <label>New Password</label>
-              <div className="input-group flex-nowrap">
-                <input
-                  type={showPassword.new ? "text" : "password"}
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  className="form-control text-input-filed type_2"
-                  required
-                />
-                <button
-                  type="button"
-                  className="btn btn-outline-secondary"
-                  onClick={() => togglePasswordVisibility("new")}
-                >
-                  {showPassword.new ? "Hide" : "Show"}
-                </button>
-              </div>
-            </div>
-            <div className="form-group mb-3">
-              <label>Confirm New Password</label>
-              <div className="input-group flex-nowrap">
-                <input
-                  type={showPassword.confirm ? "text" : "password"}
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="text-input-filed type_2"
-                  required
-                />
-                <button
-                  type="button"
-                  className="btn btn-outline-secondary"
-                  onClick={() => togglePasswordVisibility("confirm")}
-                >
-                  {showPassword.confirm ? "Hide" : "Show"}
-                </button>
-              </div>
-            </div>
-            <button type="submit" className="button-primary mt-3">
-              Update Password
-            </button>
-          </form>
-         
-        </div>
-         }
+          )}
         <div className="ak-height-80 ak-height-lg-30"></div>
       </div>
     );

@@ -10,6 +10,14 @@ const paymentApi = apiSlice.injectEndpoints({
       }),
     }),
 
+    /* memberPayment: bulider.mutation({
+      query: (data) => ({
+        url: "/payment",
+        method: "POST",
+        body: data,
+      }),
+    }), */
+
     paymentStatus: bulider.query({
       query: (tr_id) => ({
         url: `/status?tr_id=${tr_id}`,
