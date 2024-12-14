@@ -93,8 +93,6 @@ export default function EventSponsorRegistrationForm(props) {
     try {
       const respAddEvent = await AddEventSponsorRegister(postData);
 
-      console.log(respAddEvent);
-
       if (
         respAddEvent?.data?.success === true ||
         (respAddEvent?.data?.success === false &&
