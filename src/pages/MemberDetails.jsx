@@ -59,10 +59,13 @@ export default function MemberDetails() {
 
       const response = await memberUpdatePassword(fromData);
 
-      if (response.message === "Password update successfully! ") {
-        toast.success(response.message, toastOptions);
+      if (response.data.success === true) {
+        toast.success(response.data.message, toastOptions);
+        setOldPassword("");
+        setNewPassword("");
+        setConfirmPassword("");
       } else {
-        toast.info(response.message, toastOptions);
+        toast.info(response.data.message, toastOptions);
       }
     } catch (error) {
       toast.error("An error occurred. Please try again.", toastOptions);
@@ -94,7 +97,6 @@ export default function MemberDetails() {
       admin_approval,
       amount,
     } = singalMember.result;
-    console.log(singalMember);
     return (
       <div className="container">
         <div className="ak-height-80 ak-height-lg-30"></div>

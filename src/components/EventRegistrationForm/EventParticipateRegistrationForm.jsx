@@ -60,7 +60,6 @@ export default function EventParticipateRegistrationForm({ props: eventId }) {
   useEffect(() => {
     if (memberData?.success && eventDetails?.success) {
       const member = memberData.result;
-        console.log(member)
       setValue("event_id", eventId);
       setValue("member_id", member.id);
       setValue("session", member.session);
@@ -75,13 +74,13 @@ export default function EventParticipateRegistrationForm({ props: eventId }) {
       if (member.membership_category_id === "3") {
         setMembershipRenewAmount(0);
       } else if (member.membership_category_id === "4") {
-          if(member.is_pay){
-              setMembershipRenewAmount(0);
-          }else{
-              setMembershipRenewAmount(
-                  Number(eventDetails?.result[0]?.membership_renew_fees)
-              );
-          }
+        if (member.is_pay) {
+          setMembershipRenewAmount(0);
+        } else {
+          setMembershipRenewAmount(
+            Number(eventDetails?.result[0]?.membership_renew_fees)
+          );
+        }
       }
     } else {
       // Fallback values when memberData is undefined

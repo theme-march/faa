@@ -16,8 +16,6 @@ export default function AddModal() {
     }
   }, [showModal, data]);
 
-  console.log(data);
-
   const handleCloseModal = () => {
     setShowModal(false);
   };
