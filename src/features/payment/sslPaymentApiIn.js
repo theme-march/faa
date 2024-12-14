@@ -4,7 +4,7 @@ const paymentApi = apiSlice.injectEndpoints({
   endpoints: (bulider) => ({
     memberPayment: bulider.mutation({
       query: (data) => ({
-        url: "/payment",
+        url: "/payment_membership",
         method: "POST",
         body: data,
       }),

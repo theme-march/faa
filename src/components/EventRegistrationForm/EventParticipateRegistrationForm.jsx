@@ -60,6 +60,7 @@ export default function EventParticipateRegistrationForm({ props: eventId }) {
   useEffect(() => {
     if (memberData?.success && eventDetails?.success) {
       const member = memberData.result;
+        console.log(member)
       setValue("event_id", eventId);
       setValue("member_id", member.id);
       setValue("session", member.session);
