@@ -203,11 +203,11 @@ function InputField({
 // Render payment methods with validation
 function renderPaymentMethods(register, error) {
   const methods = [
-    "Bkash",
+    // "Bkash",
     "SSLCommerz",
-    "Visa",
+    /*  "Visa",
     "Mastercard",
-    "American Express",
+    "American Express", */
   ];
   return methods.map((method, idx) => (
     <div key={idx} className="form-check form-check-inline">

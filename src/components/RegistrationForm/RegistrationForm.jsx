@@ -465,16 +465,16 @@ export default function RegistrationForm() {
       >
         <Modal.Header closeButton>
           {userId && isModalOpen ? (
-            <Modal.Title>Register Successfully!</Modal.Title>
+            <Modal.Title>Membership Apply Successfully!</Modal.Title>
           ) : (
-            <Modal.Title>Member Email Already Registered!</Modal.Title>
+            <Modal.Title>Membership Email Already Registered!</Modal.Title>
           )}
         </Modal.Header>
         <Modal.Body>
           <div>
             {userId && isModalOpen ? (
               <>
-                <p>Register Successfully!. Please Pay Your fees</p>
+                <p>Membership Apply Successfully!. Please Pay Your fees</p>
                 <Link
                   to={`/members-payment/${userId}`}
                   className="button-primary mt-4"
@@ -485,8 +485,8 @@ export default function RegistrationForm() {
             ) : (
               <>
                 <p>
-                  Member Email Already Registered!. Please Add Your New Email Or
-                  Sign In
+                  Membership Email Already Registered!. Please Add Your New
+                  Email Or Sign In
                 </p>
                 <Link to={`/singin`} className="button-primary mt-4">
                   Sign In
