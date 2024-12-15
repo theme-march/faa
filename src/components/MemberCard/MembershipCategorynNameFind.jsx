@@ -21,7 +21,7 @@ export default function MembershipCategorynNameFind({ label, id }) {
   return (
     <div className="d-flex gap-3 align-items-center  p-2">
       {label && <h6>{label}:</h6>}
-      {id && <p> {MembershipCategoryData?.category_name}</p>}
+      {id && <p> {MembershipCategoryData?.category_name?.slice(0, 15)}</p>}
     </div>
   );
 }
