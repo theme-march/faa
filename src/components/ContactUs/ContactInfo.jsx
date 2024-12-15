@@ -14,13 +14,24 @@ import { SocialIcon } from "../SocialIcon/SocialIcon";
 export default function ContactInfo() {
   return (
     <div className="contact-us-info">
-      <h3>Finance Alumni Association</h3>
-      <a
-        href="tel:+8801819214814"
-        className="mt-5 d-flex align-items-center gap-2"
-      >
+      <h3 className="mb-5">Finance Alumni Association</h3>
+      <p>To get help, please call:</p>
+
+      <a href="tel:+8801972012785" className=" d-flex align-items-center gap-2">
         <FaPhone />
-        <span>+8801819214814 </span>
+        <span>+8801972012785 </span>
+      </a>
+      <a href="tel:+8801973019010" className=" d-flex align-items-center gap-2">
+        <FaPhone />
+        <span>+8801973019010</span>
+      </a>
+      <a href="tel:+8801533340059" className=" d-flex align-items-center gap-2">
+        <FaPhone />
+        <span>+8801533340059</span>
+      </a>
+      <a href="tel:+8801714006407" className=" d-flex align-items-center gap-2">
+        <FaPhone />
+        <span>+8801714006407</span>
       </a>
       <a
         href="mailto:faa.dubd@outlook.com"

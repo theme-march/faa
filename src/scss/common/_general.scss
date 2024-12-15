@@ -404,6 +404,12 @@ select:focus {
   max-height: 45vh;
 }
 
+@media screen and (min-width: 991px) {
+  .modal-dialog {
+    min-width: 750px;
+  }
+}
+
 .ak-scrollup {
   position: fixed;
   top: 110%;

@@ -5,6 +5,7 @@ import payment from "../../assets/sslcommerz-banner.png";
 import {
   FaFacebookF,
   FaLinkedinIn,
+  FaPhone,
   FaTwitter,
   FaYoutube,
 } from "react-icons/fa";
@@ -47,6 +48,40 @@ export default function Footer() {
               <Link to="/faq">Help & FAQ</Link>
               <Link to="/contact-us">Contact us</Link>
               <Link to="/singin">Sing In</Link>
+            </div>
+            <div className="mb-3">
+              <p className="ak-white-color ak-font-22 mb-2 ">
+                To get help, please call:
+              </p>
+
+              <a
+                href="tel:+8801972012785"
+                className="d-inline-flex ak-white-color align-items-center gap-2 w-50 ak-black-color-hover"
+              >
+                <FaPhone />
+                <span>+8801972012785 </span>
+              </a>
+              <a
+                href="tel:+8801973019010"
+                className="d-inline-flex ak-white-color align-items-center gap-2  w-50 ak-black-color-hover"
+              >
+                <FaPhone />
+                <span>+8801973019010</span>
+              </a>
+              <a
+                href="tel:+8801533340059"
+                className="d-inline-flex ak-white-color align-items-center gap-2  w-50 ak-black-color-hover"
+              >
+                <FaPhone />
+                <span>+8801533340059</span>
+              </a>
+              <a
+                href="tel:+8801714006407"
+                className="d-inline-flex ak-white-color align-items-center gap-2 w-50 ak-black-color-hover"
+              >
+                <FaPhone />
+                <span>+8801714006407</span>
+              </a>
             </div>
             <div className="social-link">
               {/* <SocialIconTransparent>

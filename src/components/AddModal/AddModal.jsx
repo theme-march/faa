@@ -32,10 +32,11 @@ export default function AddModal() {
       </Modal.Header>
       <Modal.Body>
         <img
-          src={`/images/home_popup_image/${data?.result[0]?.image}`}
+          src={`https://faa-dubd.org/images/home_popup_image/resized_home_popup_1734237306312.jpg`}
+          // src={`/images/home_popup_image/${data?.result[0]?.image}`}
           className="add-images-home"
         />
-        <p>{data?.result[0]?.details}</p>
+        <p className="my-3">{data?.result[0]?.details}</p>
       </Modal.Body>
       <Modal.Footer>
         <Button className="button-primary" onClick={handleCloseModal}>
