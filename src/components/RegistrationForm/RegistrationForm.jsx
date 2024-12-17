@@ -71,7 +71,7 @@ export default function RegistrationForm() {
         setUserId(null);
       }
     } catch (error) {
-      toast.error("SignIn Data Not Submitted!", toastOptions);
+      toast.error("Sign In Data Not Submitted!", toastOptions);
     }
   };
 

@@ -91,7 +91,7 @@ export default function NavMenu() {
                           className="sing-out"
                           onClick={() => singOut(loginUser?.id)}
                         >
-                          Sing Out
+                          Sign Out
                         </span>
                       </Dropdown.Item>
                     </Dropdown.Menu>

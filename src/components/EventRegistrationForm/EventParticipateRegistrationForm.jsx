@@ -297,7 +297,7 @@ export default function EventParticipateRegistrationForm({ props: eventId }) {
         {!memberData ? (
           <>
             <InputField
-              label="Student ID/Guest ID"
+              label="Student ID"
               id="inputName"
               required
               register={register}
@@ -437,14 +437,15 @@ export default function EventParticipateRegistrationForm({ props: eventId }) {
                 value: "Single",
                 label: `Single (${eventDetails?.result[0]?.student_single_fees} Taka)`,
               },
-              {
+              // removing the with Spouse option
+              /* {
                 value: "Spouse",
                 // label: `Spouse (Single ${eventDetails?.result[0]?.student_single_fees} + Spouse ${eventDetails?.result[0]?.student_spouse_fees} Taka)`,
                 label: `With Spouse (${
                   Number(eventDetails?.result[0]?.student_single_fees) +
                   Number(eventDetails?.result[0]?.student_single_fees)
                 } Taka)`,
-              },
+              }, */
             ]}
             onChange={(e) => handleParticipationChange(e.target.value)}
             errorMessage={{ required: "Please select a participation type" }}
@@ -465,23 +466,35 @@ export default function EventParticipateRegistrationForm({ props: eventId }) {
               options={[
                 {
                   value: "S",
-                  label: 'T- Shirt: S - Body Length 68" chest 49".',
+                  label: 'T- Shirt: S - Length 26" chest 36".',
                 },
                 {
                   value: "M",
-                  label: 'T- Shirt: M - Body Length 70" chest 51".',
+                  label: 'T- Shirt: M - Length 27" chest 38".',
                 },
                 {
                   value: "L",
-                  label: 'T- Shirt: L - Body Length 72" chest: 53".',
+                  label: 'T- Shirt: L - Length 28" chest: 40".',
                 },
                 {
                   value: "XL",
-                  label: 'T- Shirt: XL - Body Length 74" chest 56"',
+                  label: 'T- Shirt: XL - Length 29" chest 42"',
                 },
                 {
-                  value: "XXL",
-                  label: 'T- Shirt: XXL - Body Length 76" chest 59"',
+                  value: "2XL",
+                  label: 'T- Shirt: 2XL - Length 30" chest 44"',
+                },
+                {
+                  value: "3XL",
+                  label: 'T- Shirt: 3XL - Length 31" chest 46"',
+                },
+                {
+                  value: "4XL",
+                  label: 'T- Shirt: 4XL - Length 32" chest 48"',
+                },
+                {
+                  value: "5XL",
+                  label: 'T- Shirt: 5XL - Length 33" chest 50"',
                 },
               ]}
               onChange={(e) => handleTShirtSizeChange(e.target.value)}
