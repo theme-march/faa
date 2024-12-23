@@ -102,7 +102,7 @@ function App() {
         ></Route>
         <Route path="/contact-us" element={<ContactUs />}></Route>
         <Route path="/program" element={<Program />}></Route>
-        <Route path="/teams-use" element={<TeamsUse />}></Route>
+        {/* <Route path="/teams-use" element={<TeamsUse />}></Route> */}
         <Route path="/career" element={<Career />}></Route>
         <Route path="/faq" element={<Faq />}></Route>
         <Route path="/terms-condition" element={<TermsCondition />}></Route>
