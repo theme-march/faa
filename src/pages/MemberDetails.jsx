@@ -141,11 +141,7 @@ export default function MemberDetails() {
 
             <div className="d-flex gap-3 align-items-center p-2">
               <h6>Approval Status: </h6>
-              <p>
-                {admin_approval === 1
-                  ? "Approval Member"
-                  : "Not Approval Member"}
-              </p>
+              <p>{admin_approval === 1 ? "Approved" : "Not Approved"}</p>
             </div>
 
             <div className="d-flex gap-3 align-items-center p-2">
