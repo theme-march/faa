@@ -433,18 +433,33 @@ export default function EventParticipateRegistrationForm({ props: eventId }) {
             field="participation_type"
             validation={{ required: true }}
             options={[
-              {
+              //removing Single option 27/12/24
+              /*   {
                 value: "Single",
                 label: `Single (${eventDetails?.result[0]?.student_single_fees} Taka)`,
+              }, */
+
+              // Single option changes and updates Student Option
+              {
+                value: "Single",
+                label: `Student- BBA/MBA (${eventDetails?.result[0]?.student_single_fees} Taka)`,
               },
+
+              {
+                value: "Spouse",
+                label: `Student- EMBA/MPF (${Number(
+                  eventDetails?.result[0]?.student_spouse_fees
+                )} Taka)`,
+              },
+
               // removing the with Spouse option
               /* {
                 value: "Spouse",
                 // label: `Spouse (Single ${eventDetails?.result[0]?.student_single_fees} + Spouse ${eventDetails?.result[0]?.student_spouse_fees} Taka)`,
-                label: `With Spouse (${
+                label: `Spouse(${
                   Number(eventDetails?.result[0]?.student_single_fees) +
-                  Number(eventDetails?.result[0]?.student_single_fees)
-                } Taka)`,
+                  Number(eventDetails?.result[0]?.student_spouse_fees)
+                } Taka)`
               }, */
             ]}
             onChange={(e) => handleParticipationChange(e.target.value)}
