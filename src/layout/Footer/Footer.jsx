@@ -51,7 +51,7 @@ export default function Footer() {
             </div>
             <div className="mb-3">
               <p className="ak-white-color ak-font-22 mb-2 ">
-                To get help, please call:
+                To get help, please call: ( 11AM - 9PM )
               </p>
 
               <a

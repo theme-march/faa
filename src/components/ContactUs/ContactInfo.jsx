@@ -15,7 +15,7 @@ export default function ContactInfo() {
   return (
     <div className="contact-us-info">
       <h3 className="mb-5">Finance Alumni Association</h3>
-      <p>To get help, please call:</p>
+      <p>To get help, please call: ( 11AM - 9PM )</p>
 
       <a href="tel:+8801972012785" className=" d-flex align-items-center gap-2">
         <FaPhone />
