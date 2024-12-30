@@ -138,10 +138,13 @@ export default function EventParticipateRegistrationForm({ props: eventId }) {
           eventDetails?.result[0]?.student_single_fees
         );
       } else if (participationType === "Spouse") {
-        participationAmount = Number(
-          Number(eventDetails?.result[0]?.student_single_fees) +
-            Number(eventDetails?.result[0]?.student_spouse_fees)
-        );
+        // participationAmount = Number(
+        //   Number(eventDetails?.result[0]?.student_single_fees) +
+        //     Number(eventDetails?.result[0]?.student_spouse_fees)
+        // );
+          participationAmount = Number(
+              eventDetails?.result[0]?.student_spouse_fees
+          );
       }
     }
 
@@ -643,17 +646,17 @@ export default function EventParticipateRegistrationForm({ props: eventId }) {
                     <strong>Student Subscription fee:</strong>
                   </span>
                   <span>
-                    + {eventDetails?.result[0]?.student_single_fees} Taka
-                  </span>
-                </p>
-                <p className="d-flex justify-content-between">
-                  <span>
-                    <strong>With Spouse:</strong>
-                  </span>
-                  <span>
                     + {eventDetails?.result[0]?.student_spouse_fees} Taka
                   </span>
                 </p>
+                {/*<p className="d-flex justify-content-between">*/}
+                {/*  <span>*/}
+                {/*    <strong>With Spouse:</strong>*/}
+                {/*  </span>*/}
+                {/*  <span>*/}
+                {/*    + {eventDetails?.result[0]?.student_spouse_fees} Taka*/}
+                {/*  </span>*/}
+                {/*</p>*/}
               </>
             )}
 
