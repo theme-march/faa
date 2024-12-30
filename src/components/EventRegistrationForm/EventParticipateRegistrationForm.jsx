@@ -519,7 +519,7 @@ export default function EventParticipateRegistrationForm({ props: eventId }) {
               errorMessage={{ required: "Please select a T-Shirt size" }}
               error={errors.t_shirt_size}
             />
-            {/* {tshirtSize ? (
+             {tshirtSize ? (
               <>
                 <InputField
                   label="Do you want to receive your gift at home?"
@@ -529,7 +529,7 @@ export default function EventParticipateRegistrationForm({ props: eventId }) {
                   field="delivery_option"
                   validation={{ required: true }}
                   options={[
-                    { value: "from_event", label: "No" },
+                    // { value: "from_event", label: "No" },
                     { value: "from_home", label: "Yes" },
                   ]}
                   errorMessage={{ required: "Please select delivery option" }}
@@ -582,7 +582,7 @@ export default function EventParticipateRegistrationForm({ props: eventId }) {
                   </>
                 ) : null}
               </>
-            ) : null} */}
+            ) : null}
           </>
         ) : null}
 
