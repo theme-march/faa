@@ -55,13 +55,13 @@ export default function Footer() {
               </p>
 
               <a
-                href="tel:+8801972012785"
+                href="tel:+8801819214814"
                 className="d-inline-flex ak-white-color align-items-center gap-2 w-50 ak-black-color-hover"
               >
                 <FaPhone />
-                <span>+8801972012785 </span>
+                <span>+8801819214814 </span>
               </a>
-              <a
+              {/*   <a
                 href="tel:+8801973019010"
                 className="d-inline-flex ak-white-color align-items-center gap-2  w-50 ak-black-color-hover"
               >
@@ -81,7 +81,7 @@ export default function Footer() {
               >
                 <FaPhone />
                 <span>+8801714006407</span>
-              </a>
+              </a> */}
             </div>
             <div className="social-link">
               {/* <SocialIconTransparent>

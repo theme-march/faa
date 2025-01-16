@@ -17,11 +17,11 @@ export default function ContactInfo() {
       <h3 className="mb-5">Finance Alumni Association</h3>
       <p>To get help, please call: ( 11AM - 9PM )</p>
 
-      <a href="tel:+8801972012785" className=" d-flex align-items-center gap-2">
+      <a href="tel:+8801819214814" className=" d-flex align-items-center gap-2">
         <FaPhone />
-        <span>+8801972012785 </span>
+        <span>+8801819214814 </span>
       </a>
-      <a href="tel:+8801973019010" className=" d-flex align-items-center gap-2">
+      {/* <a href="tel:+8801973019010" className=" d-flex align-items-center gap-2">
         <FaPhone />
         <span>+8801973019010</span>
       </a>
@@ -32,7 +32,7 @@ export default function ContactInfo() {
       <a href="tel:+8801714006407" className=" d-flex align-items-center gap-2">
         <FaPhone />
         <span>+8801714006407</span>
-      </a>
+      </a> */}
       <a
         href="mailto:faa.dubd@outlook.com"
         className="mt-1 d-flex align-items-center gap-2"
