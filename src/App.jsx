@@ -34,6 +34,8 @@ import ErrorPages from "./pages/ErrorPages";
 import MemberPayment from "./pages/MemberPayment";
 import PaymentFail from "./pages/PaymentFail";
 import PaymentSuccess from "./pages/PaymentSuccess";
+import MemberDetailsUpdate from "./pages/MemberDetailsUpdate";
+import UpdatePassword from "./pages/MemberPassWordUpdate";
 
 function App() {
   return (
@@ -64,6 +66,23 @@ function App() {
           element={
             <PrivateRoute>
               <MemberDetails />
+            </PrivateRoute>
+          }
+        ></Route>
+
+        <Route
+          path="/member-details-update/:id"
+          element={
+            <PrivateRoute>
+              <MemberDetailsUpdate />
+            </PrivateRoute>
+          }
+        ></Route>
+        <Route
+          path="/member-password-update/:id"
+          element={
+            <PrivateRoute>
+              <UpdatePassword />
             </PrivateRoute>
           }
         ></Route>

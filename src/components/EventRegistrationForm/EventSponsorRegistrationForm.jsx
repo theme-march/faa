@@ -269,13 +269,7 @@ function InputField({
 }
 
 function renderPaymentMethods(register, error) {
-  const methods = [
-    "Bkash",
-    "SSLCommerz",
-    "Visa",
-    "Mastercard",
-    "American Express",
-  ];
+  const methods = ["SSLCommerz"];
   return methods.map((method, idx) => (
     <div key={idx} className="form-check form-check-inline">
       <input
