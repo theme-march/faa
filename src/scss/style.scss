@@ -23,8 +23,16 @@
 @import "components/PublicationItem";
 @import "components/Payment";
 @import "components/ErrorPages.scss";
+@import "components/Gallery";
 
 @import "components/Footer";
+
+/* lightgallery */
+@import "lightgallery/css/lightgallery.css";
+@import "lightgallery/css/lg-zoom.css";
+@import "lightgallery/css/lg-thumbnail.css";
+@import "lightgallery/css/lg-fullscreen.css";
+@import "lightgallery/css/lg-share.css";
 
 /* Swiper sass */
 @import "swiper/scss";

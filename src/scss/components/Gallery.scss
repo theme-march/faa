@@ -1,0 +1,23 @@
+.lg-custom-thumbnails {
+  background-color: #040d10;
+  #lg-counter {
+    color: #fff;
+  }
+  .lg-icon {
+    background-color: transparent;
+    border: none;
+    color: #fff;
+    &:hover {
+      color: $primary;
+    }
+  }
+}
+.lg-outer {
+  .lg-img-wrap {
+    .lg-object.lg-image {
+      width: 70vw;
+      height: 90vw;
+      object-fit: cover;
+    }
+  }
+}
