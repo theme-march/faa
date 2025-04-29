@@ -11,11 +11,15 @@
     width: 100%;
   }
   &:focus {
+    outline: none;
     box-shadow: none;
     border: 1px solid $primary; /* Change border color on focus */
   }
   &:focus-visible {
+    outline: none;
     box-shadow: none;
     border: 1px solid $primary; /* Change border color on focus */
   }
+
+  
 }

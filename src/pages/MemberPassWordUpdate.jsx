@@ -69,76 +69,80 @@ export default function UpdatePassword() {
 
   return (
     <div className="container">
-      <div className="password-update mt-5">
-        <h5 className="mb-4 text-uppercase">Update Password</h5>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            handlePasswordUpdate();
-          }}
-        >
-          <div className="form-group mb-3">
-            <label>Old Password</label>
-            <div className="input-group flex-nowrap">
-              <input
-                type={showPassword.old ? "text" : "password"}
-                value={oldPassword}
-                onChange={(e) => setOldPassword(e.target.value)}
-                className="text-input-filed type_2"
-                required
-              />
-              <button
-                type="button"
-                className="btn btn-outline-secondary"
-                onClick={() => togglePasswordVisibility("old")}
-              >
-                {showPassword.old ? "Hide" : "Show"}
-              </button>
+      <div className="ak-height-100 ak-height-lg-60"></div>
+      <div className="password-update-content">
+        <div className="password-update">
+          <h5 className="mb-4 text-uppercase">Update Password</h5>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handlePasswordUpdate();
+            }}
+          >
+            <div className="form-group mb-3">
+              <label>Old Password</label>
+              <div className="input-group flex-nowrap">
+                <input
+                  type={showPassword.old ? "text" : "password"}
+                  value={oldPassword}
+                  onChange={(e) => setOldPassword(e.target.value)}
+                  className="text-input-filed type_2"
+                  required
+                />
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary"
+                  onClick={() => togglePasswordVisibility("old")}
+                >
+                  {showPassword.old ? "Hide" : "Show"}
+                </button>
+              </div>
             </div>
-          </div>
-          <div className="form-group  mb-3">
-            <label>New Password</label>
-            <div className="input-group flex-nowrap">
-              <input
-                type={showPassword.new ? "text" : "password"}
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                className="form-control text-input-filed type_2"
-                required
-              />
-              <button
-                type="button"
-                className="btn btn-outline-secondary"
-                onClick={() => togglePasswordVisibility("new")}
-              >
-                {showPassword.new ? "Hide" : "Show"}
-              </button>
+            <div className="form-group  mb-3">
+              <label>New Password</label>
+              <div className="input-group flex-nowrap">
+                <input
+                  type={showPassword.new ? "text" : "password"}
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  className="form-control text-input-filed type_2"
+                  required
+                />
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary"
+                  onClick={() => togglePasswordVisibility("new")}
+                >
+                  {showPassword.new ? "Hide" : "Show"}
+                </button>
+              </div>
             </div>
-          </div>
-          <div className="form-group mb-3">
-            <label>Confirm New Password</label>
-            <div className="input-group flex-nowrap">
-              <input
-                type={showPassword.confirm ? "text" : "password"}
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                className="text-input-filed type_2"
-                required
-              />
-              <button
-                type="button"
-                className="btn btn-outline-secondary"
-                onClick={() => togglePasswordVisibility("confirm")}
-              >
-                {showPassword.confirm ? "Hide" : "Show"}
-              </button>
+            <div className="form-group mb-3">
+              <label>Confirm New Password</label>
+              <div className="input-group flex-nowrap">
+                <input
+                  type={showPassword.confirm ? "text" : "password"}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="text-input-filed type_2"
+                  required
+                />
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary"
+                  onClick={() => togglePasswordVisibility("confirm")}
+                >
+                  {showPassword.confirm ? "Hide" : "Show"}
+                </button>
+              </div>
             </div>
-          </div>
-          <button type="submit" className="button-primary mt-3">
-            Update Password
-          </button>
-        </form>
+            <button type="submit" className="button-primary mt-3">
+              Update Password
+            </button>
+          </form>
+        </div>
       </div>
+      <div className="ak-height-100 ak-height-lg-60"></div>
     </div>
   );
 }

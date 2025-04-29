@@ -404,13 +404,14 @@ export default function RegistrationForm() {
               "Your Address"
             )}
           </label>
-          <input
+          <textarea
             type="text"
             name="address"
             className="text-input-filed type_2 "
             id="member_address"
             {...register("address")}
-          />
+            rows="1"
+          ></textarea>
         </div>
         <div className="col-12">
           <div className="form-check">
