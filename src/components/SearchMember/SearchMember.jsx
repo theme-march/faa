@@ -1,14 +1,22 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { searchMemberName } from "../../features/member/memberSearchSlice";
+import { debounce } from "lodash";
 
 export default function SearchMember() {
   const [input, setInput] = useState("");
   const dispatch = useDispatch();
 
+
+    // Debounced function to handle input changes
+    const handleChange = debounce((e) => {
+      dispatch(searchMemberName(e.target.value));
+    }, 300);
+
   const handleInputChange = (e) => {
     setInput(e.target.value);
-    dispatch(searchMemberName(input));
+    // dispatch(searchMemberName(input));
+    handleChange(e);
   };
 
   const headerSearch = (e) => {

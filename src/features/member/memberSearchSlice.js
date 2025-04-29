@@ -10,9 +10,12 @@ const memberSearchSlice = createSlice({
     searchMemberName: (state, action) => {
       state.search = action.payload;
     },
+    clearSearch: (state) => {
+      state.search = ""; // ✅ clear search
+    },
   },
 });
 
-export const { searchMemberName } = memberSearchSlice.actions;
+export const { searchMemberName ,clearSearch } = memberSearchSlice.actions;
 
 export default memberSearchSlice.reducer;
