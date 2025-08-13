@@ -32,8 +32,11 @@ export default function AddModal() {
       </Modal.Header>
       <Modal.Body>
         <img
-          src={`https://faa-dubd.org/images/home_popup_image/resized_home_popup_1734237306312.jpg`}
-          // src={`/images/home_popup_image/${data?.result[0]?.image}`}
+          src={
+            data?.result[0]?.image
+              ? `/images/home_popup_image/${data?.result[0]?.image}`
+              : `https://faa-dubd.org/images/home_popup_image/resized_home_popup_1734237306312.jpg`
+          }
           className="add-images-home"
         />
         <p className="my-3">{data?.result[0]?.details}</p>
