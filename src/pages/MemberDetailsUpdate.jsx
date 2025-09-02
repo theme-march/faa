@@ -85,8 +85,6 @@ export default function MemberDetailsUpdate() {
       formData.append(key, postData[key]);
     });
 
-    console.log(data);
-
     try {
       const response = await updateMemberInfo(formData);
       if (response.data.success) {

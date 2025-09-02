@@ -6,6 +6,7 @@ import DateFormat from "../components/DateFormat/DateFormat";
 import demoImgMember from "../assets/member/member_1.jpg";
 import MembershipCategorynNameFind from "../components/MemberCard/MembershipCategorynNameFind";
 import HomeLoading from "../components/UI/HomeLoading";
+import ExpeirGenaralMember from "../components/ExpeirGenaralMember/ExpeirGenaralMember";
 
 export default function MemberDetails() {
   const loginUser = JSON.parse(localStorage.getItem("user"));
@@ -53,6 +54,9 @@ export default function MemberDetails() {
       admin_approval,
       amount,
     } = singalMember?.result;
+
+    console.log(Number(membership_category_id) === Number(4));
+
     content = (
       <div className="container">
         <div className="ak-height-80 ak-height-lg-30"></div>
@@ -66,6 +70,9 @@ export default function MemberDetails() {
               />
             ) : (
               <img src={demoImgMember} className="col-12" alt="member" />
+            )}
+            {id && Number(membership_category_id) === Number(4) && (
+              <ExpeirGenaralMember id={id} />
             )}
           </div>
           <div className="col-md-7">
@@ -138,6 +145,7 @@ export default function MemberDetails() {
             </div>
           </div>
         </div>
+        <div className="ak-height-20 ak-height-lg-20"></div>
 
         <div className="ak-height-80 ak-height-lg-30"></div>
       </div>

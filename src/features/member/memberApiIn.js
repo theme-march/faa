@@ -88,6 +88,18 @@ const memberApi = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
+
+      getExpeirGenaralMembersList: bulider.query({
+        query: (member_id) => ({
+        url: `/expired-only?member_id=${member_id}`,
+        method: "GET",
+      }),
+}),
+
+
+    
+
+    
   }),
 });
 
@@ -103,4 +115,5 @@ export const {
   useGetMembersSessionListQuery,
   useMemberUpdatePasswordMutation,
   useUpdateMemberInfoMutation,
+  useGetExpeirGenaralMembersListQuery
 } = memberApi;
