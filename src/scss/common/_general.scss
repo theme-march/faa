@@ -475,7 +475,7 @@ select:focus {
   background-color: $border;
   opacity: 0.2;
   position: relative;
-  z-index: 500;
+  z-index: 50;
 }
 .ak-border-height {
   width: 1px;
@@ -583,6 +583,10 @@ input[type="checkbox"]:checked {
 @media (max-width: 768px) {
   .gallery {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+
+  .ak-border-width {
+    z-index: 500;
   }
 }
 .ak-main_header_left {

@@ -5,8 +5,14 @@ import { ButtonMore } from "../Button/Button";
 import MembershipCategorynNameFind from "./MembershipCategorynNameFind";
 
 const MemberCard = ({ props }) => {
-  const { id, name, hsc_passing_year, admin_approval, membership_category_id } =
-    props;
+  const {
+    id,
+    name,
+    hsc_passing_year,
+    admin_approval,
+    membership_category_id,
+    organization_name,
+  } = props;
   const navigate = useNavigate();
 
   const handleClick = useCallback(() => {
@@ -19,6 +25,7 @@ const MemberCard = ({ props }) => {
           <p className="member-name ak-primary-color ak-font-18">
             {name || "N/A"}
           </p>
+
           {hsc_passing_year && (
             <p className="member-name">
               <span className="ms-1 ak-font-16">HSC/Equivalent: </span>
@@ -29,8 +36,15 @@ const MemberCard = ({ props }) => {
               )}
             </p>
           )}
+
           {admin_approval !== 0 && membership_category_id && (
             <MembershipCategorynNameFind id={membership_category_id} />
+          )}
+          {organization_name && (
+            <p className="member-name">
+              <span className="ms-1 ak-font-16">Organization: </span>
+              {organization_name}
+            </p>
           )}
           <ButtonMore to={`/member-details/${id}`}>
             <span className="details-btn">Details</span>
