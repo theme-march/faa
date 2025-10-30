@@ -152,7 +152,7 @@ export default function SearchMember({ members }) {
         <input
           type="text"
           className="text-input-filed"
-          placeholder="Type name, ID, or organization..."
+          placeholder="Name / ID / Session / Batch / HSC / Organization ..."
           value={input}
           onChange={handleInputChange}
           onKeyDown={handleKeyDown} // 👈 handle Enter key
