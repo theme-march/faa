@@ -78,7 +78,7 @@
 //   );
 // }
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { searchMemberName } from "../../features/member/memberSearchSlice";
 import Fuse from "fuse.js";
@@ -89,36 +89,27 @@ export default function SearchMember({ members }) {
   const [suggestions, setSuggestions] = useState([]);
   const dispatch = useDispatch();
 
+  // ✅ Initialize Fuse.js
   const fuse = useMemo(() => {
     if (!members?.length) return null;
     return new Fuse(members, {
-      keys: [
-        "name",
-        "membership_number",
-        "organization_name",
-        "phone_number",
-        "hsc_passing_year",
-        "email",
-        "session",
-      ],
+      keys: ["name", "membership_number", "organization_name"],
       threshold: 0.3,
     });
   }, [members]);
 
+  // ✅ Debounced search for suggestions
   const debouncedSearch = useMemo(
     () =>
       debounce((value) => {
-        dispatch(searchMemberName(value.trim()));
-
         if (!fuse || !value.trim()) {
           setSuggestions([]);
           return;
         }
-
         const result = fuse.search(value);
-        setSuggestions(result.map((r) => r.item).slice(0, 8)); // Top 8 suggestions
+        setSuggestions(result.map((r) => r.item).slice(0, 8)); // show top 8
       }, 200),
-    [dispatch, fuse]
+    [fuse]
   );
 
   const handleInputChange = (e) => {
@@ -127,11 +118,32 @@ export default function SearchMember({ members }) {
     debouncedSearch(value);
   };
 
+  // ✅ When user presses Enter
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      dispatch(searchMemberName(input.trim()));
+      setSuggestions([]); // hide suggestion list
+    }
+  };
+
+  // ✅ When user clicks suggestion
   const handleSelect = (name) => {
     setInput(name);
     dispatch(searchMemberName(name));
-    setSuggestions([]);
+    setSuggestions([]); // hide list after select
   };
+
+  // ✅ Hide suggestion list when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!event.target.closest(".search-member-section")) {
+        setSuggestions([]);
+      }
+    };
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, []);
 
   return (
     <div className="search-member-section" style={{ position: "relative" }}>
@@ -140,9 +152,10 @@ export default function SearchMember({ members }) {
         <input
           type="text"
           className="text-input-filed"
-          placeholder="Type name or ID..."
+          placeholder="Type name, ID, or organization..."
           value={input}
           onChange={handleInputChange}
+          onKeyDown={handleKeyDown} // 👈 handle Enter key
         />
 
         {suggestions.length > 0 && (
