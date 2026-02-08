@@ -9,6 +9,7 @@ import AboutUs from "../components/AboutUs/AboutUs";
 import { useGetHomeIdQuery } from "../features/home/homeApiIn";
 import HomeLoading from "../components/UI/HomeLoading";
 import ErrorShow from "../components/UI/ErrorShow";
+import YoutubeEmbed from "../components/YoutubeEmbed/YoutubeEmbed";
 
 export default function Home() {
   const { data: allDataInHome, isLoading, isError } = useGetHomeIdQuery();
@@ -37,6 +38,8 @@ export default function Home() {
         <MilestoneProgram />
 
         <div className="ak-height-50 ak-height-lg-30"></div>
+        <YoutubeEmbed url="https://www.youtube.com/watch?v=ckyhAWrXKhE&t=9s"  />
+    
         {section_5.length !== 0 ? <UncommingEvents props={section_5} /> : " "}
 
         <div className="ak-height-50 ak-height-lg-30"></div>
@@ -52,6 +55,9 @@ export default function Home() {
         {section_6.length !== 0 ? <NewsGrid props={section_6} /> : " "}
 
         <div className="ak-height-80 ak-height-lg-30"></div>
+      
+
+
       </>
     );
   }

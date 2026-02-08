@@ -18,12 +18,13 @@
   flex-shrink: 0;
   align-items: center;
   padding: 15px 0px;
-  animation: slide-left 40s linear infinite;
+  animation: slide-left 70s linear infinite;
   p {
     font-size: 16px;
     font-style: normal;
     font-weight: 600;
     line-height: 20.8px;
+    color: var(--primary-color);
   }
 
   span {
@@ -57,6 +58,7 @@
 
 .ak-moving-section-hover-push:hover .ak-moving-section {
   animation-play-state: paused;
+  cursor: pointer;
 }
 
 @keyframes slide-left {

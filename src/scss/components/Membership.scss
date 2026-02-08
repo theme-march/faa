@@ -73,11 +73,21 @@
 .suggestion-list li:hover {
   background: #f1f1f1;
 }
+
+.container-search-member-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 30px;
+  gap: 20px;
+}
 @media screen and (max-width: 768px) {
+  .container-search-member-section {
+    flex-direction: column;
+  }
   .search-member-section {
     flex-wrap: wrap;
     margin-top: 30px;
-    margin-bottom: 30px;
     gap: 15px;
     .search-member {
       width: 90%;

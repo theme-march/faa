@@ -2,11 +2,13 @@ import React, { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { useGetHomePopupQuery } from "../../features/home/homeApiIn";
+import HomeLoading from "../UI/HomeLoading";
 
 export default function AddModal() {
   const [showModal, setShowModal] = useState(false);
 
-  const { data } = useGetHomePopupQuery();
+  const { data ,isLoading} = useGetHomePopupQuery();
+
 
   useEffect(() => {
     const hasVisitedBefore = sessionStorage.getItem("hasVisitedBefore");
@@ -20,6 +22,8 @@ export default function AddModal() {
     setShowModal(false);
   };
 
+
+
   return (
     <Modal
       show={showModal}
@@ -31,14 +35,13 @@ export default function AddModal() {
         <Modal.Title>{data?.result[0]?.title}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
+        {
+        data?.result[0]?.image &&
         <img
-          src={
-            data?.result[0]?.image
-              ? `/images/home_popup_image/${data?.result[0]?.image}`
-              : `https://faa-dubd.org/images/home_popup_image/resized_home_popup_1734237306312.jpg`
-          }
+          src={`/images/home_popup_image/${data?.result[0]?.image}`}
           className="add-images-home"
         />
+        }
         <p className="my-3">{data?.result[0]?.details}</p>
       </Modal.Body>
       <Modal.Footer>
