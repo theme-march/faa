@@ -1,28 +1,40 @@
+
 import React, { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { useGetHomePopupQuery } from "../../features/home/homeApiIn";
-import HomeLoading from "../UI/HomeLoading";
 
 export default function AddModal() {
   const [showModal, setShowModal] = useState(false);
 
-  const { data ,isLoading} = useGetHomePopupQuery();
+  const { data, isLoading } = useGetHomePopupQuery();
 
-
+  /* ================= SHOW MODAL ONLY IF DATA EXISTS ================= */
   useEffect(() => {
-    const hasVisitedBefore = sessionStorage.getItem("hasVisitedBefore");
+    if (isLoading) return;
+
+    const popupItem = data?.result?.[0];
+    if (!popupItem) return; 
+
+    const hasVisitedBefore =
+      sessionStorage.getItem("hasVisitedBefore");
+
     if (!hasVisitedBefore) {
       setShowModal(true);
-      sessionStorage.setItem("hasVisitedBefore", true);
+      sessionStorage.setItem("hasVisitedBefore", "true");
     }
-  }, [showModal, data]);
+  }, [data, isLoading]);
 
   const handleCloseModal = () => {
     setShowModal(false);
   };
 
+  /* ================= SAFETY CHECK ================= */
+  if (!data?.result?.[0]) {
+    return null; // ✅ nothing render
+  }
 
+  const popup = data.result[0];
 
   return (
     <Modal
@@ -32,20 +44,28 @@ export default function AddModal() {
       centered
     >
       <Modal.Header closeButton>
-        <Modal.Title>{data?.result[0]?.title}</Modal.Title>
+        <Modal.Title>{popup.title}</Modal.Title>
       </Modal.Header>
+
       <Modal.Body>
-        {
-        data?.result[0]?.image &&
-        <img
-          src={`/images/home_popup_image/${data?.result[0]?.image}`}
-          className="add-images-home"
-        />
-        }
-        <p className="my-3">{data?.result[0]?.details}</p>
+        {popup.image && (
+          <img
+            src={`/images/home_popup_image/${popup.image}`}
+            className="add-images-home"
+            alt={popup.title}
+          />
+        )}
+
+        {popup.details && (
+          <p className="my-3">{popup.details}</p>
+        )}
       </Modal.Body>
+
       <Modal.Footer>
-        <Button className="button-primary" onClick={handleCloseModal}>
+        <Button
+          className="button-primary"
+          onClick={handleCloseModal}
+        >
           Close
         </Button>
       </Modal.Footer>

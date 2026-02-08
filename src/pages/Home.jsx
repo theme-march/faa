@@ -56,8 +56,6 @@ export default function Home() {
 
         <div className="ak-height-80 ak-height-lg-30"></div>
       
-
-
       </>
     );
   }

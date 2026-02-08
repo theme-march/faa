@@ -54,6 +54,14 @@ export default function Footer() {
                 To get help, please call: ( 11AM - 9PM )
               </p>
 
+                  <a
+                href="tel:+8801819162727"
+                className="d-inline-flex ak-white-color align-items-center gap-2 w-50 ak-black-color-hover"
+              >
+                <FaPhone />
+                <span>+880 1819-162727</span>
+              </a>
+
               <a
                 href="tel:+8801819214814"
                 className="d-inline-flex ak-white-color align-items-center gap-2 w-50 ak-black-color-hover"

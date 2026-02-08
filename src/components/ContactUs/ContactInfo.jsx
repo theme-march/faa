@@ -17,13 +17,17 @@ export default function ContactInfo() {
       <h3 className="mb-5">Finance Alumni Association</h3>
       <p>To get help, please call: ( 11AM - 9PM )</p>
 
+      <a href="tel:+8801819162727" className=" d-flex align-items-center gap-2">
+        <FaPhone />
+        <span>+880 1819-162727</span>
+      </a>
       <a href="tel:+8801819214814" className=" d-flex align-items-center gap-2">
         <FaPhone />
-        <span>+8801819214814 </span>
+        <span>+880 1819-214814 </span>
       </a>
       {/* <a href="tel:+8801973019010" className=" d-flex align-items-center gap-2">
         <FaPhone />
-        <span>+8801973019010</span>
+        <span>+880 1819-162727</span>
       </a>
       <a href="tel:+8801533340059" className=" d-flex align-items-center gap-2">
         <FaPhone />

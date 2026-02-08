@@ -46,7 +46,7 @@ const AlphabetButton = React.memo(({ isActive, onToggle }) => {
         className={`ak-alpha-btn ${isActive ? "active" : ""}`}
         onClick={onToggle}
       >
-        Alphabet (A–Z)
+        SORT (A–Z)
       </button>
     </div>
   );
