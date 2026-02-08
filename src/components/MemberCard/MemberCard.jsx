@@ -42,7 +42,7 @@ const MemberCard = ({ props }) => {
           )}
           {organization_name && (
             <p className="member-name">
-              <span className="ms-1 ak-font-16">Organization: </span>
+              {/* <span className="ms-1 ak-font-16">Organization: </span> */}
               {organization_name}
             </p>
           )}

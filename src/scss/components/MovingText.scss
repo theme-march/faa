@@ -18,13 +18,13 @@
   flex-shrink: 0;
   align-items: center;
   padding: 15px 0px;
-  animation: slide-left 70s linear infinite;
+  animation: slide-left 120s linear infinite;
   p {
     font-size: 16px;
     font-style: normal;
     font-weight: 600;
     line-height: 20.8px;
-    color: var(--primary-color);
+    color: #4e009e;
   }
 
   span {
@@ -45,7 +45,7 @@
 }
 
 .ak-animation-speed-70 {
-  animation: slide-left 70s linear infinite;
+  animation: slide-left 120s linear infinite;
 }
 
 .ak-animation-speed-40 {
@@ -94,7 +94,7 @@
 
 @media screen and (max-width: 768px) {
   .ak-moving-section-wrap {
-    max-width: 80%;
+    max-width: 95%;
   }
   .event-sponors {
     display: flex;

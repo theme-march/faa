@@ -24,7 +24,7 @@ export default function TopHeader() {
     <div className="container">
       <div className="top-header">
         <MovingText>{content}</MovingText>
-        <div className="d-flex align-items-center">
+        <div className="d-flex align-items-center top-header-link">
           <ul className="d-flex align-items-center gap-4 m-0">
             <li>
               <Link to={"/career"}>Career Resource</Link>

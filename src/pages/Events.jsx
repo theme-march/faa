@@ -21,11 +21,18 @@ export default function Events() {
     content = <ErrorShow message={"Event not found"} />;
   }
 
-  if (!isLoading && !isError && eventList?.success === true) {
-    content = eventList?.result?.map((event) => (
-      <EventItem key={event.id} props={event} />
-    ));
-  }
+  // if (!isLoading && !isError && eventList?.success === true) {
+  //   content = eventList?.result?.map((event) => (
+  //     <EventItem key={event.id} props={event} />
+  //   ));
+  // }
+    if (!isLoading && !isError && eventList?.success === true) {
+      content = [...eventList.result]
+        .reverse()
+        .map((event) => (
+          <EventItem key={event.id} props={event} />
+        ));
+    }
 
   return (
     <>

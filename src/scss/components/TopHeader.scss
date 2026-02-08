@@ -4,7 +4,7 @@
   justify-content: space-between;
 }
 .header-bg-section {
-  padding: 35px 0 25px 0;
+  padding: 25px 0 25px 0;
 }
 .header-text-section {
   display: flex;
@@ -16,11 +16,14 @@
 }
 @media screen and (max-width: 768px) {
   .top-header {
-    // flex-direction: column;
-    display: none;
+    flex-direction: column;
+    // display: none;
+  }
+  .top-header-link {
+    display: none !important;
   }
   .ak-moving-section-wrap {
-    width: 80%;
+    width: 95%;
   }
   .header-text-section {
     flex-direction: column;

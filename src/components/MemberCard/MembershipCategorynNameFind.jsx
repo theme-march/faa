@@ -19,7 +19,7 @@ export default function MembershipCategorynNameFind({ label, id }) {
   if (isLoading) return <p>Loading...</p>;
   if (isError) return <p>Not loading data</p>;
   return (
-    <div className="d-flex gap-3 align-items-center  p-2">
+    <div className="d-flex gap-3 align-items-center">
       {label && <h6>{label}:</h6>}
       {id && <p> {MembershipCategoryData?.category_name?.slice(0, 15)}</p>}
     </div>
