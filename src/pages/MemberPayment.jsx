@@ -11,6 +11,8 @@ import {
 import HomeLoading from "../components/UI/HomeLoading";
 import ErrorShow from "../components/UI/ErrorShow";
 import { useMemberPaymentMutation } from "../features/payment/sslPaymentApiIn";
+import { useGetPaymentSettingsQuery } from "../features/payment/sslPaymentApiIn";
+import { getAuthMemberId } from "../utils/authStorage";
 
 // Constants
 const TOAST_OPTIONS = {
@@ -41,7 +43,6 @@ const FormField = ({
       {...register(id, { required })}
       onChange={onChange}
       readOnly={readOnly} // Use the readOnly prop here
-      disabled={readOnly} // Use the readOnly prop here
     />
     {errors[id] && <p className="text-danger">{`${label} is required.`}</p>}
   </div>
@@ -70,8 +71,7 @@ const RadioGroup = ({ options, register, name, required = true }) => (
 
 export default function MemberPayment() {
   const navigate = useNavigate();
-  /*   const loginUser = JSON.parse(localStorage.getItem("user"));
-  console.log(loginUser); */
+  const authMemberId = getAuthMemberId();
   const { id: userId } = useParams();
 
   const [formData, setFormData] = useState({
@@ -88,6 +88,7 @@ export default function MemberPayment() {
     handleSubmit,
     reset,
     setValue,
+    watch,
     formState: { errors },
   } = useForm();
 
@@ -95,11 +96,29 @@ export default function MemberPayment() {
     data: memberData,
     isLoading,
     isError,
-  } = useGetMemberDetailsIdQuery(userId);
+  } = useGetMemberDetailsIdQuery(
+    { id: userId, viewer_id: authMemberId },
+    { skip: !userId }
+  );
 
   const { data: membership_category } = useGetMembersCategoryListQuery();
+  const { data: paymentSettings } = useGetPaymentSettingsQuery();
 
   const [memberPayment] = useMemberPaymentMutation();
+  const selectedPaymentType = watch("payment_type");
+  const siteUrlFromSettings = String(paymentSettings?.result?.site_url || "").trim();
+
+  const paymentMethodOptions = React.useMemo(() => {
+    const sslEnabled = Boolean(paymentSettings?.result?.ssl_enabled);
+    const cashEnabled = Boolean(paymentSettings?.result?.cash_enabled);
+
+    const options = [];
+    if (sslEnabled) options.push({ label: "SSLCommerz", value: "ssl_commerz" });
+    if (cashEnabled)
+      options.push({ label: "Cash Payment (Admin Approval Required)", value: "cash" });
+
+    return options;
+  }, [paymentSettings]);
 
   useEffect(() => {
     if (memberData?.success) {
@@ -109,12 +128,7 @@ export default function MemberPayment() {
         email,
         phone_number,
         id,
-        membership_category_id,
       } = memberData.result;
-
-      const membership_category_p = membership_category.result.find(
-        (category) => category.id == membership_category_id
-      );
 
       setFormData({
         name,
@@ -122,24 +136,61 @@ export default function MemberPayment() {
         email,
         phone_number,
         member_id: id,
+        pay_amount: "",
       });
       setValue("name", name);
       setValue("organization_name", organization_name);
       setValue("email_address", email);
       setValue("phone_number", phone_number);
       setValue("member_id", id);
-      setValue("pay_amount", membership_category_p.category_price);
     }
-  }, [memberData, setValue, membership_category]);
+  }, [memberData, setValue]);
+
+  useEffect(() => {
+    if (!memberData?.success) return;
+
+    const membershipCategoryId = memberData?.result?.membership_category_id;
+    const categoryList = membership_category?.result || [];
+    const matchedCategory = categoryList.find(
+      (category) => String(category?.id) === String(membershipCategoryId)
+    );
+
+    const resolvedAmount = matchedCategory?.category_price ?? "";
+    const normalizedAmount = String(resolvedAmount);
+
+    setFormData((prev) => ({
+      ...prev,
+      pay_amount: normalizedAmount,
+    }));
+    setValue("pay_amount", normalizedAmount);
+  }, [memberData, membership_category, setValue]);
+
+  useEffect(() => {
+    if (paymentMethodOptions.length > 0) {
+      setValue("payment_type", paymentMethodOptions[0].value);
+    }
+  }, [paymentMethodOptions, setValue]);
 
   const onSubmit = async (data) => {
+    if (!paymentMethodOptions.length) {
+      toast.info("No payment method is enabled by admin.", TOAST_OPTIONS);
+      return;
+    }
     try {
       const resp = await memberPayment(data);
 
       if (resp?.data?.success) {
+        if (data.payment_type === "cash" || resp?.data?.cash) {
+          toast.success(
+            resp?.data?.message || "Cash payment request submitted successfully.",
+            TOAST_OPTIONS
+          );
+          navigate(`/member-details/${userId}`);
+          return;
+        }
         window.location.replace(resp?.data?.url);
       } else {
-        throw new Error("Payment not completed");
+        throw new Error(resp?.data?.message || "Payment not completed");
       }
     } catch (error) {
       toast.info(error.message, TOAST_OPTIONS);
@@ -215,16 +266,39 @@ export default function MemberPayment() {
           />
 
           <RadioGroup
-            options={[
-              // { label: "Bkash Payment", value: "bkash" },
-              { label: "SSLCommerz", value: "ssl_commerz" },
-              // { label: "Visa", value: "visa" },
-              // { label: "Master-card", value: "mastercard" },
-              // { label: "American-express", value: "americanexpress" },
-            ]}
+            options={paymentMethodOptions}
             register={register}
             name="payment_type"
           />
+          {selectedPaymentType === "cash" ? (
+            <div className="col-12 mb-3">
+              <label htmlFor="cash_txn_reference" className="form-label">
+                Cash TXN/Reference Number*
+              </label>
+              <input
+                type="text"
+                className="text-input-filed type_2"
+                id="cash_txn_reference"
+                {...register("cash_txn_reference", {
+                  required: "Cash TXN/Reference Number is required for cash payment",
+                })}
+              />
+              {errors.cash_txn_reference ? (
+                <p className="text-danger">{errors.cash_txn_reference.message}</p>
+              ) : null}
+              {String(paymentSettings?.result?.cash_payment_notice || "").trim() ? (
+                <p className="mb-0" style={{ color: "#4a3b7a" }}>
+                  {paymentSettings.result.cash_payment_notice}
+                </p>
+              ) : null}
+            </div>
+          ) : null}
+          {!paymentMethodOptions.length ? (
+            <p className="text-danger mt-1">
+              No payment method is enabled by admin. Please contact support.
+            </p>
+          ) : null}
+          <input type="hidden" {...register("member_id", { required: true })} />
           <div className="col-12">
             <div className="form-check">
               <input
@@ -256,7 +330,13 @@ export default function MemberPayment() {
                   Refund Policy{" "}
                 </Link>
                 " of Finanace Alumni Association Website{" "}
-                <Link to={"https://faa-dubd.org"}>https://faa-dubd.org</Link>
+                <a
+                  href={siteUrlFromSettings || "https://faa-dubd.org"}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {siteUrlFromSettings || "https://faa-dubd.org"}
+                </a>
               </label>
             </div>
           </div>

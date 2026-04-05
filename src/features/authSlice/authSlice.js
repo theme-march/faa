@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit/react";
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   isAuthenticated: false,
@@ -7,8 +7,6 @@ const initialState = {
   isError: false,
   error: "",
 };
-const loginUser = JSON.parse(localStorage.getItem("user"));
-
 const authSlice = createSlice({
   name: "auth",
   initialState,

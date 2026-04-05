@@ -120,6 +120,202 @@
     }
   }
 }
+
+.executive-committee-section {
+  .executive-committee-title {
+    text-align: center;
+    font-size: 32px;
+    line-height: 1.1;
+    margin-bottom: 20px;
+    color: #4a4a4a;
+    font-weight: 700;
+    font-family: "Times New Roman", serif;
+  }
+}
+
+.about-nav-item {
+  p {
+    margin: 0;
+    padding: 2px 0;
+  }
+
+  &.is-active p {
+    color: #fff;
+    background: #61259e;
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+}
+
+.executive-committee-lead-row {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 18px;
+}
+
+.executive-committee-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  justify-items: center;
+  align-items: end;
+}
+
+.executive-member-card {
+  border: none;
+  background: transparent;
+  text-align: center;
+  padding: 0;
+  cursor: pointer;
+  width: 145px;
+  text-decoration: none !important;
+
+  &:hover,
+  &:focus,
+  &:active {
+    text-decoration: none !important;
+    outline: none;
+    transform: translateY(-2px);
+  }
+}
+
+.executive-member-card--featured {
+  width: 170px;
+  .executive-member-image {
+    width: 170px;
+    height: 250px;
+  }
+}
+
+.executive-member-image {
+  width: 145px;
+  height: 175px;
+  object-fit: cover;
+  margin: 0 auto 6px;
+  display: block;
+}
+
+.executive-member-name {
+  font-size: 12px;
+  color: #121212;
+  font-weight: 700;
+  margin-bottom: 0;
+  line-height: 1.15;
+  margin-bottom: 2px;
+}
+
+.executive-member-designation {
+  margin: 0;
+  font-size: 12px;
+  color: #202020;
+  line-height: 1.2;
+}
+
+.executive-committee-summary {
+  max-width: 760px;
+  margin: 34px auto 0;
+}
+
+.executive-summary-title {
+  margin-bottom: 8px;
+  font-size: 20px;
+  color: #4a4a4a;
+  text-align: left;
+  font-family: "Times New Roman", serif;
+}
+
+.executive-summary-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.executive-summary-item {
+  display: grid;
+  grid-template-columns: 50px 1fr 40px;
+  align-items: baseline;
+  column-gap: 8px;
+  font-size: 18px;
+  color: #4a4a4a;
+  line-height: 1.25;
+  font-family: "Times New Roman", serif;
+}
+
+.executive-summary-index {
+  text-align: right;
+}
+
+.executive-summary-name {
+  text-align: left;
+}
+
+.executive-summary-count {
+  text-align: right;
+}
+
+.executive-member-details-card {
+  border: 1px solid #e8e4f8;
+  border-radius: 18px;
+  background: #fff;
+  padding: 26px;
+}
+
+.executive-member-details-top {
+  display: flex;
+  gap: 22px;
+  align-items: center;
+  margin-bottom: 22px;
+}
+
+.executive-member-details-image {
+  width: 220px;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 14px;
+}
+
+.executive-member-details-head {
+  h2 {
+    margin-bottom: 8px;
+    color: #1f255b;
+  }
+  p {
+    margin-bottom: 10px;
+    color: #4a4f7b;
+    font-weight: 600;
+    font-size: 18px;
+  }
+}
+
+.executive-member-details-meta {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  span {
+    font-size: 15px;
+    color: #596080;
+  }
+}
+
+.executive-member-details-bio {
+  h4 {
+    color: #1f255b;
+    margin-bottom: 8px;
+  }
+  p {
+    margin-bottom: 8px;
+    line-height: 1.6;
+  }
+}
+
+.executive-member-details-actions {
+  margin-top: 20px;
+}
+.executive-committee-section {
+  max-width: 799px;
+  margin: 0 auto;
+}
 @media screen and (max-width: 991px) {
   .about-section {
     flex-wrap: wrap;
@@ -148,9 +344,57 @@
     justify-content: start;
     gap: 50px;
   }
+  .executive-committee-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .executive-member-card {
+    width: 150px;
+  }
+  .executive-member-card--featured {
+    width: 168px;
+    .executive-member-image {
+      width: 168px;
+      height: 200px;
+    }
+  }
+  .executive-member-image {
+    width: 150px;
+    height: 180px;
+  }
+  .executive-member-details-top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .executive-summary-item {
+    grid-template-columns: 42px 1fr 34px;
+  }
 }
 @media screen and (max-width: 767px) {
   .about-pages-section-one {
     flex-direction: column;
+  }
+
+  .executive-committee-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  .executive-member-card {
+    width: 170px;
+  }
+  .executive-member-image {
+    width: 170px;
+    height: 200px;
+  }
+  .executive-member-details-card {
+    padding: 16px;
+  }
+  .executive-member-details-image {
+    width: 180px;
+    height: 180px;
+  }
+
+  .executive-summary-item {
+    grid-template-columns: 34px 1fr 28px;
   }
 }

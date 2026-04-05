@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
 import DatePicker from "react-datepicker";
@@ -11,6 +11,7 @@ import {
   useGetMembersSessionListQuery,
   useMemberRegisterMutation,
 } from "../../features/member/memberApiIn";
+import { useGetPaymentSettingsQuery } from "../../features/payment/sslPaymentApiIn";
 import ImageUploadComponent from "../ImageUploadComponent/ImageCompression";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
@@ -29,6 +30,7 @@ export default function RegistrationForm() {
     setError,
     clearErrors,
     control,
+    watch,
     reset,
     formState: { errors },
   } = useForm();
@@ -38,6 +40,39 @@ export default function RegistrationForm() {
   const { data: Occupations } = useGetMembersOccupationListQuery();
 
   const { data: membership_category_id } = useGetMembersCategoryListQuery();
+  const { data: paymentSettings } = useGetPaymentSettingsQuery();
+  const siteUrlFromSettings = String(paymentSettings?.result?.site_url || "").trim();
+  const selectedMembershipCategoryId = watch("membership_category_id");
+
+  const selectedCategoryValidity = useMemo(() => {
+    const categories = membership_category_id?.result || [];
+    const selected = categories.find(
+      (item) => String(item?.id) === String(selectedMembershipCategoryId || "")
+    );
+    if (!selected) return null;
+
+    let membershipType = String(selected?.membership_type || "").toLowerCase();
+    let durationDays = Number(selected?.membership_duration_days || 0) || null;
+
+    if (selected?.category_title) {
+      try {
+        const parsed = typeof selected.category_title === "string"
+          ? JSON.parse(selected.category_title)
+          : selected.category_title;
+        membershipType = String(parsed?.membership_type || membershipType).toLowerCase();
+        const parsedDays = Number(parsed?.membership_duration_days || 0);
+        if (Number.isFinite(parsedDays) && parsedDays > 0) durationDays = parsedDays;
+      } catch (_) {
+        // keep fallback
+      }
+    }
+
+    const isLifetime =
+      membershipType === "lifetime" ||
+      String(selected?.category_name || "").toLowerCase().includes("lifetime");
+
+    return { isLifetime, durationDays };
+  }, [membership_category_id, selectedMembershipCategoryId]);
 
   const [memberRegister] = useMemberRegisterMutation();
 
@@ -300,6 +335,14 @@ export default function RegistrationForm() {
               </select>
             )}
           />
+          {selectedCategoryValidity ? (
+            <small className="d-block mt-2 text-muted">
+              Membership Duration (Days):{" "}
+              {selectedCategoryValidity.isLifetime
+                ? "Lifetime"
+                : selectedCategoryValidity.durationDays || 365}
+            </small>
+          ) : null}
         </div>
         <div className="col-md-6">
           <label forhtml="Organization" className="form-label">
@@ -444,7 +487,13 @@ export default function RegistrationForm() {
                 Refund Policy{" "}
               </Link>
               " of Finanace Alumni Association Website{" "}
-              <Link to={"https://faa-dubd.org"}>https://faa-dubd.org</Link>
+              <a
+                href={siteUrlFromSettings || "https://faa-dubd.org"}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {siteUrlFromSettings || "https://faa-dubd.org"}
+              </a>
             </label>
           </div>
         </div>

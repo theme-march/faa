@@ -1,126 +1,59 @@
-
-
-// import React, { useState, useMemo, useEffect } from "react";
-// import { useDispatch } from "react-redux";
-// import { searchMemberName } from "../../features/member/memberSearchSlice";
-// import Fuse from "fuse.js";
-// import { debounce } from "lodash";
-
-// export default function SearchMember({ members }) {
-//   const [input, setInput] = useState("");
-//   const [suggestions, setSuggestions] = useState([]);
-//   const dispatch = useDispatch();
-
-//   // ✅ Initialize Fuse.js
-//   const fuse = useMemo(() => {
-//     if (!members?.length) return null;
-//     return new Fuse(members, {
-//       keys: ["name", "membership_number", "organization_name"],
-//       threshold: 0.3,
-//     });
-//   }, [members]);
-
-//   // ✅ Debounced search for suggestions
-//   const debouncedSearch = useMemo(
-//     () =>
-//       debounce((value) => {
-//         if (!fuse || !value.trim()) {
-//           setSuggestions([]);
-//           return;
-//         }
-//         const result = fuse.search(value);
-//         setSuggestions(result.map((r) => r.item).slice(0, 8)); // show top 8
-//       }, 200),
-//     [fuse]
-//   );
-
-//   const handleInputChange = (e) => {
-//     const value = e.target.value;
-//     setInput(value);
-//     debouncedSearch(value);
-//   };
-
-//   // ✅ When user presses Enter
-//   const handleKeyDown = (e) => {
-//     if (e.key === "Enter") {
-//       e.preventDefault();
-//       dispatch(searchMemberName(input.trim()));
-//       setSuggestions([]); // hide suggestion list
-//     }
-//   };
-
-//   // ✅ When user clicks suggestion
-//   const handleSelect = (name) => {
-//     setInput(name);
-//     dispatch(searchMemberName(name));
-//     setSuggestions([]); // hide list after select
-//   };
-
-//   // ✅ Hide suggestion list when clicking outside
-//   useEffect(() => {
-//     const handleClickOutside = (event) => {
-//       if (!event.target.closest(".search-member-section")) {
-//         setSuggestions([]);
-//       }
-//     };
-//     document.addEventListener("click", handleClickOutside);
-//     return () => document.removeEventListener("click", handleClickOutside);
-//   }, []);
-
-//   return (
-//     <div className="search-member-section" style={{ position: "relative" }}>
-//       <p className="search-title">Search Member</p>
-//       <div className="search-member">
-//         <input
-//           type="text"
-//           className="text-input-filed"
-//           placeholder="Name / ID / Session / Batch / HSC / Organization ..."
-//           value={input}
-//           onChange={handleInputChange}
-//           onKeyDown={handleKeyDown} // 👈 handle Enter key
-//         />
-
-//         {suggestions.length > 0 && (
-//           <ul className="suggestion-list">
-//             {suggestions.map((s, i) => (
-//               <li key={i} onClick={() => handleSelect(s.name)}>
-//                 {s.name}{" "}
-//                 <span className="text-muted">
-//                   ({s.membership_number || "N/A"})
-//                 </span>
-//               </li>
-//             ))}
-//           </ul>
-//         )}
-//       </div>
-//     </div>
-//   );
-// }
-import React, { useState, useMemo, useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Fuse from "fuse.js";
 import { debounce } from "lodash";
+import { useGetMembersListQuery } from "../../features/member/memberApiIn";
 import { searchMemberName } from "../../features/member/memberSearchSlice";
 
+function pickRows(apiData) {
+  const result = apiData?.result;
+  if (!result) return [];
+  if (Array.isArray(result)) return result;
+
+  const rows =
+    result?.rows ||
+    result?.data ||
+    result?.members ||
+    result?.list ||
+    [];
+
+  return Array.isArray(rows) ? rows : [];
+}
+
 export default function SearchMember({ members = [] }) {
-  const [input, setInput] = useState("");
-  const [suggestions, setSuggestions] = useState([]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  /* ================= FUSE CONFIG ================= */
+  const [input, setInput] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [debouncedInput, setDebouncedInput] = useState("");
+
+  const shouldSearchServer = isModalOpen && debouncedInput.length > 0;
+  const searchQuery = useMemo(
+    () => ({
+      page: 1,
+      limit: 12,
+      search: debouncedInput || undefined,
+    }),
+    [debouncedInput]
+  );
+
+  const { data: searchedMembersData } = useGetMembersListQuery(searchQuery, {
+    skip: !shouldSearchServer,
+    refetchOnMountOrArgChange: true,
+  });
+
   const fuse = useMemo(() => {
     if (!members.length) return null;
-
     return new Fuse(members, {
-      keys: ["name", "membership_number", "organization_name"],
+      keys: ["name", "membership_number", "organization_name", "session", "email"],
       threshold: 0.3,
     });
   }, [members]);
 
-  /* ================= DEBOUNCED SEARCH ================= */
-  const debouncedSearch = useMemo(
+  const debouncedLocalSearch = useMemo(
     () =>
       debounce((value) => {
         if (!fuse || !value.trim()) {
@@ -129,80 +62,143 @@ export default function SearchMember({ members = [] }) {
         }
         const result = fuse.search(value);
         setSuggestions(result.slice(0, 8).map((r) => r.item));
-      }, 200),
+      }, 220),
     [fuse]
   );
 
-  /* ================= INPUT CHANGE ================= */
-  const handleInputChange = (e) => {
-    const value = e.target.value;
+  useEffect(() => {
+    return () => {
+      debouncedLocalSearch.cancel();
+    };
+  }, [debouncedLocalSearch]);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setDebouncedInput(input.trim());
+    }, 220);
+    return () => clearTimeout(timeout);
+  }, [input]);
+
+  useEffect(() => {
+    if (!isModalOpen || !debouncedInput) {
+      setSuggestions([]);
+      return;
+    }
+
+    const apiRows = pickRows(searchedMembersData);
+    if (apiRows.length > 0) {
+      setSuggestions(apiRows.slice(0, 8));
+      return;
+    }
+
+    // Fallback in case API response is temporarily empty/unavailable.
+    debouncedLocalSearch(debouncedInput);
+  }, [isModalOpen, debouncedInput, searchedMembersData, debouncedLocalSearch]);
+
+  useEffect(() => {
+    if (!isModalOpen) return undefined;
+    const closeOnEsc = (event) => {
+      if (event.key === "Escape") {
+        setIsModalOpen(false);
+        setSuggestions([]);
+      }
+    };
+    document.addEventListener("keydown", closeOnEsc);
+    return () => document.removeEventListener("keydown", closeOnEsc);
+  }, [isModalOpen]);
+
+  const handleInputChange = (event) => {
+    const value = event.target.value;
     setInput(value);
-    debouncedSearch(value);
   };
 
-  /* ================= ENTER KEY ================= */
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
       dispatch(searchMemberName(input.trim()));
       setSuggestions([]);
     }
   };
 
-  /* ================= CLICK SUGGESTION → PROFILE ================= */
-  const handleSelect = (member) => {
+  const handleSuggestionClick = (member) => {
     setInput("");
+    setDebouncedInput("");
     setSuggestions([]);
-    navigate(`/member-details/${member.id}`); // ✅ CORRECT URL
+    setIsModalOpen(false);
+    navigate(`/member-details/${member.id}`);
   };
 
-  /* ================= CLICK OUTSIDE ================= */
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (!event.target.closest(".search-member-section")) {
-        setSuggestions([]);
-      }
-    };
-    document.addEventListener("click", handleClickOutside);
-    return () =>
-      document.removeEventListener("click", handleClickOutside);
-  }, []);
-
   return (
-    <div
-      className="search-member-section"
-      style={{ position: "relative" }}
-    >
-      <p className="search-title">Search Member</p>
-
-      <div className="search-member">
-        <input
-          type="text"
-          className="text-input-filed"
-          placeholder="Name / ID / Session / Batch / HSC / Organization ..."
-          value={input}
-          onChange={handleInputChange}
-          onKeyDown={handleKeyDown}
-          autoComplete="off"
-        />
-
-        {/* 🔽 SUGGESTION LIST */}
-        {suggestions.length > 0 && (
-          <ul className="suggestion-list">
-            {suggestions.map((member) => (
-              <li
-                key={member.id}
-                onClick={() => handleSelect(member)}
-              >
-                <strong>{member.name}</strong>{" "}
-                <span className="text-muted">
-                  ({member.membership_number || "N/A"})
-                </span>
-              </li>
-            ))}
-          </ul>
-        )}
+    <div className="search-member-section" style={{ position: "relative" }}>
+      <div className="search-member-inline">
+        <p className="search-title">Search Member</p>
+        <button
+          type="button"
+          className="search-trigger"
+          onClick={() => setIsModalOpen(true)}
+        >
+          <span className="search-trigger-icon">
+            <i className="fas fa-search" />
+          </span>
+          <span className="search-trigger-text">Search</span>
+          <span className="search-trigger-shortcut">CTRL K</span>
+        </button>
       </div>
+
+      {isModalOpen ? (
+        <div
+          className="search-modal-backdrop"
+          onClick={() => {
+            setIsModalOpen(false);
+            setInput("");
+            setDebouncedInput("");
+          }}
+        >
+          <div className="search-modal" onClick={(event) => event.stopPropagation()}>
+            <div className="search-modal-head">
+              <div className="search-modal-input-wrap">
+                <i className="fas fa-search" />
+                <input
+                  type="text"
+                  className="search-modal-input"
+                  placeholder="Search member by name / id / organization..."
+                  value={input}
+                  onChange={handleInputChange}
+                  onKeyDown={handleKeyDown}
+                  autoComplete="off"
+                  autoFocus
+                />
+              </div>
+              <button
+                type="button"
+                className="search-modal-close"
+                onClick={() => setIsModalOpen(false)}
+                aria-label="Close search"
+              >
+                x
+              </button>
+            </div>
+
+            <div className="search-modal-body">
+              {suggestions.length > 0 ? (
+                <>
+                  <p className="search-modal-caption">Members</p>
+                  <ul className="suggestion-list in-modal">
+                    {suggestions.map((member) => (
+                      <li key={member.id} onClick={() => handleSuggestionClick(member)}>
+                        <strong>{member.name}</strong>{" "}
+                        <span className="text-muted">({member.membership_number || "N/A"})</span>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              ) : (
+                <div className="search-modal-empty">Start typing to find members</div>
+              )}
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }

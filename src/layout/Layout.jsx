@@ -4,9 +4,11 @@ import Header from "./Header/Header";
 import Footer from "./Footer/Footer";
 import ScrollTop from "./ScrollTop";
 import AddModal from "../components/AddModal/AddModal";
+import AuthSessionSync from "../components/Auth/AuthSessionSync";
 export default function Layout() {
   return (
     <>
+      <AuthSessionSync />
       <AddModal />
       <Header />
       <ScrollTop />

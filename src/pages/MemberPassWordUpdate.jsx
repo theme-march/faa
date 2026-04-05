@@ -3,12 +3,13 @@ import { useParams } from "react-router-dom";
 import { useMemberUpdatePasswordMutation } from "../features/member/memberApiIn";
 import { toast } from "react-toastify";
 import ErrorPages from "./ErrorPages";
+import { getAuthMemberId } from "../utils/authStorage";
 
 export default function UpdatePassword() {
   const { id } = useParams();
-  const loginUser = JSON.parse(localStorage.getItem("user"));
+  const authMemberId = getAuthMemberId();
 
-  if (Number(loginUser?.id) !== Number(id))
+  if (Number(authMemberId) !== Number(id))
     return (
       <>
         <ErrorPages />

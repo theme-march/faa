@@ -2,6 +2,13 @@ import { apiSlice } from "../api/apiSlice";
 
 const paymentApi = apiSlice.injectEndpoints({
   endpoints: (bulider) => ({
+    getPaymentSettings: bulider.query({
+      query: () => ({
+        url: "/payment_settings",
+        method: "GET",
+      }),
+    }),
+
     memberPayment: bulider.mutation({
       query: (data) => ({
         url: "/payment_membership",
@@ -27,6 +34,7 @@ const paymentApi = apiSlice.injectEndpoints({
   }),
 });
 export const {
+  useGetPaymentSettingsQuery,
   useDonationPaymentMutation,
   useMemberPaymentMutation,
   usePaymentStatusQuery,

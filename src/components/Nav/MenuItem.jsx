@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import classNames from "classnames";
 import PropTypes from "prop-types";
 
-export default function MenuItem({ props }) {
+export default function MenuItem({ props, onNavigate }) {
   const [showMenu, setShowMenu] = useState(false);
 
   const showsubnav = () => {
@@ -21,13 +21,27 @@ export default function MenuItem({ props }) {
 
   return (
     <li className={showActivePrent}>
-      <Link to={props.link}>{props.title}</Link>
+      <Link
+        to={props.link}
+        onClick={() => {
+          if (typeof onNavigate === "function") onNavigate();
+        }}
+      >
+        {props.title}
+      </Link>
       {isArray(props.childern) && (
         <>
           <ul>
             {props?.childern?.map((child) => (
               <li key={child.key}>
-                <Link to={child.link}>{child.title}</Link>
+                <Link
+                  to={child.link}
+                  onClick={() => {
+                    if (typeof onNavigate === "function") onNavigate();
+                  }}
+                >
+                  {child.title}
+                </Link>
               </li>
             ))}
           </ul>
@@ -40,4 +54,5 @@ export default function MenuItem({ props }) {
 
 MenuItem.propTypes = {
   props: PropTypes.object,
+  onNavigate: PropTypes.func,
 };

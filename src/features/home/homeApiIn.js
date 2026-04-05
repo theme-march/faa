@@ -23,6 +23,12 @@ const homeApi = apiSlice.injectEndpoints({
       }),
       //   providesTags: ["homeTags"],
     }),
+    getYoutubeVideo: bulider.query({
+      query: () => ({
+        url: "/youtube_video",
+        method: "GET",
+      }),
+    }),
     getMilestoneProgram: bulider.query({
       query: () => ({
         url: "/programs_list",
@@ -43,6 +49,7 @@ export const {
   useGetHomeIdQuery,
   useGetHomeSliderQuery,
   useGetHomePopupQuery,
+  useGetYoutubeVideoQuery,
   useGetMilestoneProgramQuery,
   useGetMilestoneProgramIdQuery,
 } = homeApi;

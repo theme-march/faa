@@ -6,13 +6,33 @@ import RecentEvent from "../components/RecentEvent/RecentEvent";
 import DonationCareer from "../components/DonationCareer/DonationCareer";
 import MilestoneProgram from "../components/MilestoneProgram/MilestoneProgram";
 import AboutUs from "../components/AboutUs/AboutUs";
-import { useGetHomeIdQuery } from "../features/home/homeApiIn";
+import { useGetHomeIdQuery, useGetYoutubeVideoQuery } from "../features/home/homeApiIn";
 import HomeLoading from "../components/UI/HomeLoading";
 import ErrorShow from "../components/UI/ErrorShow";
 import YoutubeEmbed from "../components/YoutubeEmbed/YoutubeEmbed";
 
 export default function Home() {
   const { data: allDataInHome, isLoading, isError } = useGetHomeIdQuery();
+  const { data: youtubeData } = useGetYoutubeVideoQuery();
+
+  const youtubeUrl = React.useMemo(() => {
+    const source =
+      youtubeData?.result?.[0] ||
+      youtubeData?.data?.[0] ||
+      youtubeData?.result ||
+      youtubeData?.data ||
+      null;
+
+    if (!source) return "";
+
+    return (
+      source.youtube_url ||
+      source.url ||
+      source.video_url ||
+      source.link ||
+      ""
+    );
+  }, [youtubeData]);
 
   let content = null;
   if (isLoading) {
@@ -38,7 +58,9 @@ export default function Home() {
         <MilestoneProgram />
 
         <div className="ak-height-50 ak-height-lg-30"></div>
-        <YoutubeEmbed url="https://www.youtube.com/watch?v=ckyhAWrXKhE&t=9s"  />
+        <YoutubeEmbed
+          url={youtubeUrl || "https://www.youtube.com/watch?v=ckyhAWrXKhE&t=9s"}
+        />
     
         {section_5.length !== 0 ? <UncommingEvents props={section_5} /> : " "}
 

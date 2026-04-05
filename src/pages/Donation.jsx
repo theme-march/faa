@@ -1,70 +1,278 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useGetMemberDetailsIdQuery } from "../features/member/memberApiIn";
-import { useDonationPaymentMutation } from "../features/payment/sslPaymentApiIn";
+import { useGetMilestoneProgramQuery } from "../features/home/homeApiIn";
+import {
+  useDonationPaymentMutation,
+  useGetPaymentSettingsQuery,
+} from "../features/payment/sslPaymentApiIn";
 import HomeLoading from "../components/UI/HomeLoading";
-import ErrorShow from "../components/UI/ErrorShow";
+import { getAuthMemberId } from "../utils/authStorage";
+
+const TOAST_OPTIONS = {
+  position: toast.POSITION.TOP_RIGHT,
+  autoClose: 1500,
+};
+
+function InputField({
+  label,
+  id,
+  type = "text",
+  register,
+  field,
+  validation,
+  error,
+  errorMessage,
+  disabled = false,
+}) {
+  return (
+    <div className="col-md-6">
+      <label htmlFor={id} className="form-label">
+        {label}*
+      </label>
+      <input
+        type={type}
+        className="text-input-filed type_2"
+        id={id}
+        disabled={disabled}
+        {...register(field, validation)}
+      />
+      {error ? <p className="text-danger">{errorMessage[error.type] || error.message}</p> : null}
+    </div>
+  );
+}
+
+function renderPaymentMethods(register, error, methods = []) {
+  return methods.map((method, idx) => (
+    <div key={idx} className="form-check form-check-inline">
+      <input
+        className="form-check-input custom-checkbox"
+        type="radio"
+        name="paymentMethod"
+        id={method.value}
+        value={method.value}
+        {...register("payment_type", { required: true })}
+      />
+      <label className="form-check-label" htmlFor={method.value}>
+        {method.label}
+      </label>
+      {error && idx === 0 ? <p className="text-danger">Payment method is required.</p> : null}
+    </div>
+  ));
+}
+
+function TermsAndConditions() {
+  return (
+    <div className="col-12">
+      <div className="form-check">
+        <input className="form-check-input" type="checkbox" id="termsCheckbox" required />
+        <label className="form-check-label" htmlFor="termsCheckbox">
+          I have read and agree to the
+          <Link to="/terms-condition?id=termsconditions" className="ak-primary-color text-decoration-underline">
+            {" "}
+            Terms & Conditions
+          </Link>
+          ,
+          <Link to="/terms-condition?id=privacypolicy" className="ak-primary-color text-decoration-underline">
+            {" "}
+            Privacy Policy
+          </Link>
+          , and
+          <Link to="/terms-condition?id=refundpolicy" className="ak-primary-color text-decoration-underline">
+            {" "}
+            Refund Policy
+          </Link>
+          .
+        </label>
+      </div>
+    </div>
+  );
+}
 
 export default function Donation() {
-  const loginUser = JSON.parse(localStorage.getItem("user"));
+  const [searchParams] = useSearchParams();
+  const programIdFromQuery = Number(searchParams.get("program_id")) || null;
+  const typeFromQuery = String(searchParams.get("type") || "").toLowerCase();
+
+  const authMemberId = getAuthMemberId();
+  const isLoggedIn = Boolean(authMemberId);
 
   const {
     register,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      donation_type: typeFromQuery === "program" ? "program" : "normal",
+      program_id: programIdFromQuery || "",
+      member_id: "",
+      name: "",
+      organization_name: "",
+      email_address: "",
+      phone_number: "",
+      pay_amount: "",
+      payment_type: "",
+      cash_txn_reference: "",
+    },
+  });
 
-  const {
-    data: memberData,
-    isLoading,
-    isError,
-  } = useGetMemberDetailsIdQuery(loginUser?.id);
+  const donationType = watch("donation_type");
+  const selectedProgramId = Number(watch("program_id")) || null;
+  const selectedPaymentType = watch("payment_type");
+
+  const { data: memberData, isLoading: memberLoading } = useGetMemberDetailsIdQuery(
+    { id: authMemberId, viewer_id: authMemberId },
+    { skip: !isLoggedIn }
+  );
+
+  const { data: programListData } = useGetMilestoneProgramQuery();
+
   const [donationPayment] = useDonationPaymentMutation();
+  const { data: paymentSettings } = useGetPaymentSettingsQuery();
 
-  const toastOptions = {
-    position: toast.POSITION.TOP_RIGHT,
-    autoClose: 1000,
-  };
+  const paymentMethodOptions = useMemo(() => {
+    const sslEnabled = Boolean(paymentSettings?.result?.ssl_enabled);
+    const cashEnabled = Boolean(paymentSettings?.result?.cash_enabled);
+    const options = [];
+    if (sslEnabled) options.push({ label: "SSLCommerz", value: "ssl_commerz" });
+    if (cashEnabled)
+      options.push({ label: "Cash Payment (Admin Approval Required)", value: "cash" });
+    return options;
+  }, [paymentSettings]);
+
+  const programOptions = useMemo(
+    () =>
+      Array.isArray(programListData?.result)
+        ? programListData.result.map((item) => ({
+            value: String(item?.id),
+            label: item?.title || `Program ${item?.id}`,
+          }))
+        : [],
+    [programListData]
+  );
 
   useEffect(() => {
-    if (memberData?.success) {
+    if (isLoggedIn && memberData?.success) {
       const member = memberData.result;
-      setValue("name", member.name);
-      setValue("organization_name", member.organization_name);
-      setValue("email_address", member.email);
-      setValue("phone_number", member.phone_number);
-      setValue("member_id", member.id);
+      setValue("name", member.name || "");
+      setValue("organization_name", member.organization_name || "");
+      setValue("email_address", member.email || "");
+      setValue("phone_number", member.phone_number || "");
+      setValue("member_id", String(member.id || ""));
+    } else if (!isLoggedIn) {
+      setValue("member_id", "guest");
     }
-  }, [memberData, setValue]);
+  }, [isLoggedIn, memberData, setValue]);
 
-  const onSubmit = async (data) => {
+  useEffect(() => {
+    if (paymentMethodOptions.length > 0) {
+      setValue("payment_type", paymentMethodOptions[0].value);
+    }
+  }, [paymentMethodOptions, setValue]);
+
+  useEffect(() => {
+    if (programIdFromQuery) {
+      setValue("program_id", String(programIdFromQuery));
+      setValue("donation_type", "program");
+    }
+  }, [programIdFromQuery, setValue]);
+
+  const onSubmit = async (values) => {
+    if (!paymentMethodOptions.length) {
+      toast.info("No payment method is enabled by admin.", TOAST_OPTIONS);
+      return;
+    }
+
+    if (values.donation_type === "program" && !values.program_id) {
+      toast.info("Please provide a program for program-wise donation.", TOAST_OPTIONS);
+      return;
+    }
+
     try {
-      const resp = await donationPayment(data);
+      const payload = {
+        ...values,
+        donation_type: values.donation_type === "program" ? "program" : "normal",
+        program_id: values.donation_type === "program" ? Number(values.program_id) : null,
+        member_id: values.member_id || (isLoggedIn ? String(authMemberId) : "guest"),
+        cash_txn_reference:
+          (values.payment_type || "ssl_commerz") === "cash"
+            ? String(values.cash_txn_reference || "").trim()
+            : "",
+      };
+      const resp = await donationPayment(payload);
       if (resp?.data?.success) {
+        if (resp?.data?.cash) {
+          toast.success(resp?.data?.message || "Donation request submitted.", TOAST_OPTIONS);
+          return;
+        }
         window.location.replace(resp?.data?.url);
       } else {
-        throw new Error("Payment not completed");
+        throw new Error(resp?.data?.message || "Payment not completed");
       }
     } catch (error) {
-      toast.info(error.message, toastOptions);
+      toast.info(error.message, TOAST_OPTIONS);
     }
   };
 
-  if (isLoading) return <HomeLoading />;
-  if (isError || memberData?.success === false)
-    return <ErrorShow message={"No data found"} />;
+  if (isLoggedIn && memberLoading) return <HomeLoading />;
 
   return (
     <div className="container">
-      <div className="ak-height-80 ak-height-lg-60"></div>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="row g-3"
-        autoComplete="on"
-      >
+      <div className="ak-height-80 ak-height-lg-60" />
+      <form onSubmit={handleSubmit(onSubmit)} className="row g-3" autoComplete="on">
+        <div className="col-12">
+          <label className="form-label">Donation Type*</label>
+          <div className="d-flex flex-wrap gap-4">
+            <div className="form-check form-check-inline">
+              <input
+                className="form-check-input custom-checkbox"
+                type="radio"
+                id="donationTypeNormal"
+                value="normal"
+                {...register("donation_type", { required: true })}
+                disabled={Boolean(programIdFromQuery)}
+              />
+              <label className="form-check-label" htmlFor="donationTypeNormal">
+                Normal Donation
+              </label>
+            </div>
+            <div className="form-check form-check-inline">
+              <input
+                className="form-check-input custom-checkbox"
+                type="radio"
+                id="donationTypeProgram"
+                value="program"
+                {...register("donation_type", { required: true })}
+              />
+              <label className="form-check-label" htmlFor="donationTypeProgram">
+                Program-wise Donation
+              </label>
+            </div>
+          </div>
+        </div>
+
+        {donationType === "program" ? (
+          <div className="col-12">
+            <label className="form-label">Program*</label>
+            <select
+              className="text-input-filed type_2"
+              {...register("program_id", { required: "Program is required for program-wise donation" })}
+            >
+              <option value="">Select Program</option>
+              {programOptions.map((program) => (
+                <option key={program.value} value={program.value}>
+                  {program.label}
+                </option>
+              ))}
+            </select>
+            {errors.program_id ? <p className="text-danger">{errors.program_id.message}</p> : null}
+          </div>
+        ) : null}
+
         <InputField
           label="Name"
           id="inputName"
@@ -126,14 +334,8 @@ export default function Donation() {
           field="phone_number"
           validation={{
             required: true,
-            minLength: {
-              value: 10,
-              message: "Phone number must be at least 10 digits",
-            },
-            maxLength: {
-              value: 15,
-              message: "Phone number must be less than 15 digits",
-            },
+            minLength: { value: 10, message: "Phone number must be at least 10 digits" },
+            maxLength: { value: 15, message: "Phone number must be less than 15 digits" },
           }}
           errorMessage={{ required: "Phone number is required" }}
         />
@@ -156,9 +358,33 @@ export default function Donation() {
           }}
         />
 
-        <div className="col-12">
-          {renderPaymentMethods(register, errors.payment_type)}
-        </div>
+        <div className="col-12">{renderPaymentMethods(register, errors.payment_type, paymentMethodOptions)}</div>
+        {selectedPaymentType === "cash" ? (
+          <div className="col-12">
+            <label className="form-label" htmlFor="cashTxnReferenceDonation">
+              Cash TXN/Reference Number*
+            </label>
+            <input
+              id="cashTxnReferenceDonation"
+              className="text-input-filed type_2"
+              type="text"
+              {...register("cash_txn_reference", {
+                required: "Cash TXN/Reference Number is required for cash payment",
+              })}
+            />
+            {errors.cash_txn_reference ? (
+              <p className="text-danger mt-1">{errors.cash_txn_reference.message}</p>
+            ) : null}
+            {String(paymentSettings?.result?.cash_payment_notice || "").trim() ? (
+              <p className="mt-2 mb-0" style={{ color: "#4a3b7a" }}>
+                {paymentSettings.result.cash_payment_notice}
+              </p>
+            ) : null}
+          </div>
+        ) : null}
+        {!paymentMethodOptions.length ? <p className="text-danger">No payment method is enabled by admin.</p> : null}
+
+        <input type="hidden" {...register("member_id")} />
 
         <TermsAndConditions />
 
@@ -168,106 +394,7 @@ export default function Donation() {
           </button>
         </div>
       </form>
-      <div className="ak-height-100 ak-height-lg-60"></div>
-    </div>
-  );
-}
-
-// InputField Component with validation and error handling
-function InputField({
-  label,
-  id,
-  type = "text",
-  register,
-  field,
-  validation,
-  error,
-  errorMessage,
-}) {
-  return (
-    <div className="col-md-6">
-      <label htmlFor={id} className="form-label">
-        {label}*
-      </label>
-      <input
-        type={type}
-        className="text-input-filed type_2"
-        id={id}
-        {...register(field, validation)}
-      />
-      {error && <p className="text-danger">{errorMessage[error.type]}</p>}
-    </div>
-  );
-}
-
-// Render payment methods with validation
-function renderPaymentMethods(register, error) {
-  const methods = [
-    // "Bkash",
-    "SSLCommerz",
-    /*  "Visa",
-    "Mastercard",
-    "American Express", */
-  ];
-  return methods.map((method, idx) => (
-    <div key={idx} className="form-check form-check-inline">
-      <input
-        className="form-check-input custom-checkbox"
-        type="radio"
-        name="paymentMethod"
-        id={method.toLowerCase()}
-        value={method.toLowerCase()}
-        {...register("payment_type", { required: true })}
-      />
-      <label className="form-check-label" htmlFor={method.toLowerCase()}>
-        {method}
-      </label>
-      {error && idx === 0 && (
-        <p className="text-danger">Payment method is required.</p>
-      )}
-    </div>
-  ));
-}
-
-// Terms and Conditions Component
-function TermsAndConditions() {
-  return (
-    <div className="col-12">
-      <div className="form-check">
-        <input
-          className="form-check-input"
-          type="checkbox"
-          id="termsCheckbox"
-          required
-        />
-        <label className="form-check-label" htmlFor="termsCheckbox">
-          I have read and agree to the
-          <Link
-            to="/terms-condition?id=termsconditions"
-            className="ak-primary-color text-decoration-underline"
-          >
-            {" "}
-            Terms & Conditions
-          </Link>
-          ,
-          <Link
-            to="/terms-condition?id=privacypolicy"
-            className="ak-primary-color text-decoration-underline"
-          >
-            {" "}
-            Privacy Policy
-          </Link>
-          , and
-          <Link
-            to="/terms-condition?id=refundpolicy"
-            className="ak-primary-color text-decoration-underline"
-          >
-            {" "}
-            Refund Policy
-          </Link>
-          .
-        </label>
-      </div>
+      <div className="ak-height-100 ak-height-lg-60" />
     </div>
   );
 }

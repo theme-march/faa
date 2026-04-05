@@ -1,231 +1,342 @@
-import React, { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import {
   useAddEventSponsorRegisterMutation,
   useGetEventDetailsIdQuery,
 } from "../../features/events/eventsApiInject";
-import { toast } from "react-toastify";
+import { useGetMemberDetailsIdQuery } from "../../features/member/memberApiIn";
+import { useGetPaymentSettingsQuery } from "../../features/payment/sslPaymentApiIn";
 import ErrorShow from "../UI/ErrorShow";
 import HomeLoading from "../UI/HomeLoading";
-import { useGetMemberDetailsIdQuery } from "../../features/member/memberApiIn";
-import { useMemberPaymentMutation } from "../../features/payment/sslPaymentApiIn";
-import { Link } from "react-router-dom";
+import { getAuthMemberId } from "../../utils/authStorage";
 
-export default function EventSponsorRegistrationForm(props) {
-  const loginUser = JSON.parse(localStorage.getItem("user"));
-  const eventId = props?.props;
+const TOAST_OPTIONS = {
+  position: toast.POSITION.TOP_RIGHT,
+  autoClose: 2500,
+};
 
-  const {
-    data: memberData,
-    isLoading,
-    isSuccess,
-    isError,
-  } = useGetMemberDetailsIdQuery(loginUser?.id, { skip: !loginUser });
+const DEFAULT_PAYMENT_OPTIONS = [
+  { value: "ssl_commerz", label: "SSLCommerz" },
+  { value: "cash", label: "Cash Payment (Admin Approval Required)" },
+];
 
-  const {
-    data: eventsDetailsData,
-    isLoading: eventsisLoading,
-    isError: eventsisError,
-    isSuccess: eventsisSuccess,
-  } = useGetEventDetailsIdQuery(eventId, { skip: !eventId });
+function getEnabledPaymentOptions(paymentSettings) {
+  const sslEnabled = Boolean(paymentSettings?.result?.ssl_enabled);
+  const cashEnabled = Boolean(paymentSettings?.result?.cash_enabled);
 
-  const [AddEventSponsorRegister, { data }] =
-    useAddEventSponsorRegisterMutation();
+  return DEFAULT_PAYMENT_OPTIONS.filter((option) => {
+    if (option.value === "ssl_commerz") return sslEnabled;
+    if (option.value === "cash") return cashEnabled;
+    return false;
+  });
+}
 
-  const [memberPayment] = useMemberPaymentMutation();
+function InputField({
+  label,
+  id,
+  type = "text",
+  register,
+  field,
+  validation = {},
+  error,
+  required = false,
+}) {
+  return (
+    <div className="col-md-6">
+      <label htmlFor={id} className="form-label">
+        {label}
+        {required ? "*" : ""}
+      </label>
+      <input type={type} className="text-input-filed type_2" id={id} {...register(field, validation)} />
+      {error ? (
+        <p className="text-danger" style={{ fontSize: 13, marginTop: 4 }}>
+          {error.message || "This field is required"}
+        </p>
+      ) : null}
+    </div>
+  );
+}
+
+function PaymentTypeField({ register, error, options }) {
+  return (
+    <div className="col-12">
+      <label className="form-label">Payment Method*</label>
+      <div className="d-flex flex-wrap gap-3">
+        {options.map((method) => (
+          <div key={method.value} className="form-check form-check-inline">
+            <input
+              className="form-check-input custom-checkbox"
+              type="radio"
+              id={`pay-${method.value}`}
+              value={method.value}
+              {...register("payment_type", { required: "Please select payment method" })}
+            />
+            <label className="form-check-label" htmlFor={`pay-${method.value}`}>
+              {method.label}
+            </label>
+          </div>
+        ))}
+      </div>
+      {error ? <p className="text-danger mt-1">{error.message}</p> : null}
+    </div>
+  );
+}
+
+function TermsAndConditions() {
+  return (
+    <div className="col-12">
+      <div className="form-check">
+        <input className="form-check-input" type="checkbox" id="termsCheckboxSponsor" required />
+        <label className="form-check-label" htmlFor="termsCheckboxSponsor">
+          I have read and agree to the{" "}
+          <Link to="/terms-condition?id=termsconditions" className="ak-primary-color text-decoration-underline">
+            Terms & Conditions
+          </Link>
+          ,{" "}
+          <Link to="/terms-condition?id=privacypolicy" className="ak-primary-color text-decoration-underline">
+            Privacy Policy
+          </Link>{" "}
+          and{" "}
+          <Link to="/terms-condition?id=refundpolicy" className="ak-primary-color text-decoration-underline">
+            Refund Policy
+          </Link>
+          .
+        </label>
+      </div>
+    </div>
+  );
+}
+
+export default function EventSponsorRegistrationForm({ props: eventId }) {
+  const navigate = useNavigate();
+  const authMemberId = getAuthMemberId();
+  const isLoggedIn = Boolean(authMemberId);
+
+  const { data: memberData, isLoading: memberLoading, isFetching: memberFetching } =
+    useGetMemberDetailsIdQuery(
+      {
+        id: authMemberId,
+        viewer_id: authMemberId,
+      },
+      { skip: !isLoggedIn }
+    );
+
+  const { data: eventDetails, isLoading: eventLoading } = useGetEventDetailsIdQuery(eventId, {
+    skip: !eventId,
+  });
+
+  const { data: paymentSettings } = useGetPaymentSettingsQuery();
+  const [addEventSponsorRegister] = useAddEventSponsorRegisterMutation();
 
   const {
     register,
     handleSubmit,
-    reset,
     setValue,
+    watch,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      name: "",
+      organization_name: "",
+      email_address: "",
+      phone_number: "",
+      pay_amount: "",
+      payment_type: "",
+      cash_txn_reference: "",
+    },
+  });
 
-  const toastOptions = {
-    position: toast.POSITION.TOP_RIGHT,
-    autoClose: 1000,
-  };
+  const member = memberData?.result || null;
+  const selectedPaymentType = watch("payment_type");
+  const availablePaymentOptions = useMemo(
+    () => getEnabledPaymentOptions(paymentSettings),
+    [paymentSettings]
+  );
 
   useEffect(() => {
-    if (
-      memberData?.success &&
-      eventsDetailsData?.success &&
-      isSuccess &&
-      eventsisSuccess
-    ) {
-      const member = memberData.result;
-      setValue("event_id", eventId);
-      setValue("member_id", member.id);
-      setValue("name", member.name);
-      setValue("organization_name", member.organization_name);
-      setValue("designation_name", member.designation_name);
-      setValue("email_address", member.email);
-      setValue("phone_number", member.phone_number);
-      setValue("pay_amount", " ");
-    } else if (!loginUser == true) {
-      // Clear all input fields if user is not logged in
-      reset({
-        event_id: eventId,
-        member_id: "",
-        name: "",
-        organization_name: "",
-        designation_name: "",
-        email_address: "",
-        phone_number: "",
-        pay_amount: "",
-      });
+    if (availablePaymentOptions.length > 0) {
+      setValue("payment_type", availablePaymentOptions[0].value);
+    } else {
+      setValue("payment_type", "");
     }
-  }, [memberData, setValue, eventsDetailsData, !loginUser]);
+  }, [availablePaymentOptions, setValue]);
 
-  const onSubmit = async (data) => {
-    const postData = {
-      event_id: data.event_id,
-      member_id: data.member_id,
-      full_name: data.name,
-      organization_name: data.organization_name,
-      designation_name: data.designation_name,
-      email: data.email_address,
-      phone_number: data.phone_number,
-      address: "member user",
+  useEffect(() => {
+    if (!member) return;
+    setValue("name", String(member.name || ""), { shouldDirty: false });
+    setValue("organization_name", String(member.organization_name || ""), { shouldDirty: false });
+    setValue("email_address", String(member.email || ""), { shouldDirty: false });
+    setValue("phone_number", String(member.phone_number || ""), { shouldDirty: false });
+  }, [member, setValue]);
+
+  const onSubmit = async (values) => {
+    if (!availablePaymentOptions.length) {
+      toast.info("No payment method is enabled by admin.", TOAST_OPTIONS);
+      return;
+    }
+
+    const payload = {
+      event_id: eventId,
+      member_id: member?.id || "",
+      full_name: values.name,
+      organization_name: values.organization_name,
+      designation_name: member?.designation_name || "",
+      email_address: values.email_address,
+      email: values.email_address,
+      phone_number: values.phone_number,
+      address: "sponsor registration",
+      pay_amount: Number(values.pay_amount || 0),
+      payment_type: values.payment_type || "ssl_commerz",
+      cash_txn_reference:
+        (values.payment_type || "ssl_commerz") === "cash"
+          ? String(values.cash_txn_reference || "").trim()
+          : "",
     };
 
     try {
-      const respAddEvent = await AddEventSponsorRegister(postData);
+      const response = await addEventSponsorRegister(payload);
+      const body = response?.data;
 
-      if (
-        respAddEvent?.data?.success === true ||
-        (respAddEvent?.data?.success === false &&
-          respAddEvent?.data?.message === "Already event registered !")
-      ) {
-        const resp = await memberPayment(data);
+      if (!body?.success) {
+        toast.info(body?.message || "Sponsor registration failed.", TOAST_OPTIONS);
+        return;
+      }
 
-        if (resp?.data?.success) {
-          window.location.replace(resp?.data?.url);
-        } else {
-          throw new Error("Payment not completed");
+      if (payload.payment_type === "ssl_commerz") {
+        if (body?.url) {
+          window.location.replace(body.url);
+          return;
         }
-      } else {
-        toast.info(respAddEvent?.data?.message, toastOptions);
+        toast.info("SSL payment URL not found. Please try again.", TOAST_OPTIONS);
+        return;
+      }
+
+      toast.success(body?.message || "Cash payment request submitted successfully.", TOAST_OPTIONS);
+      if (member?.id) {
+        navigate(`/member-details/${member.id}`);
       }
     } catch (error) {
-      toast.info(error.message, toastOptions);
+      toast.error(error?.message || "Submission failed.", TOAST_OPTIONS);
     }
   };
 
-  if (isLoading && eventsisLoading && loginUser && eventId)
+  if (eventLoading || (isLoggedIn && memberLoading && memberFetching)) {
     return <HomeLoading />;
-  if (
-    (!isLoading && isError && eventsisError && loginUser && !isSuccess) ||
-    memberData?.success === false
-  )
-    return <ErrorShow message={"No data found"} />;
+  }
+
+  if (!eventDetails?.success) {
+    return <ErrorShow message="No event details found" />;
+  }
 
   return (
     <div className="container">
-      <div className="ak-height-80 ak-height-lg-60"></div>
-      <h6 className="mb-3">
-        Event Title: {eventsDetailsData?.result[0]?.event_title}
-      </h6>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="row g-3"
-        autoComplete="on"
-      >
+      <div className="ak-height-80 ak-height-lg-60" />
+      <h6 className="mb-3">Event Title: {eventDetails?.result?.[0]?.event_title}</h6>
+
+      <form onSubmit={handleSubmit(onSubmit)} className="row g-3" autoComplete="on">
         <InputField
           label="Name"
           id="inputName"
-          error={errors.name}
           required
           register={register}
           field="name"
-          validation={{ required: true, minLength: 3, maxLength: 50 }}
-          errorMessage={{
+          validation={{
             required: "Name is required",
-            minLength: "Name must be at least 3 characters",
-            maxLength: "Name cannot exceed 50 characters",
+            minLength: { value: 3, message: "Name must be at least 3 characters" },
+            maxLength: { value: 50, message: "Name cannot exceed 50 characters" },
           }}
+          error={errors.name}
         />
 
         <InputField
           label="Organization Name"
           id="inputOrganization"
-          error={errors.organization_name}
           required
           register={register}
           field="organization_name"
-          validation={{ required: true, minLength: 3, maxLength: 100 }}
-          errorMessage={{
+          validation={{
             required: "Organization Name is required",
-            minLength: "Organization Name must be at least 3 characters",
-            maxLength: "Organization Name cannot exceed 100 characters",
+            minLength: { value: 3, message: "At least 3 characters" },
+            maxLength: { value: 100, message: "Cannot exceed 100 characters" },
           }}
+          error={errors.organization_name}
         />
 
         <InputField
           label="Email Address"
           id="inputEmail"
           type="email"
-          error={errors.email_address}
           required
           register={register}
           field="email_address"
           validation={{
-            required: true,
+            required: "Email is required",
             pattern: {
               value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-              message: "Invalid email address",
+              message: "Invalid email format",
             },
           }}
-          errorMessage={{
-            required: "Email is required",
-            pattern: "Invalid email format",
-          }}
+          error={errors.email_address}
         />
 
         <InputField
           label="Phone Number"
           id="inputPhone"
           type="tel"
-          error={errors.phone_number}
           required
           register={register}
           field="phone_number"
           validation={{
-            required: true,
-            minLength: {
-              value: 10,
-              message: "Phone number must be at least 10 digits",
-            },
-            maxLength: {
-              value: 15,
-              message: "Phone number must be less than 15 digits",
-            },
+            required: "Phone number is required",
+            minLength: { value: 10, message: "At least 10 digits" },
+            maxLength: { value: 15, message: "Cannot exceed 15 digits" },
           }}
-          errorMessage={{ required: "Phone number is required" }}
+          error={errors.phone_number}
         />
 
         <InputField
           label="Payment Amount"
           id="inputAmount"
           type="number"
-          error={errors.pay_amount}
           required
           register={register}
           field="pay_amount"
           validation={{
-            required: true,
-            min: { value: 1, message: "Amount must be at least 1" },
-          }}
-          errorMessage={{
             required: "Payment amount is required",
-            min: "Amount must be greater than 0",
+            min: { value: 1, message: "Amount must be greater than 0" },
           }}
+          error={errors.pay_amount}
         />
 
-        <div className="col-12">
-          {renderPaymentMethods(register, errors.payment_type)}
-        </div>
+        <PaymentTypeField register={register} error={errors.payment_type} options={availablePaymentOptions} />
+        {selectedPaymentType === "cash" ? (
+          <div className="col-12">
+            <label className="form-label" htmlFor="cashTxnReferenceSponsor">
+              Cash TXN/Reference Number*
+            </label>
+            <input
+              id="cashTxnReferenceSponsor"
+              className="text-input-filed type_2"
+              type="text"
+              {...register("cash_txn_reference", {
+                required: "Cash TXN/Reference Number is required for cash payment",
+              })}
+            />
+            {errors.cash_txn_reference ? (
+              <p className="text-danger mt-1">{errors.cash_txn_reference.message}</p>
+            ) : null}
+            {String(paymentSettings?.result?.cash_payment_notice || "").trim() ? (
+              <p className="mt-2 mb-0" style={{ color: "#4a3b7a" }}>
+                {paymentSettings.result.cash_payment_notice}
+              </p>
+            ) : null}
+          </div>
+        ) : null}
+        {!availablePaymentOptions.length ? (
+          <p className="text-danger mt-1">No payment method is enabled by admin.</p>
+        ) : null}
 
         <TermsAndConditions />
 
@@ -235,98 +346,8 @@ export default function EventSponsorRegistrationForm(props) {
           </button>
         </div>
       </form>
-      <div className="ak-height-100 ak-height-lg-60"></div>
-    </div>
-  );
-}
 
-function InputField({
-  label,
-  id,
-  type = "text",
-  register,
-  field,
-  validation,
-  error,
-  errorMessage,
-  disabled = false,
-}) {
-  return (
-    <div className="col-md-6">
-      <label htmlFor={id} className="form-label">
-        {label}*
-      </label>
-      <input
-        type={type}
-        className="text-input-filed type_2"
-        id={id}
-        {...register(field, validation)}
-        disabled={disabled}
-      />
-      {error && <p className="text-danger">{errorMessage[error.type]}</p>}
-    </div>
-  );
-}
-
-function renderPaymentMethods(register, error) {
-  const methods = ["SSLCommerz"];
-  return methods.map((method, idx) => (
-    <div key={idx} className="form-check form-check-inline">
-      <input
-        className="form-check-input custom-checkbox"
-        type="radio"
-        name="paymentMethod"
-        id={method.toLowerCase()}
-        value={method.toLowerCase()}
-        {...register("payment_type", { required: true })}
-      />
-      <label className="form-check-label" htmlFor={method.toLowerCase()}>
-        {method}
-      </label>
-      {error && idx === 0 && (
-        <p className="text-danger">Payment method is required.</p>
-      )}
-    </div>
-  ));
-}
-function TermsAndConditions() {
-  return (
-    <div className="col-12">
-      <div className="form-check">
-        <input
-          className="form-check-input"
-          type="checkbox"
-          id="termsCheckbox"
-          required
-        />
-        <label className="form-check-label" htmlFor="termsCheckbox">
-          I have read and agree to the
-          <Link
-            to="/terms-condition?id=termsconditions"
-            className="ak-primary-color text-decoration-underline"
-          >
-            {" "}
-            Terms & Conditions
-          </Link>
-          ,
-          <Link
-            to="/terms-condition?id=privacypolicy"
-            className="ak-primary-color text-decoration-underline"
-          >
-            {" "}
-            Privacy Policy
-          </Link>
-          , and
-          <Link
-            to="/terms-condition?id=refundpolicy"
-            className="ak-primary-color text-decoration-underline"
-          >
-            {" "}
-            Refund Policy
-          </Link>
-          .
-        </label>
-      </div>
+      <div className="ak-height-100 ak-height-lg-60" />
     </div>
   );
 }

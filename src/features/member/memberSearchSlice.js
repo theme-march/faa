@@ -1,4 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit/react";
+import { createSlice } from "@reduxjs/toolkit";
+
 const initialState = {
   search: "",
 };
@@ -11,11 +12,11 @@ const memberSearchSlice = createSlice({
       state.search = action.payload;
     },
     clearSearch: (state) => {
-      state.search = ""; // ✅ clear search
+      state.search = "";
     },
   },
 });
 
-export const { searchMemberName ,clearSearch } = memberSearchSlice.actions;
+export const { searchMemberName, clearSearch } = memberSearchSlice.actions;
 
 export default memberSearchSlice.reducer;

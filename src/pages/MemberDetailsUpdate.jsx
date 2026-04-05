@@ -19,25 +19,57 @@ import demoImgMember from "../assets/member/member_1.jpg";
 
 import ImageUploadComponent from "../components/ImageUploadComponent/ImageCompression";
 import HomeLoading from "../components/UI/HomeLoading";
+import { getAuthMemberId } from "../utils/authStorage";
+
+function toValidDate(value) {
+  if (!value) return null;
+
+  if (value instanceof Date) {
+    return Number.isNaN(value.getTime()) ? null : value;
+  }
+
+  // Accept plain year values like 2017
+  if (typeof value === "number" && Number.isFinite(value)) {
+    const date = new Date(value, 0, 1);
+    return Number.isNaN(date.getTime()) ? null : date;
+  }
+
+  if (typeof value === "string") {
+    const trimmed = value.trim();
+    if (!trimmed || trimmed === "-" || trimmed.toLowerCase() === "null") return null;
+
+    if (/^\d{4}$/.test(trimmed)) {
+      const yearDate = new Date(Number(trimmed), 0, 1);
+      return Number.isNaN(yearDate.getTime()) ? null : yearDate;
+    }
+
+    const date = new Date(trimmed);
+    return Number.isNaN(date.getTime()) ? null : date;
+  }
+
+  return null;
+}
 
 export default function MemberDetailsUpdate() {
   const { id } = useParams();
+  const authMemberId = getAuthMemberId();
 
-  const loginUser = JSON.parse(localStorage.getItem("user"));
-
-  if (Number(loginUser?.id) !== Number(id))
-    return (
-      <>
-        <ErrorPages />
-      </>
-    );
+  const isOwner = Number(authMemberId) === Number(id);
 
   const {
     data: singalMember,
     isLoading: isMemberLoading,
     isError: isMemberError,
     error: memberError,
-  } = useGetMemberDetailsIdQuery(id);
+  } = useGetMemberDetailsIdQuery(
+      {
+        id,
+        viewer_id: authMemberId ? String(authMemberId) : "",
+      },
+    {
+      skip: !isOwner,
+    }
+  );
 
   const {
     data: BatchSession,
@@ -138,17 +170,20 @@ export default function MemberDetailsUpdate() {
       setValue("email", email);
       setValue("phone_number", phone_number);
       setValue("occupation", occupation);
-      setValue("organization_name", organization_name);
-      setValue("designation_name", designation_name);
+      setValue("organization_name", organization_name || "");
+      setValue("designation_name", designation_name || "");
       setValue("membership_category_id", membership_category_id);
       setValue("session", session);
-      setValue("hsc_passing_year", hsc_passing_year_only);
-      setValue("linkedin_link", linkedin_link);
-      setValue("facebook_link", facebook_link);
-      setValue("twitter_link", twitter_link);
-      setValue("blood_group", blood_group);
-      setValue("gender", gender);
-      setValue("date_of_birth", date_of_birth ? new Date(date_of_birth) : null);
+      setValue(
+        "hsc_passing_year",
+        hsc_passing_year_only ? toValidDate(hsc_passing_year_only) : null
+      );
+      setValue("linkedin_link", linkedin_link || "");
+      setValue("facebook_link", facebook_link || "");
+      setValue("twitter_link", twitter_link || "");
+      setValue("blood_group", blood_group || "");
+      setValue("gender", gender || "");
+      setValue("date_of_birth", toValidDate(date_of_birth));
     }
   }, [singalMember, id, setValue]);
 
@@ -164,6 +199,10 @@ export default function MemberDetailsUpdate() {
         <div className="ak-height-80 ak-height-lg-30"></div>
       </div>
     );
+  }
+
+  if (!isOwner) {
+    return <ErrorShow message="Unauthorized access. Login is required." />;
   }
 
   if (
@@ -187,40 +226,44 @@ export default function MemberDetailsUpdate() {
   }
 
   return (
-    <div className="container">
+    <div className="container member-update-page">
       <div className="ak-height-80 ak-height-lg-30"></div>
       <div className="row">
         <div className="col-12">
-          <div className="card-body">
-            <div className="row d-flex align-items-center flex-column-reverse flex-md-column">
-              <div className="col-md-3 mb-5">
+          <div className="card-body member-update-shell">
+            <div className="member-update-hero">
+              <div className="member-update-avatar-wrap">
                 {singalMember?.result?.member_image ? (
                   <img
                     src={`/images/member/${singalMember?.result?.member_image}`}
-                    className="col-6 col-md-12"
+                    className="member-update-avatar"
                     alt="member"
                   />
                 ) : (
                   <img
                     src={demoImgMember}
-                    className="col-6 col-md-12"
+                    className="member-update-avatar"
                     alt="memberDemo"
                   />
                 )}
               </div>
-              <h3 className="text-uppercase text-center col-md-6 ak-bold align-md-self-end mb-5 ak-font-42">
-                Update Your Profile
-              </h3>
+              <div className="member-update-hero-content">
+                <h3>Update Your Profile</h3>
+                <p>
+                  Keep your personal information updated so your membership
+                  profile always stays accurate.
+                </p>
+              </div>
             </div>
             <form
               onSubmit={handleSubmit(onSubmitInfo)}
               method="POST"
               encType="multipart/form-data"
-              className="row g-4"
+              className="row g-4 member-update-form"
             >
-              <div className="row g-4">
-                <div className="col-md-12">
-                  <h2 className="col-12">Change Your Member Information</h2>
+              <div className="row g-4 member-update-section">
+                <div className="col-md-12 member-update-section-title">
+                  <h2>Core Member Information</h2>
                 </div>
 
                 <div className="col-md-6">
@@ -322,7 +365,7 @@ export default function MemberDetailsUpdate() {
                         <div>
                           <DatePicker
                             {...field}
-                            selected={field.value}
+                            selected={toValidDate(field.value)}
                             onChange={(date) => field.onChange(date)}
                             dateFormat="yyyy"
                             showYearPicker
@@ -387,7 +430,7 @@ export default function MemberDetailsUpdate() {
 
                 {/* membership_type */}
                 <div className="col-md-6">
-                  <label forhtml="membershipId" className="form-label">
+                  <label htmlFor="membershipId" className="form-label">
                     {errors.membership_type?.message ? (
                       <p role="alert " className="text-danger">
                         Select Membership Category* is required
@@ -422,7 +465,7 @@ export default function MemberDetailsUpdate() {
 
                 {/* occupation */}
                 <div className="col-md-6">
-                  <label forhtml="occupationId" className="form-label">
+                  <label htmlFor="occupationId" className="form-label">
                     {errors.occupation?.message ? (
                       <p role="alert " className="text-danger">
                         Select Current Occupation* is required
@@ -457,7 +500,7 @@ export default function MemberDetailsUpdate() {
 
                 {/* organization_name */}
                 <div className="col-md-6">
-                  <label forhtml="Organization" className="form-label">
+                  <label htmlFor="Organization" className="form-label">
                     {errors.organization_name?.type === "required" ? (
                       <p role="alert " className="text-danger">
                         Organization name* is required
@@ -497,7 +540,7 @@ export default function MemberDetailsUpdate() {
 
                 {/* member_address */}
                 <div className="col-md-12">
-                  <label forhtml="member_address" className="form-label">
+                  <label htmlFor="member_address" className="form-label">
                     {errors.address?.type === "required" ? (
                       <p role="alert " className="text-danger">
                         Address is required
@@ -518,8 +561,8 @@ export default function MemberDetailsUpdate() {
               </div>
 
               {/* New Fields Start Here */}
-              <div className="row g-4">
-                <div className="col-md-12">
+              <div className="row g-4 member-update-section">
+                <div className="col-md-12 member-update-section-title">
                   <h2 className="col-12">
                     {(singalMember?.result?.blood_group &&
                       singalMember?.result?.linkedin_link &&
@@ -639,7 +682,7 @@ export default function MemberDetailsUpdate() {
               </div>
 
               {/* Submit Button */}
-              <div className="col-12">
+              <div className="col-12 member-update-submit">
                 {updateLoadingBtn ? (
                   <button type="submit" disabled className="btn-success">
                     Updating...
@@ -744,7 +787,7 @@ const CustomDatePicker = ({ control, name, label }) => {
         render={({ field }) => (
           <DatePicker
             {...field}
-            selected={field.value}
+            selected={toValidDate(field.value)}
             onChange={(date) => field.onChange(date)}
             dateFormat="yyyy-MM-dd"
             renderCustomHeader={renderCustomHeader}

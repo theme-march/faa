@@ -3,16 +3,51 @@ import { Link, useNavigate } from "react-router-dom";
 import MenuItem from "./MenuItem";
 import { ButtonPrimary } from "../Button/Button";
 import { useGetMenuListQuery } from "../../features/menuList/menuList";
+import { useGetMemberDetailsIdQuery } from "../../features/member/memberApiIn";
 import member from "../../assets/member/member_1.jpg";
 import Dropdown from "react-bootstrap/Dropdown";
 import Image from "react-bootstrap/Image";
+import { clearAuthSession, getAuthMemberId } from "../../utils/authStorage";
+
+function isExpiredByDate(expireDate) {
+  if (!expireDate) return false;
+  const parsedDate = new Date(expireDate);
+  if (Number.isNaN(parsedDate.getTime())) return false;
+  return parsedDate.getTime() < Date.now();
+}
 
 export default function NavMenu() {
-  const loginUser = JSON.parse(localStorage.getItem("user"));
+  const authMemberId = getAuthMemberId();
   const navigate = useNavigate();
   const { data } = useGetMenuListQuery();
+  const { data: memberDetailsData } = useGetMemberDetailsIdQuery(
+    {
+      id: authMemberId,
+      viewer_id: authMemberId,
+    },
+    { skip: !authMemberId }
+  );
   const [navBar, setNavbar] = useState("");
   const [navlist, setNavList] = useState("");
+
+  const closeMobileNav = () => {
+    if (typeof window !== "undefined" && window.innerWidth <= 1199) {
+      setNavbar("");
+      setNavList("");
+    }
+  };
+
+  const memberDetails = memberDetailsData?.result || {};
+  const memberStatus = String(
+    memberDetails?.member_status || memberDetails?.status_label || memberDetails?.membership_status || ""
+  )
+    .toLowerCase()
+    .trim();
+  const hasMemberDetails = !!memberDetailsData?.success;
+  const isExpired = memberStatus.includes("expired") || isExpiredByDate(memberDetails?.expire_date);
+  const isUnpaid = Number(memberDetails?.is_pay) !== 1;
+  const showRenewal = hasMemberDetails && isExpired;
+  const showPayment = hasMemberDetails && !isExpired && isUnpaid;
 
   const navBarShow = () => {
     if (navBar == "") {
@@ -29,7 +64,7 @@ export default function NavMenu() {
   };
   const singOut = (id) => {
     if (id) {
-      localStorage.removeItem("user");
+      clearAuthSession();
       navigate("/singin");
     }
   };
@@ -39,7 +74,7 @@ export default function NavMenu() {
         <div className="ak-main_header_in">
           <div className="ak-main_header_left">
             <div className="d-flex gap-3 align-items-center">
-              {loginUser ? (
+              {authMemberId ? (
                 <>
                   <Dropdown>
                     <Dropdown.Toggle
@@ -49,8 +84,8 @@ export default function NavMenu() {
                     >
                       <Image
                         src={
-                          loginUser?.img
-                            ? `/images/member/${loginUser?.img}`
+                          memberDetails?.member_image
+                            ? `/images/member/${memberDetails?.member_image}`
                             : member
                         }
                       />
@@ -59,27 +94,27 @@ export default function NavMenu() {
                     <Dropdown.Menu>
                       <Dropdown.Item
                         onClick={() =>
-                          navigate(
-                            loginUser?.id
-                              ? `/member-details/${loginUser?.id}`
+                            navigate(
+                            authMemberId
+                              ? `/member-details/${authMemberId}`
                               : "/singin"
                           )
                         }
                       >
-                        {loginUser?.name.slice(0, 10)}
+                        {String(memberDetails?.name || "Member").slice(0, 10)}
                       </Dropdown.Item>
                       <Dropdown.Item
                         onClick={() => navigate("/member-registration")}
                       >
                         Create a Member
                       </Dropdown.Item>
-                      <Dropdown.Item
-                        onClick={() =>
-                          navigate(`/members-payment/${loginUser?.id}`)
-                        }
-                      >
-                        <span className="text-primary">Renewal</span>
-                      </Dropdown.Item>
+                      {showRenewal || showPayment ? (
+                        <Dropdown.Item
+                          onClick={() => navigate(`/members-payment/${authMemberId}`)}
+                        >
+                          <span className="text-primary">{showRenewal ? "Renewal" : "Payment"}</span>
+                        </Dropdown.Item>
+                      ) : null}
                       {/*  <Dropdown.Item
                         onClick={() => navigate("/members-approved-list")}
                       >
@@ -89,7 +124,7 @@ export default function NavMenu() {
                       <Dropdown.Item>
                         <span
                           className="sing-out"
-                          onClick={() => singOut(loginUser?.id)}
+                          onClick={() => singOut(authMemberId)}
                         >
                           Sign Out
                         </span>
@@ -111,7 +146,13 @@ export default function NavMenu() {
             <div className="ak-nav">
               <ul id="ak-nav_list" className={`ak-nav_list ${navlist}`}>
                 {data?.result?.map((item, index) => {
-                  return <MenuItem props={item} key={index} />;
+                  return (
+                    <MenuItem
+                      props={item}
+                      key={index}
+                      onNavigate={closeMobileNav}
+                    />
+                  );
                 })}
               </ul>
               <span

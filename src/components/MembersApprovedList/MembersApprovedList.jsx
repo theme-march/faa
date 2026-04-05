@@ -5,22 +5,26 @@ import {
   useMemberListApprovedMutation,
 } from "../../features/member/memberApiIn";
 import { toast } from "react-toastify";
+import { getAuthMemberId } from "../../utils/authStorage";
 
 export default function MembersApprovedList() {
-  const loginUser = JSON.parse(localStorage.getItem("user"));
-  const { data: loginUserData } = useGetMemberDetailsIdQuery(loginUser?.id);
+  const authMemberId = getAuthMemberId();
+  const { data: loginUserData } = useGetMemberDetailsIdQuery(
+    { id: authMemberId, viewer_id: authMemberId },
+    { skip: !authMemberId }
+  );
   const [sameSessionUsers, setSameSessionUsers] = useState(null);
   const [memberListApproved] = useMemberListApprovedMutation();
   const [memberApproved] = useMemberApprovedMutation();
 
   const fetchData = useCallback(async () => {
     const data = {
-      user_id: loginUser?.id,
-      session: loginUser?.session,
+      user_id: authMemberId,
+      session: loginUserData?.result?.session,
     };
     const resp = await memberListApproved(data);
     setSameSessionUsers(resp.data.result);
-  }, [loginUser?.id, loginUser?.session, memberListApproved]);
+  }, [authMemberId, loginUserData?.result?.session, memberListApproved]);
 
   useEffect(() => {
     fetchData();
@@ -29,7 +33,7 @@ export default function MembersApprovedList() {
   const handleMemberApproval = useCallback(
     async (memberId) => {
       const data = {
-        register_member_id: loginUser.id,
+        register_member_id: authMemberId,
         member_id: memberId,
       };
       const response = await memberApproved(data);
@@ -43,7 +47,7 @@ export default function MembersApprovedList() {
 
       fetchData();
     },
-    [fetchData, loginUser.id, memberApproved]
+    [authMemberId, fetchData, memberApproved]
   );
 
   const renderTableHeaders = (isAdminApproval) => {
@@ -67,7 +71,7 @@ export default function MembersApprovedList() {
   return (
     <div className="container">
       <div className="ak-height-80 ak-height-lg-40"></div>
-      {loginUser?.admin_approval === 1 && (
+      {Number(loginUserData?.result?.admin_approval) === 1 && (
         <div className="row">
           <table className="table table-hover table-striped">
             <thead>{renderTableHeaders(false)}</thead>
@@ -93,7 +97,7 @@ export default function MembersApprovedList() {
           </table>
         </div>
       )}
-      {loginUser?.admin_approval === 0 && (
+      {Number(loginUserData?.result?.admin_approval) === 0 && (
         <>
           <div className="ak-height-80 ak-height-lg-40"></div>
           <h3 className="mb-3">Approved Members</h3>

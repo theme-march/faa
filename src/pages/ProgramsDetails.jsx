@@ -42,7 +42,7 @@ export default function ProgramsDetails() {
     singleMilestoneProgram?.success === true &&
     singleMilestoneProgram?.result[0] !== undefined
   ) {
-    const { title, details, image } = singleMilestoneProgram?.result[0];
+    const { id: programId, title, details, image } = singleMilestoneProgram?.result[0];
     content = (
       <>
         <CommonHero title={title.split(" ")[0]} />
@@ -61,7 +61,10 @@ export default function ProgramsDetails() {
               __html: details,
             }}
           />
-          <Link className="button-primary mb-md-5 mb-2 mt-5" to={"/donation"}>
+          <Link
+            className="button-primary mb-md-5 mb-2 mt-5"
+            to={`/donation?type=program&program_id=${programId}`}
+          >
             Donate
           </Link>
         </div>

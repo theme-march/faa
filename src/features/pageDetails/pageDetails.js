@@ -16,8 +16,24 @@ const pageDetails = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
+    getExecutiveCommitteeMembers: bulider.query({
+      query: () => ({
+        url: "/executive_committee",
+        method: "GET",
+      }),
+    }),
+    getExecutiveCommitteeMemberDetails: bulider.query({
+      query: (id) => ({
+        url: `/executive_committee/${id}`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
-export const { useAddPageDetailsMutation, useGetAboutUsMessageQuery } =
-  pageDetails;
+export const {
+  useAddPageDetailsMutation,
+  useGetAboutUsMessageQuery,
+  useGetExecutiveCommitteeMembersQuery,
+  useGetExecutiveCommitteeMemberDetailsQuery,
+} = pageDetails;
