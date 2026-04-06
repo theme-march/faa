@@ -86,9 +86,19 @@ const memberApi = apiSlice.injectEndpoints({
         // UPDATED
         const input = typeof arg === "object" && arg !== null ? arg : { id: arg };
         const id = input?.id;
+        const params = Object.entries(input || {}).reduce((acc, [key, value]) => {
+          if (key === "id" || value === undefined || value === null || value === "") {
+            return acc;
+          }
+
+          acc[key] = value;
+          return acc;
+        }, {});
+
         return {
           url: `/user_details/${id}`,
           method: "GET",
+          params,
         };
       },
       providesTags: (result, error, arg) => [{ type: "memberDetails", id: String(arg?.id || arg) }],

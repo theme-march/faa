@@ -165,9 +165,7 @@ function getMemberCategoryMeta(member, categories) {
     .trim()
     .toLowerCase();
 
-  const isLifetime =
-    membershipType === "lifetime" ||
-    String(selected?.category_name || "").toLowerCase().includes("lifetime");
+  const isLifetime = membershipType === "lifetime";
 
   return {
     name: String(selected?.category_name || "").trim(),

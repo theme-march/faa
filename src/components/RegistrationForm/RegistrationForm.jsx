@@ -67,9 +67,7 @@ export default function RegistrationForm() {
       }
     }
 
-    const isLifetime =
-      membershipType === "lifetime" ||
-      String(selected?.category_name || "").toLowerCase().includes("lifetime");
+    const isLifetime = membershipType === "lifetime";
 
     return { isLifetime, durationDays };
   }, [membership_category_id, selectedMembershipCategoryId]);

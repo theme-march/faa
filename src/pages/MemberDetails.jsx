@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { useGetMemberDetailsIdQuery } from "../features/member/memberApiIn";
-import { useGetExpeirGenaralMembersListQuery } from "../features/member/memberApiIn";
-import { useGetMembersCategoryListQuery } from "../features/member/memberApiIn";
+import {
+  useGetExpeirGenaralMembersListQuery,
+  useGetMemberDetailsIdQuery,
+  useGetMembersCategoryListQuery,
+} from "../features/member/memberApiIn";
 import ErrorShow from "../components/UI/ErrorShow";
 import DateFormat from "../components/DateFormat/DateFormat";
 import demoImgMember from "../assets/member/member_1.jpg";
@@ -22,28 +24,65 @@ function getAdminBaseUrl() {
   return (import.meta.env.VITE_ADMIN_BASE_URL || "http://localhost:3000").replace(/\/+$/, "");
 }
 
+// function getMemberImageCandidates(memberImage) {
+//   if (!memberImage) return [demoImgMember];
+
+//   if (memberImage.startsWith("http://") || memberImage.startsWith("https://")) {
+//     return [memberImage, demoImgMember];
+//   }
+
+//   const adminBase = getAdminBaseUrl();
+//   const raw = String(memberImage).replace(/\\/g, "/").trim();
+//   const cleaned = raw.replace(/^\/+/, "").replace(/^public\//i, "");
+//   const fileName = cleaned.split("/").pop() || cleaned;
+
+//   const candidateSet = new Set([
+//     `${adminBase}/images/member/${fileName}`,
+//     `${adminBase}/images/member/${fileName}`,
+//     `${adminBase}/${cleaned}`,
+//     raw.startsWith("/") ? raw : `/${cleaned}`,
+//   ]);
+
+//   return [...candidateSet, demoImgMember];
+// }
 function getMemberImageCandidates(memberImage) {
   if (!memberImage) return [demoImgMember];
 
-  if (memberImage.startsWith("http://") || memberImage.startsWith("https://")) {
-    return [memberImage, demoImgMember];
+  const raw = String(memberImage).replace(/\\/g, "/").trim();
+
+  if (/^https?:\/\//i.test(raw)) {
+    return [raw, demoImgMember];
   }
 
   const adminBase = getAdminBaseUrl();
-  const raw = String(memberImage).replace(/\\/g, "/").trim();
-  const cleaned = raw.replace(/^\/+/, "").replace(/^public\//i, "");
-  const fileName = cleaned.split("/").pop() || cleaned;
+  const fileName = raw.split("/").filter(Boolean).pop();
 
-  const candidateSet = new Set([
-    `${adminBase}/member/${fileName}`,
-    `${adminBase}/images/member/${fileName}`,
-    `${adminBase}/${cleaned}`,
-    raw.startsWith("/") ? raw : `/${cleaned}`,
-  ]);
+  const candidates = new Set();
 
-  return [...candidateSet, demoImgMember];
+  const add = (url) => {
+    if (url) candidates.add(url);
+  };
+
+  // 1. original path
+  add(raw.startsWith("/") ? raw : `/${raw}`);
+
+  // 2. admin base দিয়ে
+  add(`${adminBase}/${raw.replace(/^\/+/, "")}`);
+
+  // 3. images/member
+  if (fileName) {
+    add(`${adminBase}/images/member/${fileName}`);
+    add(`/images/member/${fileName}`);
+  }
+
+  // 4. member folder fallback (IMPORTANT)
+  if (fileName) {
+    add(`${adminBase}/member/${fileName}`);
+    add(`/member/${fileName}`);
+  }
+
+  return [...candidates, demoImgMember];
 }
-
 function normalizeMoney(value) {
   if (value === null || value === undefined || value === "") return "-";
   const asNumber = Number(String(value).replace(/,/g, ""));
@@ -66,117 +105,6 @@ function isExpiredByDate(expireDate) {
   const parsedDate = new Date(expireDate);
   if (Number.isNaN(parsedDate.getTime())) return false;
   return parsedDate.getTime() < Date.now();
-}
-
-function parseValidDate(value) {
-  if (!value) return null;
-  const parsed = new Date(value);
-  return Number.isNaN(parsed.getTime()) ? null : parsed;
-}
-
-function toNumberOrNull(value) {
-  if (value === null || value === undefined || value === "") return null;
-  const parsed = Number(value);
-  return Number.isFinite(parsed) ? parsed : null;
-}
-
-function deriveLatestPaymentDate(result = {}, expiryInfo = null) {
-  const directCandidates = [
-    result?.last_payment_date,
-    result?.lastPaymentDate,
-    result?.payment_last_date,
-    expiryInfo?.last_payment_date,
-    result?.tx_tran_date,
-  ];
-
-  const collectionCandidates = [
-    ...(Array.isArray(result?.paid_event_registrations) ? result.paid_event_registrations : []),
-    ...(Array.isArray(result?.sponsor_contributions) ? result.sponsor_contributions : []),
-    ...(Array.isArray(result?.donation_contributions) ? result.donation_contributions : []),
-  ].flatMap((row) => [
-    row?.tx_tran_date,
-    row?.registration_date,
-    row?.created_date,
-    row?.created_at,
-  ]);
-
-  const allCandidates = [...directCandidates, ...collectionCandidates]
-    .map(parseValidDate)
-    .filter(Boolean);
-
-  if (!allCandidates.length) return null;
-  return new Date(Math.max(...allCandidates.map((d) => d.getTime())));
-}
-
-function deriveApprovedDate(result = {}, expiryInfo = null, latestPaymentDate = null) {
-  if (Number(result?.admin_approval) !== 1) {
-    return null;
-  }
-
-  const directCandidates = [
-    result?.approved_at,
-    result?.approved_date,
-    expiryInfo?.approved_date,
-  ]
-    .map(parseValidDate)
-    .filter(Boolean);
-
-  if (directCandidates.length) {
-    return new Date(Math.max(...directCandidates.map((d) => d.getTime())));
-  }
-
-  if (latestPaymentDate) {
-    return latestPaymentDate;
-  }
-
-  return parseValidDate(result?.created_at);
-}
-
-function isLifetimeMember(result = {}) {
-  const membershipNumber = String(result?.membership_number || "").toUpperCase();
-  const membershipCategoryName = String(
-    result?.membership_category_name || result?.membership_category || ""
-  ).toLowerCase();
-
-  return membershipNumber.startsWith("LM") || membershipCategoryName.includes("lifetime");
-}
-
-function getCategoryValidity(categoryList, categoryId) {
-  const rows = Array.isArray(categoryList) ? categoryList : [];
-  const selected = rows.find((row) => String(row?.id) === String(categoryId));
-  if (!selected) return { isLifetime: null, durationDays: null };
-
-  let membershipType = String(
-    selected?.membership_type || selected?.membership_validity_type || ""
-  ).toLowerCase();
-  let durationDays =
-    toNumberOrNull(selected?.membership_duration_days) ??
-    toNumberOrNull(selected?.duration_days) ??
-    toNumberOrNull(selected?.membership_validity_days);
-
-  const categoryTitle = selected?.category_title;
-  if (categoryTitle) {
-    try {
-      const parsedMeta = typeof categoryTitle === "string" ? JSON.parse(categoryTitle) : categoryTitle;
-      const metaType = String(parsedMeta?.membership_type || "").toLowerCase();
-      if (metaType) membershipType = metaType;
-      durationDays =
-        toNumberOrNull(parsedMeta?.membership_duration_days) ??
-        toNumberOrNull(parsedMeta?.duration_days) ??
-        durationDays;
-    } catch (_) {
-      // Keep fallback values when category_title is not JSON
-    }
-  }
-
-  const validityText = String(selected?.membership_validity || "").toLowerCase();
-  const categoryName = String(selected?.category_name || "").toLowerCase();
-  const isLifetime =
-    membershipType.includes("lifetime") ||
-    validityText.includes("lifetime") ||
-    categoryName.includes("lifetime");
-
-  return { isLifetime, durationDays };
 }
 
 function getEntryPassUrl(row = {}) {
@@ -233,10 +161,10 @@ export default function MemberDetails() {
     id,
     viewer_id: viewerId,
   });
-  const { data: categoryMeta } = useGetMembersCategoryListQuery();
-  const { data: expiryMeta } = useGetExpeirGenaralMembersListQuery(id, {
+  const { data: expiredMetaData } = useGetExpeirGenaralMembersListQuery(id, {
     skip: !id,
   });
+  const { data: categoryData } = useGetMembersCategoryListQuery();
 
   const [eventTypeFilter, setEventTypeFilter] = useState("all");
   const [eventStatusFilter, setEventStatusFilter] = useState("all");
@@ -251,6 +179,7 @@ export default function MemberDetails() {
   const [profileImageIndex, setProfileImageIndex] = useState(0);
 
   const result = data?.result || {};
+  const expiredMeta = Array.isArray(expiredMetaData?.data) ? expiredMetaData.data[0] || {} : {};
   const {
     id: memberId,
     address,
@@ -267,56 +196,67 @@ export default function MemberDetails() {
     membership_duration_days,
     is_pay,
     admin_approval,
-    last_payment_date,
-    expire_date,
     member_status,
   } = result;
-  const expiryInfo = Array.isArray(expiryMeta?.data) ? expiryMeta.data[0] : null;
   const isApproved = Number(result?.admin_approval) === 1;
   const isPaid = Number(result?.is_pay) === 1;
+  const categoryRows = Array.isArray(categoryData?.result) ? categoryData.result : [];
+  const selectedCategory = categoryRows.find(
+    (row) => String(row?.id || "") === String(membership_category_id || "")
+  );
 
-  const latestPaymentDate = deriveLatestPaymentDate(result, expiryInfo);
-  const approvedDate = deriveApprovedDate(result, expiryInfo, latestPaymentDate);
-  const resolvedApprovedDate = approvedDate || null;
-  const resolvedLastPaymentDate = isPaid
-    ? expiryInfo?.last_payment_date ||
-      last_payment_date ||
-      result?.lastPaymentDate ||
-      result?.payment_last_date ||
-      null
-    : null;
+  let parsedCategoryMeta = {};
+  if (selectedCategory?.category_title) {
+    try {
+      parsedCategoryMeta = typeof selectedCategory.category_title === "string"
+        ? JSON.parse(selectedCategory.category_title)
+        : selectedCategory.category_title || {};
+    } catch (_) {
+      parsedCategoryMeta = {};
+    }
+  }
 
-  const explicitExpireDate =
-    expiryInfo?.expire_date || expire_date || result?.expiry_date || result?.expireDate || null;
-  const categoryValidity = getCategoryValidity(categoryMeta?.result, membership_category_id);
-  const fallbackLifetimeMember = isLifetimeMember(result);
-  const lifetimeMember = categoryValidity?.isLifetime ?? fallbackLifetimeMember;
+  // Membership timeline must come from the backend membership-meta source of truth.
+  // Avoid falling back to generic user_details fields because profile updates can
+  // accidentally make those dates look like payment/expire dates.
+  const resolvedLastPaymentDate =
+    expiredMeta?.last_payment_date || expiredMeta?.lastPaymentDate || null;
+  const resolvedExpireDate = expiredMeta?.expire_date || expiredMeta?.expireDate || null;
+  const explicitCategoryMembershipType = String(
+    parsedCategoryMeta?.membership_type || selectedCategory?.membership_type || ""
+  ).trim().toLowerCase();
   const effectiveDurationDays =
-    categoryValidity?.durationDays ??
-    toNumberOrNull(membership_duration_days) ??
-    365;
-
-  const computedExpireDate =
-    !lifetimeMember && approvedDate && effectiveDurationDays > 0
-      ? new Date(new Date(approvedDate).getTime() + effectiveDurationDays * 24 * 60 * 60 * 1000)
-      : null;
-
-  const resolvedExpireDate = isApproved
-    ? lifetimeMember
-      ? "Lifetime"
-      : explicitExpireDate || computedExpireDate || null
-    : null;
-
-  const isExpiredByResolvedDate = isExpiredByDate(resolvedExpireDate);
-  const resolvedMemberStatus = !isApproved
-    ? "Not Approved"
-    : !isPaid
-      ? "Unpaid"
-      : String(member_status || result?.status_label || result?.membership_status || expiryInfo?.status || "")
-          .toLowerCase()
-          .includes("expired") || isExpiredByResolvedDate
-        ? "Expired"
-        : "Active";
+    membership_duration_days ??
+    result?.membership_validity_days ??
+    result?.duration_days ??
+    parsedCategoryMeta?.membership_duration_days ??
+    selectedCategory?.membership_duration_days ??
+    null;
+  const categoryType = String(explicitCategoryMembershipType || "").trim();
+  const effectiveExpireDate = resolvedExpireDate;
+  const lifetimeMember = categoryType === "lifetime";
+  const isExpiredByResolvedDate = !lifetimeMember && isExpiredByDate(effectiveExpireDate);
+  const metaStatusText = String(expiredMeta?.status || "").trim().toLowerCase();
+  const primaryStatusText = String(
+    member_status || result?.status_label || result?.membership_status || result?.status || ""
+  )
+    .trim()
+    .toLowerCase();
+  const resolvedMemberStatus = metaStatusText
+    ? expiredMeta.status
+    : !isApproved
+      ? "Not Approved"
+      : !isPaid
+        ? "Unpaid"
+        : lifetimeMember
+          ? "Active"
+          : effectiveExpireDate
+            ? primaryStatusText.includes("expired") || isExpiredByResolvedDate
+              ? "Expired"
+              : "Active"
+            : primaryStatusText.includes("expired")
+              ? "Expired"
+              : "Pending";
 
   const isOwner =
     !!viewerId && String(viewerId) === String(memberId || id);
@@ -483,20 +423,16 @@ export default function MemberDetails() {
               {resolvedLastPaymentDate ? <DateFormat props={resolvedLastPaymentDate} /> : "-"}
             </p>
             <p>
-              <strong>Approved Date:</strong>{" "}
-              {resolvedApprovedDate ? <DateFormat props={resolvedApprovedDate} /> : "-"}
-            </p>
-            <p>
               <strong>Expire Date:</strong>{" "}
-              {resolvedExpireDate
-                ? lifetimeMember && String(resolvedExpireDate).toLowerCase() === "lifetime"
-                  ? "Lifetime"
-                  : <DateFormat props={resolvedExpireDate} />
-                : "-"}
+              {lifetimeMember
+                ? "Lifetime"
+                : effectiveExpireDate
+                  ? <DateFormat props={effectiveExpireDate} />
+                  : "-"}
             </p>
             <p className="mt-2">
               <strong>Membership Duration (Days):</strong>{" "}
-              {isApproved ? (lifetimeMember ? "Lifetime" : effectiveDurationDays) : "-"}
+              {lifetimeMember ? "Lifetime" : effectiveDurationDays || "-"}
             </p>
             <span
               className={`member-status-chip ${
