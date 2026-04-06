@@ -7,22 +7,24 @@ export default function AboutUs() {
   const swiperTestimonialRef = useRef();
 
   const { data: sliderData } = useGetHomeSliderQuery();
+  const slides = sliderData?.result ?? [];
+  const canLoop = slides.length > 1;
 
   return (
     <div>
       <div className="ak-slider ak-slider-about">
         <Swiper
-          loop={true}
+          loop={canLoop}
           effect="fade"
           speed={1500}
           modules={[Autoplay]}
-          autoplay={{ delay: 2000 }}
+          autoplay={canLoop ? { delay: 2000 } : false}
           slidesPerView={"1"}
           onSwiper={(swiper) => {
             swiperTestimonialRef.current = swiper;
           }}
         >
-          {sliderData?.result?.map((item, index) => (
+          {slides.map((item, index) => (
             <SwiperSlide key={index}>
               <img
                 className="slider-img"
@@ -53,7 +55,7 @@ export default function AboutUs() {
           <div
             className="controll-btn"
             aria-disabled="false"
-            onClick={() => swiperTestimonialRef.current.slideNext()}
+            onClick={() => swiperTestimonialRef.current?.slideNext()}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -118,7 +120,7 @@ export default function AboutUs() {
           </div>
           <div
             className="controll-btn"
-            onClick={() => swiperTestimonialRef.current.slidePrev()}
+            onClick={() => swiperTestimonialRef.current?.slidePrev()}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
