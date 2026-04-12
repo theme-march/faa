@@ -17,12 +17,12 @@ export default defineConfig({
     host: "0.0.0.0",
     proxy: {
       "/api": {
-        target: "http://127.0.0.1:3000/api",
+        target: "https://cms.faa-dubd.org/api",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ""),
       },
       "/images": {
-        target: "http://127.0.0.1:3000",
+        target: "https://cms.faa-dubd.org",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/images/, ""), // 🔥 FIX
       },

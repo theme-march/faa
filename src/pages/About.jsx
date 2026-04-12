@@ -220,7 +220,8 @@ export default function About() {
   }, [executiveCommitteeData]);
 
   const leadMember = committeeMembers[0];
-  const restMembers = committeeMembers.slice(1);
+  const SecretaryGeneral = committeeMembers[1];
+  const restMembers = committeeMembers.slice(2);
 
   const designationSummary = useMemo(() => {
     const order = [
@@ -352,8 +353,9 @@ export default function About() {
                 !committeeError &&
                 committeeMembers.length > 0 && (
                   <>
-                    {leadMember ? (
-                      <div className="executive-committee-lead-row">
+                    {leadMember  && SecretaryGeneral ? (
+                    
+                      <div className="executive-committee-lead-row gap-4 mb-5">
                         <button
                           type="button"
                           className={`executive-member-card ${
@@ -374,6 +376,28 @@ export default function About() {
                           <h4 className="executive-member-name">{leadMember?.name}</h4>
                           <p className="executive-member-designation">
                             {leadMember?.designation}
+                          </p>
+                        </button>
+                         <button
+                          type="button"
+                          className={`executive-member-card ${
+                            isFeaturedCommitteeOrder(SecretaryGeneral)
+                              ? "executive-member-card--featured"
+                              : ""
+                          }`}
+                          onClick={() => navigate(`/committee-member/${SecretaryGeneral.id}`)}
+                        >
+                          <img
+                            src={
+                              getExecutiveMemberImage(SecretaryGeneral.image) ||
+                              "https://via.placeholder.com/220x220?text=No+Image"
+                            }
+                            alt={SecretaryGeneral?.name || "Executive Member"}
+                            className="executive-member-image"
+                          />
+                          <h4 className="executive-member-name">{SecretaryGeneral?.name}</h4>
+                          <p className="executive-member-designation">
+                            {SecretaryGeneral?.designation}
                           </p>
                         </button>
                       </div>
