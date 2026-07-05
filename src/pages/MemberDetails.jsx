@@ -366,12 +366,25 @@ export default function MemberDetails() {
     "donation_list",
   ]);
 
+  const visibleMembershipPayments = useMemo(() => {
+    const currentMemberId = String(memberId || id || "").trim();
+    const currentMembershipNumber = String(membership_number || "").trim();
+
+    return membershipPayments.filter((row) => {
+      const paymentMemberId = String(row?.member_id || "").trim();
+      return (
+        (currentMemberId && paymentMemberId === currentMemberId) ||
+        (currentMembershipNumber && paymentMemberId === currentMembershipNumber)
+      );
+    });
+  }, [membershipPayments, memberId, id, membership_number]);
+
   const eventTypes = Array.from(
     new Set(paidEvents.map((e) => String(e?.event_type || "").toLowerCase()).filter(Boolean))
   );
   const membershipStatuses = Array.from(
     new Set(
-      membershipPayments
+      visibleMembershipPayments
         .map((row) => normalizeStatus(row?.tx_status || row?.status))
         .filter(Boolean)
     )
@@ -427,11 +440,11 @@ export default function MemberDetails() {
 
   const filteredMembershipPayments = useMemo(
     () =>
-      membershipPayments.filter((row) => {
+      visibleMembershipPayments.filter((row) => {
         const status = normalizeStatus(row?.tx_status || row?.status);
         return membershipStatusFilter === "all" ? true : status === membershipStatusFilter;
       }),
-    [membershipPayments, membershipStatusFilter]
+    [visibleMembershipPayments, membershipStatusFilter]
   );
 
   const filteredSponsors = useMemo(
@@ -606,57 +619,57 @@ export default function MemberDetails() {
 
       {canViewSecure ? (
         <>
-          <SectionCard
-            title={isOwner ? "My Membership Payments" : "Membership Payments"}
-            filters={
-              <select
-                value={membershipStatusFilter}
-                onChange={(e) => setMembershipStatusFilter(e.target.value)}
-              >
-                <option value="all">All Status</option>
-                {membershipStatuses.map((status) => (
-                  <option key={status} value={status}>
-                    {status}
-                  </option>
-                ))}
-              </select>
-            }
-          >
-            <div className="table-responsive">
-              <table className="table member-data-table">
-                <thead>
-                  <tr>
-                    <th>Membership Type</th>
-                    <th>Payment Date</th>
-                    <th>Paid Amount</th>
-                    <th>Payment Method</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredMembershipPayments.length ? (
-                    filteredMembershipPayments.map((row) => (
-                      <tr key={row?.id}>
-                        <td>{row?.membership_category || "-"}</td>
-                        <td>{row?.payment_date || row?.tx_tran_date || "-"}</td>
-                        <td>{normalizeMoney(row?.pay_amount)}</td>
-                        <td>{row?.payment_type || "-"}</td>
-                        <td>
-                          <span className="table-chip ok">
-                            {normalizeStatus(row?.tx_status || row?.status)}
-                          </span>
-                        </td>
-                        <td>
-                          <div className="d-flex gap-2 flex-wrap">
-                            <button
-                              type="button"
-                              className="btn btn-sm btn-primary"
-                              onClick={() => setSelectedDetails({ type: "membership", data: row })}
-                            >
-                              View Details
-                            </button>
-                            {isOwner ? (
+          {isOwner ? (
+            <SectionCard
+              title="My Membership Payments"
+              filters={
+                <select
+                  value={membershipStatusFilter}
+                  onChange={(e) => setMembershipStatusFilter(e.target.value)}
+                >
+                  <option value="all">All Status</option>
+                  {membershipStatuses.map((status) => (
+                    <option key={status} value={status}>
+                      {status}
+                    </option>
+                  ))}
+                </select>
+              }
+            >
+              <div className="table-responsive">
+                <table className="table member-data-table">
+                  <thead>
+                    <tr>
+                      <th>Membership Type</th>
+                      <th>Payment Date</th>
+                      <th>Paid Amount</th>
+                      <th>Payment Method</th>
+                      <th>Status</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredMembershipPayments.length ? (
+                      filteredMembershipPayments.map((row) => (
+                        <tr key={row?.id}>
+                          <td>{row?.membership_category || "-"}</td>
+                          <td>{row?.payment_date || row?.tx_tran_date || "-"}</td>
+                          <td>{normalizeMoney(row?.pay_amount)}</td>
+                          <td>{row?.payment_type || "-"}</td>
+                          <td>
+                            <span className="table-chip ok">
+                              {normalizeStatus(row?.tx_status || row?.status)}
+                            </span>
+                          </td>
+                          <td>
+                            <div className="d-flex gap-2 flex-wrap">
+                              <button
+                                type="button"
+                                className="btn btn-sm btn-primary"
+                                onClick={() => setSelectedDetails({ type: "membership", data: row })}
+                              >
+                                View Details
+                              </button>
                               <button
                                 type="button"
                                 className="btn btn-sm btn-outline-secondary"
@@ -664,22 +677,22 @@ export default function MemberDetails() {
                               >
                                 Download Invoice
                               </button>
-                            ) : null}
-                          </div>
+                            </div>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan={6} className="text-center">
+                          No membership payment records found.
                         </td>
                       </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan={6} className="text-center">
-                        No membership payment records found.
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </SectionCard>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </SectionCard>
+          ) : null}
 
           <SectionCard
             title={isOwner ? "My Paid Event Registrations" : "Paid Event Registrations"}
