@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import {
   useGetExpeirGenaralMembersListQuery,
   useGetMemberDetailsIdQuery,
@@ -10,7 +11,12 @@ import DateFormat from "../components/DateFormat/DateFormat";
 import demoImgMember from "../assets/member/member_1.jpg";
 import MembershipCategorynNameFind from "../components/MemberCard/MembershipCategorynNameFind";
 import HomeLoading from "../components/UI/HomeLoading";
-import { getAuthMemberId } from "../utils/authStorage";
+import { getAuthMemberId, getStoredToken } from "../utils/authStorage";
+
+const TOAST_OPTIONS = {
+  position: toast.POSITION.TOP_RIGHT,
+  autoClose: 3000,
+};
 
 function pickArray(source, keys = []) {
   for (const key of keys) {
@@ -131,6 +137,24 @@ function getEntryPassUrl(row = {}) {
   return `${adminBase}/event-registration/invoice/${registrationId}`;
 }
 
+function getMembershipInvoiceUrl(row = {}) {
+  const adminBase = getAdminBaseUrl();
+  const paymentId = row?.id;
+  const invoiceUrl = String(row?.invoice_url || "");
+
+  if (!paymentId) return "#";
+
+  if (invoiceUrl.startsWith("http://") || invoiceUrl.startsWith("https://")) {
+    return invoiceUrl;
+  }
+
+  if (invoiceUrl.startsWith("/")) {
+    return `${adminBase}${invoiceUrl}`;
+  }
+
+  return `${adminBase}/api/v1/membership-payment-invoice/${paymentId}`;
+}
+
 function DetailCard({ label, value, full = false }) {
   if (!label && !value) return null;
   return (
@@ -169,6 +193,7 @@ export default function MemberDetails() {
   const [eventTypeFilter, setEventTypeFilter] = useState("all");
   const [eventStatusFilter, setEventStatusFilter] = useState("all");
   const [eventDateFilter, setEventDateFilter] = useState("");
+  const [membershipStatusFilter, setMembershipStatusFilter] = useState("all");
 
   const [sponsorEventFilter, setSponsorEventFilter] = useState("all");
   const [sponsorOrgFilter, setSponsorOrgFilter] = useState("all");
@@ -177,6 +202,53 @@ export default function MemberDetails() {
   const [donationStatusFilter, setDonationStatusFilter] = useState("all");
   const [selectedDetails, setSelectedDetails] = useState(null);
   const [profileImageIndex, setProfileImageIndex] = useState(0);
+
+  const handleMembershipInvoiceDownload = async (row) => {
+    const url = getMembershipInvoiceUrl(row);
+    const token = getStoredToken();
+
+    if (!url || url === "#") {
+      toast.info("Invoice link is unavailable.", TOAST_OPTIONS);
+      return;
+    }
+
+    if (!token) {
+      toast.info("Please sign in again to download the invoice.", TOAST_OPTIONS);
+      return;
+    }
+
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        let message = "Unable to download membership invoice.";
+        try {
+          const data = await response.json();
+          message = data?.message || message;
+        } catch (_) {
+          // ignore non-json response body
+        }
+        throw new Error(message);
+      }
+
+      const blob = await response.blob();
+      const objectUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = objectUrl;
+      link.download = `membership_invoice_${row?.id || "payment"}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(objectUrl);
+    } catch (error) {
+      toast.error(error?.message || "Invoice download failed.", TOAST_OPTIONS);
+    }
+  };
 
   const result = data?.result || {};
   const expiredMeta = Array.isArray(expiredMetaData?.data) ? expiredMetaData.data[0] || {} : {};
@@ -260,6 +332,7 @@ export default function MemberDetails() {
 
   const isOwner =
     !!viewerId && String(viewerId) === String(memberId || id);
+  const canViewSecure = Boolean(result?.can_view_secure);
 
   const profileImageCandidates = useMemo(
     () => getMemberImageCandidates(member_image),
@@ -274,6 +347,11 @@ export default function MemberDetails() {
     "paid_event_registrations",
     "event_registrations",
     "my_paid_event_registrations",
+  ]);
+  const membershipPayments = pickArray(result, [
+    "membership_payments",
+    "member_ship_payments",
+    "my_membership_payments",
   ]);
   const sponsorContributions = pickArray(result, [
     "sponsor_contributions",
@@ -290,6 +368,13 @@ export default function MemberDetails() {
 
   const eventTypes = Array.from(
     new Set(paidEvents.map((e) => String(e?.event_type || "").toLowerCase()).filter(Boolean))
+  );
+  const membershipStatuses = Array.from(
+    new Set(
+      membershipPayments
+        .map((row) => normalizeStatus(row?.tx_status || row?.status))
+        .filter(Boolean)
+    )
   );
   const eventStatuses = Array.from(
     new Set(
@@ -338,6 +423,15 @@ export default function MemberDetails() {
         return true;
       }),
     [paidEvents, eventTypeFilter, eventStatusFilter, eventDateFilter]
+  );
+
+  const filteredMembershipPayments = useMemo(
+    () =>
+      membershipPayments.filter((row) => {
+        const status = normalizeStatus(row?.tx_status || row?.status);
+        return membershipStatusFilter === "all" ? true : status === membershipStatusFilter;
+      }),
+    [membershipPayments, membershipStatusFilter]
   );
 
   const filteredSponsors = useMemo(
@@ -510,10 +604,85 @@ export default function MemberDetails() {
         </div>
       </div>
 
-      {isOwner ? (
+      {canViewSecure ? (
         <>
           <SectionCard
-            title="My Paid Event Registrations"
+            title={isOwner ? "My Membership Payments" : "Membership Payments"}
+            filters={
+              <select
+                value={membershipStatusFilter}
+                onChange={(e) => setMembershipStatusFilter(e.target.value)}
+              >
+                <option value="all">All Status</option>
+                {membershipStatuses.map((status) => (
+                  <option key={status} value={status}>
+                    {status}
+                  </option>
+                ))}
+              </select>
+            }
+          >
+            <div className="table-responsive">
+              <table className="table member-data-table">
+                <thead>
+                  <tr>
+                    <th>Membership Type</th>
+                    <th>Payment Date</th>
+                    <th>Paid Amount</th>
+                    <th>Payment Method</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredMembershipPayments.length ? (
+                    filteredMembershipPayments.map((row) => (
+                      <tr key={row?.id}>
+                        <td>{row?.membership_category || "-"}</td>
+                        <td>{row?.payment_date || row?.tx_tran_date || "-"}</td>
+                        <td>{normalizeMoney(row?.pay_amount)}</td>
+                        <td>{row?.payment_type || "-"}</td>
+                        <td>
+                          <span className="table-chip ok">
+                            {normalizeStatus(row?.tx_status || row?.status)}
+                          </span>
+                        </td>
+                        <td>
+                          <div className="d-flex gap-2 flex-wrap">
+                            <button
+                              type="button"
+                              className="btn btn-sm btn-primary"
+                              onClick={() => setSelectedDetails({ type: "membership", data: row })}
+                            >
+                              View Details
+                            </button>
+                            {isOwner ? (
+                              <button
+                                type="button"
+                                className="btn btn-sm btn-outline-secondary"
+                                onClick={() => handleMembershipInvoiceDownload(row)}
+                              >
+                                Download Invoice
+                              </button>
+                            ) : null}
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={6} className="text-center">
+                        No membership payment records found.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </SectionCard>
+
+          <SectionCard
+            title={isOwner ? "My Paid Event Registrations" : "Paid Event Registrations"}
             filters={
               <>
                 <select value={eventTypeFilter} onChange={(e) => setEventTypeFilter(e.target.value)}>
@@ -578,14 +747,16 @@ export default function MemberDetails() {
                             >
                               View Details
                             </button>
-                            <a
-                              href={getEntryPassUrl(row)}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="btn btn-sm btn-outline-secondary"
-                            >
-                              Download Entry Pass
-                            </a>
+                            {isOwner ? (
+                              <a
+                                href={getEntryPassUrl(row)}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="btn btn-sm btn-outline-secondary"
+                              >
+                                Download Entry Pass
+                              </a>
+                            ) : null}
                           </div>
                         </td>
                       </tr>
@@ -603,7 +774,7 @@ export default function MemberDetails() {
           </SectionCard>
 
           <SectionCard
-            title="My Event-wise Sponsor Contribution"
+            title={isOwner ? "My Event-wise Sponsor Contribution" : "Event-wise Sponsor Contribution"}
             filters={
               <>
                 <select value={sponsorEventFilter} onChange={(e) => setSponsorEventFilter(e.target.value)}>
@@ -680,7 +851,7 @@ export default function MemberDetails() {
           </SectionCard>
 
           <SectionCard
-            title="My Program-wise Donations"
+            title={isOwner ? "My Program-wise Donations" : "Program-wise Donations"}
             filters={
               <select value={donationStatusFilter} onChange={(e) => setDonationStatusFilter(e.target.value)}>
                 <option value="all">All Status</option>
@@ -731,7 +902,7 @@ export default function MemberDetails() {
           </SectionCard>
 
           <SectionCard
-            title="My Normal Donations"
+            title={isOwner ? "My Normal Donations" : "Normal Donations"}
             filters={
               <select value={donationStatusFilter} onChange={(e) => setDonationStatusFilter(e.target.value)}>
                 <option value="all">All Status</option>
@@ -785,7 +956,13 @@ export default function MemberDetails() {
         <div className="member-details-modal-backdrop" onClick={() => setSelectedDetails(null)}>
           <div className="member-details-modal" onClick={(e) => e.stopPropagation()}>
             <div className="member-details-modal-header">
-              <h5>{selectedDetails.type === "event" ? "Event Details" : "Sponsor Details"}</h5>
+              <h5>
+                {selectedDetails.type === "event"
+                  ? "Event Details"
+                  : selectedDetails.type === "membership"
+                    ? "Membership Payment Details"
+                    : "Sponsor Details"}
+              </h5>
               <button type="button" onClick={() => setSelectedDetails(null)} aria-label="Close details modal">
                 x
               </button>

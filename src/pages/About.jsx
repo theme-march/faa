@@ -226,8 +226,8 @@ export default function About() {
   const designationSummary = useMemo(() => {
     const order = [
       "President",
-      "Vice President",
       "General Secretary",
+      "Vice President",
       "Joint Secretary",
       "Treasurer",
       "Organizing Secretary",

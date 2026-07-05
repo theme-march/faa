@@ -177,7 +177,16 @@ export default function MemberPayment() {
       return;
     }
     try {
-      const resp = await memberPayment(data);
+      const payload = {
+        ...data,
+        payment_for: "membership",
+        cash_txn_reference:
+          (data.payment_type || "ssl_commerz") === "cash"
+            ? String(data.cash_txn_reference || "").trim()
+            : "",
+      };
+
+      const resp = await memberPayment(payload);
 
       if (resp?.data?.success) {
         if (data.payment_type === "cash" || resp?.data?.cash) {
