@@ -184,6 +184,7 @@ import MemberDetailsUpdate from "./pages/MemberDetailsUpdate";
 import UpdatePassword from "./pages/MemberPassWordUpdate";
 import ResetPassword from "./pages/ResetPassword";
 import CommitteeMemberDetails from "./pages/CommitteeMemberDetails";
+import QrGateway from "./pages/QrGateway";
 
 /**
  * 🔐 Private Wrapper
@@ -205,6 +206,8 @@ const routes = [
   { path: "/programs-details/:id", element: <ProgramsDetails /> },
   { path: "/membership", element: <Membership /> },
   { path: "/member-registration", element: <MembershipRegistration /> },
+  { path: "/event/enter", element: <QrGateway /> },
+  { path: "/member/verify/:token", element: <QrGateway /> },
 
   { path: "/member-details/:id", element: withPrivate(MemberDetails) },
   { path: "/member-details-update/:id", element: withPrivate(MemberDetailsUpdate) },
