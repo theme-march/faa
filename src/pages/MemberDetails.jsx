@@ -12,6 +12,7 @@ import demoImgMember from "../assets/member/member_1.jpg";
 import MembershipCategorynNameFind from "../components/MemberCard/MembershipCategorynNameFind";
 import HomeLoading from "../components/UI/HomeLoading";
 import { getAuthMemberId, getStoredToken } from "../utils/authStorage";
+import { getAdminBaseUrl } from "../config/appConfig";
 
 const TOAST_OPTIONS = {
   position: toast.POSITION.TOP_RIGHT,
@@ -26,9 +27,7 @@ function pickArray(source, keys = []) {
   return [];
 }
 
-function getAdminBaseUrl() {
-  return (import.meta.env.VITE_ADMIN_BASE_URL || "http://localhost:3000").replace(/\/+$/, "");
-}
+
 
 // function getMemberImageCandidates(memberImage) {
 //   if (!memberImage) return [demoImgMember];

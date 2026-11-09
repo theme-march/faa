@@ -1,11 +1,9 @@
 import { useEffect } from "react";
+import { getAdminBaseUrl } from "../config/appConfig";
 
 export default function QrGateway() {
   useEffect(() => {
-    const adminBase = (
-      import.meta.env.VITE_ADMIN_BASE_URL ||
-      (window.location.hostname === "localhost" ? "http://localhost:3000" : "https://cms.faa-dubd.org")
-    ).replace(/\/+$/, "");
+    const adminBase = getAdminBaseUrl();
     window.location.replace(`${adminBase}${window.location.pathname}${window.location.search}`);
   }, []);
 

@@ -2,10 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { useGetHomePopupQuery } from "../../features/home/homeApiIn";
-
-function getAdminBaseUrl() {
-  return (import.meta.env.VITE_ADMIN_BASE_URL || "http://localhost:3000").replace(/\/+$/, "");
-}
+import { getAdminBaseUrl } from "../../config/appConfig";
 
 export default function AddModal() {
   const [showModal, setShowModal] = useState(false);
